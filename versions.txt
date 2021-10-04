@@ -16,3 +16,11 @@ functionality:
 - Color; sets console font colour
 - PrintonConsole: display message on console position and restores cursorpos
 
+
+Changes: 
+
+- Added trim function to Getinput function
+- added several text edition options (home/end/delete etc)
+- refactored classes and methods to classes.cs and io.cs
+
+
