@@ -22,7 +22,7 @@ namespace EmployeeMaint
 
 
             // init console window properties
-            Console.Title = "Employee Data Maintenance Console Program";
+            Console.Title = "Employee Data Maintenance Console Program v0.1_alpha";
             Console.SetWindowSize(80, 35);                                                  
             Color(5);
             Console.Clear();
@@ -49,10 +49,10 @@ namespace EmployeeMaint
             DateTime parsedDateHelpstring;              // be parsed into valid DateTime string;
 
             newEmployee.SurName = GetInput("Surname:", 30, 45, true, true).ToString();
-            newEmployee.FirstName = GetInput("First Name:", 30, 30, true ,true).ToString();
+            newEmployee.FirstName = GetInput("First Name:", 30, 30, true, true).ToString();
             dateHelpstring = GetInput("Date of Birth (dd/mm/yy):", 30, 10, true, true);
             newEmployee.Address = GetInput("Address:", 30, 45, true, true);
-            newEmployee.Zipcode = GetInput("Zipcode: (####ZZ)", 30, 6,true, true);
+            newEmployee.Zipcode = GetInput("Zipcode: (####ZZ)", 30, 6, true, true);
             newEmployee.City = GetInput("City:", 30, 45, true, true);
             newEmployee.Telephone = GetInput("Telephone:", 30, 14, true, true);
             newEmployee.email = GetInput("Email:", 30, 45, true, true);
@@ -60,26 +60,14 @@ namespace EmployeeMaint
             //Console.Write($"{"Enter Date of birth (dd/mm/yyyy)",-40}:"); dateHelpstring = Console.ReadLine();
             // string pattern = "mm/dd/yyyy";
 
-            if (DateTime.TryParse(dateHelpstring, out parsedDateHelpstring))   // Tryparse method passing back two values: bool and out var
-            {
-                Console.WriteLine("\nParsed date string succesfully to {0:dd MM yyyy}", parsedDateHelpstring);
+            parsedDateHelpstring = ParseToDateTime(newEmployee, dateHelpstring);
 
-                int age = CalculateAge(parsedDateHelpstring);
-
-                Console.WriteLine("Employee born on: {0:dddd dd MMMM}'{0:yy}, age {1}", parsedDateHelpstring, age);
-                newEmployee.DateOfBirth = parsedDateHelpstring;
-            }
-            else
-            {
-                Console.WriteLine("Could not parse date string {0} ", dateHelpstring);
-            }
-
-            int a = newEmployee.SurName.Length;
-            int b = newEmployee.FirstName.Length;
-            int c = newEmployee.DateOfBirth.ToString().Length;
-            Console.WriteLine("Voornaam: {0} Lengte voornaam: {1}", newEmployee.FirstName, b);
-            Console.WriteLine("Achternaam: {0} Lengte achternaam {1}", newEmployee.SurName, a);
-            Console.WriteLine("Date of Birth: {0} Lenght DoB: {1}", newEmployee.DateOfBirth, c);
+            //int a = newEmployee.SurName.Length;
+            //int b = newEmployee.FirstName.Length;
+            //int c = newEmployee.DateOfBirth.ToString().Length;
+            //Console.WriteLine("Voornaam: {0} Lengte voornaam: {1}", newEmployee.FirstName, b);
+            //Console.WriteLine("Achternaam: {0} Lengte achternaam {1}", newEmployee.SurName, a);
+            //Console.WriteLine("Date of Birth: {0} Lenght DoB: {1}", newEmployee.DateOfBirth, c);
 
 
             Console.WriteLine("\nPress 'Enter' to store entry, (C)hange or (E)xit");
@@ -102,28 +90,48 @@ namespace EmployeeMaint
 
             } while (inputKey.Key != ConsoleKey.E);
 
-
-            int CalculateAge(DateTime dateOfBirth)
-            {
-                // calculate age
-                var age = DateTime.Today.Year - dateOfBirth.Year;                   // not taking date into account eg. 2021-1997
-                int nowMonthandDay = int.Parse(DateTime.Now.ToString("MMdd"));      // convert month and day to int
-                int thenMonthandDay = int.Parse(dateOfBirth.ToString("MMdd"));
-                // Console.WriteLine("Now {0} and then {1}", nowMonthandDay, thenMonthandDay);
-                if (nowMonthandDay < thenMonthandDay)
-                {
-                    age--;                                                          // if current date (in MMdd) < date of birth subtract 1 year
-                }
-                //
-                return age;
-            }
-
             //
             // TODO: opslaan record in array en wegschrijven in textfile
             //
             //
 
         }
+
+        static DateTime ParseToDateTime(Employee newEmployee, string dateHelpstring)
+        {
+            DateTime parsedDateHelpstring;
+            if (DateTime.TryParse(dateHelpstring, out parsedDateHelpstring))   // Tryparse method passing back two values: bool and out var
+            {
+                Console.WriteLine("\nParsed date string succesfully to {0:dd MM yyyy}", parsedDateHelpstring);
+
+                int age = CalculateAge(parsedDateHelpstring);
+
+                Console.WriteLine("Employee born on: {0:dddd dd MMMM}'{0:yy}, age {1}", parsedDateHelpstring, age);
+                newEmployee.DateOfBirth = parsedDateHelpstring;
+            }
+            else
+            {
+                Console.WriteLine("Could not parse date string {0} ", dateHelpstring);
+            }
+
+            return parsedDateHelpstring;
+        }
+
+        static int CalculateAge(DateTime dateOfBirth)
+        {
+            // calculate age
+            var age = DateTime.Today.Year - dateOfBirth.Year;                   // not taking date into account eg. 2021-1997
+            int nowMonthandDay = int.Parse(DateTime.Now.ToString("MMdd"));      // convert month and day to int
+            int thenMonthandDay = int.Parse(dateOfBirth.ToString("MMdd"));
+            // Console.WriteLine("Now {0} and then {1}", nowMonthandDay, thenMonthandDay);
+            if (nowMonthandDay < thenMonthandDay)
+            {
+                age--;                                                          // if current date (in MMdd) < date of birth subtract 1 year
+            }
+            //
+            return age;
+        }
+
 
         static string GetInput(string inputstring, int lengthQuestionField, int lengthInputField, bool lineFeed, bool showInput)                                
         {
@@ -201,7 +209,10 @@ namespace EmployeeMaint
             } while (inp.Key != ConsoleKey.Enter);
 
             string returnString = inputStringbuilder.ToString();
-            if (lineFeed) { Console.WriteLine(); }
+            
+            if (lineFeed) { Console.WriteLine();}
+
+            Checkfieldlength(lengthInputField, 1); // reset warning incase cursor was at last position before 'Enter'
 
             Color(5);
             return returnString;
@@ -247,7 +258,6 @@ namespace EmployeeMaint
             Console.Clear();
             Color(5);
             Console.WriteLine("\n\n=============================================================================");
-            //Console.WriteLine("\n\n".PadRight(80, '='));  < OR
             Color(4);
             Console.Write("Employee data maintenance"); Console.Write("{0:dd/MM/yyyy}".PadLeft(30, ' '), DateTime.Now);
             Color(5);
@@ -298,7 +308,6 @@ namespace EmployeeMaint
             }
             else if (inputKey.Key == ConsoleKey.A & Password.validPassword)             // Add records
             {
-                //Console.WriteLine("  You Pressed A");
                 DisplayMenu("Add Record", "(C)hange\nEnter Validate Field\n");
                 AddRecord();
             }
@@ -306,7 +315,6 @@ namespace EmployeeMaint
             {
                 Console.WriteLine("  You Pressed V");
                 ViewRecords();
-
             }
             else if (inputKey.Key == ConsoleKey.D & Password.validPassword)             // delete record
             {
@@ -315,7 +323,6 @@ namespace EmployeeMaint
             }
             else if (inputKey.Key == ConsoleKey.Escape)                                 // exit program
             {
-                // Console.WriteLine(inputKey.Key);
                 return;
 
                 Console.WriteLine("Login with a valid password");
@@ -329,8 +336,8 @@ namespace EmployeeMaint
             throw new NotImplementedException();
         }
 
-        private static void Color(int color)                    /// sets or resets console font color
-        {
+        private static void Color(int color)                    // sets or resets console font color
+        {                                                       // TODO: call with colour name string instead of number
             Console.BackgroundColor = ConsoleColor.Black;
             switch (color)
             {
