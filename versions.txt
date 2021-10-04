@@ -1,0 +1,18 @@
+Version 0.1 alpha
+
+functionality:
+
+- uses classes for employee
+
+- Calculate age
+- Getinput:
+    - converts single char input to string via stringbuilder
+    - displays input field with variable length
+ - ParseToDateTime:
+    - converts date string to DateTime
+    
+- Displaymenu; display simple menu
+- Checkfieldlenght; 
+- Color; sets console font colour
+- PrintonConsole: display message on console position and restores cursorpos
+
