@@ -13,7 +13,7 @@ namespace EmployeeMaint
         {get; set;} is shorthand for:
 
         private string name;                // this is the field
-        public string Name                  // this is the property (which is why it has a Capital, it's not a variable
+        public String Name                  // this is the property (which is why it has a Capital, it's not a variable
         {
             get
             {
