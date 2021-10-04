@@ -48,14 +48,14 @@ namespace EmployeeMaint
             string dateHelpstring;                      // temp string which is filled from console input to
             DateTime parsedDateHelpstring;              // be parsed into valid DateTime string;
 
-            newEmployee.SurName = GetInput("Surname:", 30, 45, true, true).ToString();
-            newEmployee.FirstName = GetInput("First Name:", 30, 30, true, true).ToString();
-            dateHelpstring = GetInput("Date of Birth (dd/mm/yy):", 30, 10, true, true);
-            newEmployee.Address = GetInput("Address:", 30, 45, true, true);
-            newEmployee.Zipcode = GetInput("Zipcode: (####ZZ)", 30, 6, true, true);
-            newEmployee.City = GetInput("City:", 30, 45, true, true);
-            newEmployee.Telephone = GetInput("Telephone:", 30, 14, true, true);
-            newEmployee.email = GetInput("Email:", 30, 45, true, true);
+            newEmployee.SurName = GetInput("Surname:", 30, 45, true, true, true).ToString();
+            newEmployee.FirstName = GetInput("First Name:", 30, 30, true, true, true).ToString();
+            dateHelpstring = GetInput("Date of Birth (dd/mm/yy):", 30, 10, true, true, false);
+            newEmployee.Address = GetInput("Address:", 30, 45, true, true, true);
+            newEmployee.Zipcode = GetInput("Zipcode: (####ZZ)", 30, 6, true, true, true);
+            newEmployee.City = GetInput("City:", 30, 45, true, true, true);
+            newEmployee.Telephone = GetInput("Telephone:", 30, 14, true, true, true);
+            newEmployee.email = GetInput("Email:", 30, 45, true, true, true);
 
             //Console.Write($"{"Enter Date of birth (dd/mm/yyyy)",-40}:"); dateHelpstring = Console.ReadLine();
             // string pattern = "mm/dd/yyyy";
@@ -133,7 +133,7 @@ namespace EmployeeMaint
         }
 
 
-        static string GetInput(string inputstring, int lengthQuestionField, int lengthInputField, bool lineFeed, bool showInput)                                
+        static string GetInput(string inputstring, int lengthQuestionField, int lengthInputField, bool lineFeed, bool showInput, bool trim)                                
         {
 
             //Console.WriteLine("1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890");
@@ -147,6 +147,7 @@ namespace EmployeeMaint
             StringBuilder inputStringbuilderNoShow = new StringBuilder();           // helper string for passwords
             ConsoleKeyInfo inp = new ConsoleKeyInfo();
             int indexInStringbuilder = 1;
+            string returnString;
 
             // display field boundaries with padded spaces
 
@@ -164,19 +165,12 @@ namespace EmployeeMaint
                 if (inp.Key != ConsoleKey.Backspace & indexInStringbuilder <= lengthInputField & inp.Key != ConsoleKey.Escape & inp.Key != ConsoleKey.Enter & inp.Key != ConsoleKey.Tab)
                 {
                     indexInStringbuilder++;
-                    Checkfieldlength(lengthInputField, indexInStringbuilder -1);
+                    Checkfieldlength(lengthInputField, indexInStringbuilder - 1);
                     inputStringbuilder.Append(inp.KeyChar);
                     inputStringbuilderNoShow.Append("*");
                     Console.SetCursorPosition(lengthQuestionField + 1, cursorTop);      // position cursor at start inputfield
 
-                    if (showInput)
-                    {
-                        Console.Write(inputStringbuilder);
-                    }
-                    else
-                    {
-                        Console.Write(inputStringbuilderNoShow);                        // show the dummy inputstring
-                    }
+                    PrintInputString(showInput, false, inputStringbuilder, inputStringbuilderNoShow);
 
                 }
                 else if (inp.Key == ConsoleKey.Backspace & indexInStringbuilder > 1)
@@ -186,17 +180,9 @@ namespace EmployeeMaint
                     inputStringbuilder.Remove(indexInStringbuilder - 1, 1);
                     inputStringbuilderNoShow.Remove(indexInStringbuilder - 1, 1);
                     Console.SetCursorPosition(lengthQuestionField + 1, cursorTop);
-                    
 
-                    if (showInput)
-                    {
-                        Console.Write(inputStringbuilder + " ");                           // overwrite the rightmost char of string with extra space
-                    }
-                    else
-                    {
-                        Console.Write(inputStringbuilderNoShow + " ");
-                    }
-                    
+                    PrintInputString(showInput, true, inputStringbuilder, inputStringbuilderNoShow);
+
                     int helpCursorLeft = Console.CursorLeft;
                     Console.SetCursorPosition(helpCursorLeft - 1, cursorTop);             // and place the curser back one position
                 }
@@ -208,8 +194,23 @@ namespace EmployeeMaint
 
             } while (inp.Key != ConsoleKey.Enter);
 
-            string returnString = inputStringbuilder.ToString();
-            
+
+            if (!trim)
+            {
+                returnString = inputStringbuilder.ToString();
+            }
+            else
+            {
+                returnString = (inputStringbuilder.ToString()).Trim();
+            }
+
+            // write inputString in case anything was trimmed
+            Console.SetCursorPosition(lengthQuestionField + 1, cursorTop);
+            if (showInput)
+            {
+                Console.Write(returnString.PadRight(lengthInputField,' '));
+            }
+
             if (lineFeed) { Console.WriteLine();}
 
             Checkfieldlength(lengthInputField, 1); // reset warning incase cursor was at last position before 'Enter'
@@ -217,7 +218,24 @@ namespace EmployeeMaint
             Color(5);
             return returnString;
 
-            
+        }
+
+        static void PrintInputString(bool showInput, bool deltrailspace, StringBuilder inputStringbuilder, StringBuilder inputStringbuilderNoShow)
+        {
+            if (showInput)
+            {
+                Console.Write(inputStringbuilder);
+            }
+            else
+            {
+                Console.Write(inputStringbuilderNoShow);                        // show the dummy inputstring
+            }
+            if (deltrailspace)
+            {
+                Console.Write(" ");
+            }
+
+
         }
 
         private static void Checkfieldlength(int lengthInputField, int indexInStringbuilder)
@@ -288,7 +306,7 @@ namespace EmployeeMaint
             if (inputKey.Key == ConsoleKey.L || !Password.validPassword & inputKey.Key != ConsoleKey.Escape)
             {
                 //Console.WriteLine("  You Pressed L");
-                string passWordInput = GetInput("Enter password: ", 18, 56, true, false);
+                string passWordInput = GetInput("Enter password: ", 18, 56, true, false, false);
 
                 //Console.Write("Enter Password: ");
                 //string passWordInput = Console.ReadLine();
