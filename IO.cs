@@ -13,7 +13,7 @@ namespace EmployeeMaint
             IO.Color(5);
             Console.WriteLine("\n\n=============================================================================");
             IO.Color(4);
-            Console.Write("Employee data maintenance"); Console.Write("{0:dd/MM/yyyy}".PadLeft(30, ' '), DateTime.Now);
+            Console.Write("Bakker Vlaaieboer"); Console.Write("{0:dd/MM/yyyy}".PadLeft(30, ' '), DateTime.Now);
             IO.Color(5);
             if (Password.validPassword)
             {
@@ -39,16 +39,19 @@ namespace EmployeeMaint
             DateTime parsedDateHelpstring;
             if (DateTime.TryParse(dateHelpstring, out parsedDateHelpstring))   // Tryparse method passing back two values: bool and out var
             {
-                Console.WriteLine("\nParsed date string succesfully to {0:dd MM yyyy}", parsedDateHelpstring);
+                //var helperstring = "Parsed date string succesfully to {0:dd MM yyyy}", parsedDateHelpstring;
+                IO.PrintOnConsole($"Parsed date string succesfully to {parsedDateHelpstring:dd-MM-yyyy}",1, 34); 
+
+                //Console.WriteLine("\nParsed date string succesfully to {0:dd MM yyyy}", parsedDateHelpstring);
 
                 int age = CalculateAge(parsedDateHelpstring);
 
-                Console.WriteLine("Employee born on: {0:dddd dd MMMM}'{0:yy}, age {1}", parsedDateHelpstring, age);
+                //Console.WriteLine("Employee born on: {0:dddd dd MMMM}'{0:yy}, age {1}", parsedDateHelpstring, age);
                 newEmployee.DateOfBirth = parsedDateHelpstring;
             }
             else
             {
-                Console.WriteLine("Could not parse date string {0} ", dateHelpstring);
+                IO.PrintOnConsole($"Could not parse date string, set to {parsedDateHelpstring:dd-MM-yy}", 1, 34);
             }
 
             return parsedDateHelpstring;
@@ -69,7 +72,7 @@ namespace EmployeeMaint
             return age;
         }
 
-        public static void PrintOnConsole(string consoleString, int left, int top)
+        public static void PrintOnConsole(string consoleString, int left, int top)              //TODO: capture screenbuffer to display 'windows'
         {
             int currentCursorPosTop = Console.CursorTop;                // store current cursor pos
             int currentCursorPosLeft = Console.CursorLeft;
@@ -111,7 +114,9 @@ namespace EmployeeMaint
                                       bool lineFeed,                 // linefeed after input?
                                       bool showInput,                // display the typed characters?
                                       bool trim,                     // return with trimmed spaces ?
-                                      bool showBoundaries)           // print field boundaries?            
+                                      bool showBoundaries,           // print field boundaries?
+                                      int minInputLength)            // minimal inputlength required
+                                                                      
         {
 
             //Console.WriteLine("1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890");
@@ -126,6 +131,7 @@ namespace EmployeeMaint
             ConsoleKeyInfo inp = new ConsoleKeyInfo();
             int indexInStringbuilder = 1;
             string returnString;
+            bool checkedValidLength = false;
             
 
             // display field boundaries with padded spaces
@@ -138,90 +144,105 @@ namespace EmployeeMaint
                 Console.SetCursorPosition(lengthQuestionField + 1, cursorTop);                   // reset cursorposition to beginning of the input field
                 IO.Color(1);
             }
-            
 
             do
             {
-
-                inp = Console.ReadKey(true);                            // read 1 key, don't display the readkey input (true)
-
-                if (checkinputString.Contains(inp.KeyChar.ToString()) & indexInStringbuilder <= lengthInputField)         // only accept valid characters other than functions
-
+                do
                 {
-                    indexInStringbuilder++;
-                    Checkfieldlength(lengthInputField, indexInStringbuilder - 1);
-                    inputStringbuilder.Append(inp.KeyChar);
-                    inputStringbuilderNoShow.Append("*");
-                    Console.SetCursorPosition(lengthQuestionField + 1, cursorTop);      // position cursor at start inputfield
 
-                    PrintInputString(showInput, false, inputStringbuilder, inputStringbuilderNoShow);
+                    inp = Console.ReadKey(true);                            // read 1 key, don't display the readkey input (true)
 
-                }
-                else if (inp.Key == ConsoleKey.Backspace & indexInStringbuilder > 1)
-                {
-                    indexInStringbuilder--;
-                    Checkfieldlength(lengthInputField, indexInStringbuilder - 1);
-                    inputStringbuilder.Remove(indexInStringbuilder - 1, 1);
-                    inputStringbuilderNoShow.Remove(indexInStringbuilder - 1, 1);
-                    Console.SetCursorPosition(lengthQuestionField + 1, cursorTop);
+                    if (checkinputString.Contains(inp.KeyChar.ToString()) & indexInStringbuilder <= lengthInputField)         // only accept valid characters other than functions
 
-                    PrintInputString(showInput, true, inputStringbuilder, inputStringbuilderNoShow);
-
-                    int helpCursorLeft = Console.CursorLeft;
-                    Console.SetCursorPosition(helpCursorLeft - 1, cursorTop);             // and place the curser back one position
-                }
-                else if (inp.Key == ConsoleKey.Delete)
-                {
-                    if (inputStringbuilder.Length > 0 & indexInStringbuilder <= inputStringbuilder.Length)
                     {
+                        indexInStringbuilder++;
+                        Checkfieldlength(lengthInputField, indexInStringbuilder - 1);
+                        inputStringbuilder.Append(inp.KeyChar);
+                        inputStringbuilderNoShow.Append("*");
+                        Console.SetCursorPosition(lengthQuestionField + 1, cursorTop);      // position cursor at start inputfield
+
+                        PrintInputString(showInput, false, inputStringbuilder, inputStringbuilderNoShow);
+
+                    }
+                    else if (inp.Key == ConsoleKey.Backspace & indexInStringbuilder > 1)
+                    {
+                        indexInStringbuilder--;
+                        Checkfieldlength(lengthInputField, indexInStringbuilder - 1);
                         inputStringbuilder.Remove(indexInStringbuilder - 1, 1);
                         inputStringbuilderNoShow.Remove(indexInStringbuilder - 1, 1);
                         Console.SetCursorPosition(lengthQuestionField + 1, cursorTop);
+
                         PrintInputString(showInput, true, inputStringbuilder, inputStringbuilderNoShow);
+
+                        int helpCursorLeft = Console.CursorLeft;
+                        Console.SetCursorPosition(helpCursorLeft - 1, cursorTop);             // and place the curser back one position
+                    }
+                    else if (inp.Key == ConsoleKey.Delete)
+                    {
+                        if (inputStringbuilder.Length > 0 & indexInStringbuilder <= inputStringbuilder.Length)
+                        {
+                            inputStringbuilder.Remove(indexInStringbuilder - 1, 1);
+                            inputStringbuilderNoShow.Remove(indexInStringbuilder - 1, 1);
+                            Console.SetCursorPosition(lengthQuestionField + 1, cursorTop);
+                            PrintInputString(showInput, true, inputStringbuilder, inputStringbuilderNoShow);
+                            IO.PrintOnConsole(indexInStringbuilder.ToString() + " " + inputStringbuilder + "       ", 1, 1);
+                            Console.SetCursorPosition(lengthQuestionField + indexInStringbuilder, cursorTop);
+                        }
+
+                    }
+                    else if (inp.Key == ConsoleKey.LeftArrow ||
+                             inp.Key == ConsoleKey.RightArrow ||
+                             inp.Key == ConsoleKey.Home ||
+                             inp.Key == ConsoleKey.End)
+                    {
+                        if (inp.Key == ConsoleKey.LeftArrow & indexInStringbuilder > 1)
+                        {
+                            indexInStringbuilder--;         // one to the left
+                            Console.SetCursorPosition(lengthQuestionField + indexInStringbuilder, cursorTop);
+                        }
+                        else if (inp.Key == ConsoleKey.RightArrow & indexInStringbuilder < inputStringbuilder.Length)
+                        {
+                            indexInStringbuilder++;
+                            Console.SetCursorPosition(lengthQuestionField + indexInStringbuilder, cursorTop);
+                        }
+                        else if (inp.Key == ConsoleKey.Home)
+                        {
+                            indexInStringbuilder = 1;
+                            Console.SetCursorPosition(lengthQuestionField + 1, cursorTop);
+                        }
+                        else if (inp.Key == ConsoleKey.End & inputStringbuilder.Length > 0)
+                        {
+                            indexInStringbuilder = inputStringbuilder.Length;
+                            Console.SetCursorPosition(lengthQuestionField + indexInStringbuilder, cursorTop);
+                        }
+
                         IO.PrintOnConsole(indexInStringbuilder.ToString() + " " + inputStringbuilder + "       ", 1, 1);
-                        Console.SetCursorPosition(lengthQuestionField + indexInStringbuilder, cursorTop);
+
                     }
 
-                }
-                else if (inp.Key == ConsoleKey.LeftArrow ||
-                         inp.Key == ConsoleKey.RightArrow ||
-                         inp.Key == ConsoleKey.Home ||
-                         inp.Key == ConsoleKey.End)
+                    else if (inp.Key == ConsoleKey.Escape)
+                    {
+                        IO.PrintOnConsole("Do you want to stop editing this record?", 1, 34);
+                        var respons = IO.GetInput("", "YyNn", 0, 1, false, true, true, false, 1);
+
+                        Console.ReadKey();
+                    }
+
+                } while (inp.Key != ConsoleKey.Enter);
+                if (inputStringbuilder.Length >= minInputLength)
                 {
-                    if (inp.Key == ConsoleKey.LeftArrow & indexInStringbuilder > 1)
-                    {
-                        indexInStringbuilder--;         // one to the left
-                        Console.SetCursorPosition(lengthQuestionField + indexInStringbuilder, cursorTop);
-                    }
-                    else if (inp.Key == ConsoleKey.RightArrow & indexInStringbuilder < inputStringbuilder.Length)
-                    {
-                        indexInStringbuilder++;
-                        Console.SetCursorPosition(lengthQuestionField + indexInStringbuilder, cursorTop);
-                    }
-                    else if (inp.Key == ConsoleKey.Home)
-                    {
-                        indexInStringbuilder = 1;      
-                        Console.SetCursorPosition(lengthQuestionField + 1, cursorTop);
-                    }
-                    else if (inp.Key == ConsoleKey.End & inputStringbuilder.Length > 0)
-                    {
-                        indexInStringbuilder = inputStringbuilder.Length;
-                        Console.SetCursorPosition(lengthQuestionField + indexInStringbuilder, cursorTop);
-                    }
-
-                    IO.PrintOnConsole(indexInStringbuilder.ToString() + " " + inputStringbuilder + "       ", 1, 1);
-
+                    checkedValidLength = true;
+                    IO.PrintOnConsole("                             ", 1, 1);
                 }
-
-                else if (inp.Key == ConsoleKey.Escape)
+                else
                 {
-                    IO.PrintOnConsole("Do you want to stop editing this record?", 1, 34);
-                    var respons = IO.GetInput("", "YyNn", 0, 1, false, true, true, false);
-
-                    Console.ReadKey();
+                    IO.Color(3);
+                    IO.PrintOnConsole("Field cannot be empty", 1, 1);
+                    IO.Color(1);
                 }
 
-            } while (inp.Key != ConsoleKey.Enter);
+            } while (!checkedValidLength);
+
 
             // set returnstring trimmed
             if (!trim)

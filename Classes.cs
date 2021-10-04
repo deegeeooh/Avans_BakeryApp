@@ -28,16 +28,40 @@ namespace EmployeeMaint
 
         */
         public int RecordCounter { get; set; }
-        public int EmployeeID { get; set; }
+        public string EmployeeID { get; set; }
+        // public string JobTitle { get; set; }
         public string FirstName { get; set; }
         public string SurName { get; set; }
+        public string Prefix { get; set; }
         public DateTime DateOfBirth { get; set; }
         public string Address { get; set; }
         public string Zipcode { get; set; }
         public string City { get; set; }
         public string Telephone { get; set; }
-        public string email { get; set; }
+        public string Email { get; set; }
 
+    }
+
+    class Customer                  // TODO: add field conditions to data classes
+    {
+        
+        public int RecordCounter { get; set; }
+        public string CustomerID { get; set; }
+        public string Name { get; set; }
+        public string Owner { get; set; }
+        public string Address { get; set; }
+        public string Zipcode { get; set; }
+        public string City { get; set; }
+        public string Telephone { get; set; }
+        public string Email { get; set; }
+
+    }
+
+    class EmployeeRoles
+    {
+        public int RecordCounter { get; set; }
+        public string Code { get; set; }
+        public string Description { get; set; }
     }
 
     class Password
@@ -45,13 +69,5 @@ namespace EmployeeMaint
         public static string passWord = "bakker";
         public static bool validPassword;
     }
-
-    class Role
-    {
-        public int RecordCounter { get; set; }
-        public string Code { get; set; }
-        public int Description{ get; set; }
-
-
-    }
+    
 }
