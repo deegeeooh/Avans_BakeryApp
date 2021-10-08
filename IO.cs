@@ -34,43 +34,6 @@ namespace Vlaaieboer
             
         }
 
-        public static DateTime ParseToDateTime(Employee newEmployee, string dateHelpstring)
-        {
-            DateTime parsedDateHelpstring;
-            if (DateTime.TryParse(dateHelpstring, out parsedDateHelpstring))   // Tryparse method passing back two values: bool and out var
-            {
-                //var helperstring = "Parsed date string succesfully to {0:dd MM yyyy}", parsedDateHelpstring;
-                IO.PrintOnConsole($"Parsed date string succesfully to {parsedDateHelpstring:dd-MM-yyyy}",1, 34); 
-
-                //Console.WriteLine("\nParsed date string succesfully to {0:dd MM yyyy}", parsedDateHelpstring);
-
-                int age = CalculateAge(parsedDateHelpstring);
-
-                //Console.WriteLine("Employee born on: {0:dddd dd MMMM}'{0:yy}, age {1}", parsedDateHelpstring, age);
-                newEmployee.DateOfBirth = parsedDateHelpstring;
-            }
-            else
-            {
-                IO.PrintOnConsole($"Could not parse date string, set to {parsedDateHelpstring:dd-MM-yy}", 1, 34);
-            }
-
-            return parsedDateHelpstring;
-        }
-
-        public static int CalculateAge(DateTime dateOfBirth)
-        {
-            // calculate age
-            var age = DateTime.Today.Year - dateOfBirth.Year;                   // not taking date into account eg. 2021-1997
-            int nowMonthandDay = int.Parse(DateTime.Now.ToString("MMdd"));      // convert month and day to int
-            int thenMonthandDay = int.Parse(dateOfBirth.ToString("MMdd"));
-            // Console.WriteLine("Now {0} and then {1}", nowMonthandDay, thenMonthandDay);
-            if (nowMonthandDay < thenMonthandDay)
-            {
-                age--;                                                          // if current date (in MMdd) < date of birth subtract 1 year
-            }
-            //
-            return age;
-        }
 
         public static void PrintOnConsole(string consoleString, int left, int top)              //TODO: capture screenbuffer to display 'windows'
         {
@@ -229,6 +192,7 @@ namespace Vlaaieboer
                     }
 
                 } while (inp.Key != ConsoleKey.Enter);
+
                 if (inputStringbuilder.Length >= minInputLength)
                 {
                     checkedValidLength = true;
@@ -254,7 +218,7 @@ namespace Vlaaieboer
                 returnString = (inputStringbuilder.ToString()).Trim();
             }
 
-            // write inputString in case anything was trimmed
+            // print inputString to field in case anything was trimmed
             Console.SetCursorPosition(lengthQuestionField + 1, cursorTop);
             if (showInput)                                                  // not with password
             {

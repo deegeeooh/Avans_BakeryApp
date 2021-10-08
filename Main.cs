@@ -100,42 +100,11 @@ namespace Vlaaieboer
         private static void Employees()                 // TODO: read & count records into array, display first record, browse and delete
         {
             
+            Employee newEmployee = new Employee(true, false);        // instantiate object of class Employee by calling constructor method 
+
+            IO.PrintOnConsole("Age: " + newEmployee.CalculateAge().ToString(), 34, 1);
+
             
-            Employee newEmployee = new Employee();      // instantiate object of class Employee
-            string dateHelpstring;                      // temp string which is filled from console input to
-            DateTime parsedDateHelpstring;              // be parsed into valid DateTime string;
-
-            newEmployee.RecordCounter = 1;              // TODO: get recordcounter from # records in file when initialising program           
-            newEmployee.SurName = IO.GetInput("Surname:",checkinputStringAlpha, 30, 45, true, true, true, true, 1);
-            newEmployee.Prefix = IO.GetInput("Prefix", checkinputStringAlpha, 30, 35, true, true, true, true, 0);
-            newEmployee.FirstName = IO.GetInput("First Name:",checkinputStringAlpha, 30, 30, true, true, true, true, 1);
-            dateHelpstring = IO.GetInput("Date of Birth (dd/mm/yyyy):",checkinputStringDate, 30, 10, true, true, false, true, 10);
-            
-            // validate date string input
-            parsedDateHelpstring = IO.ParseToDateTime(newEmployee, dateHelpstring);
-
-            newEmployee.Address = IO.GetInput("Address:",checkinputStringAlpha, 30, 45, true, true, true, true, 0);
-            newEmployee.Zipcode = IO.GetInput("Zipcode: (####ZZ)",checkinputStringAlpha, 30, 6, true, true, true, true, 0);
-            newEmployee.City = IO.GetInput("City:",checkinputStringAlpha, 30, 45, true, true, true, true, 0);
-            newEmployee.Telephone = IO.GetInput("Telephone:","0123456789+-", 30, 14, true, true, true, true, 0);
-            newEmployee.Email = IO.GetInput("Email:",checkinputStringAlpha, 30, 45, true, true, true, true, 1);
-
-            // construct unique employee ID
-            string a = newEmployee.RecordCounter.ToString("D5");
-            string b;
-            if (newEmployee.SurName.Length >= 3)
-            {
-                b = newEmployee.SurName.Substring(0, 3).ToUpper();
-            }
-            else
-            {
-                b = newEmployee.SurName.Substring(0, newEmployee.SurName.Length)
-                    .ToUpper()
-                    .PadRight(3-newEmployee.SurName.Length,'A');
-            }
-            newEmployee.EmployeeID = b + a;
-
-
             Console.WriteLine("\nPress 'Enter' to store entry, (C)hange or (E)xit");
             do
             {
@@ -149,15 +118,9 @@ namespace Vlaaieboer
                         break;
 
                     case ConsoleKey.Enter:
-                        
+
+                        newEmployee.WriteToFile(fileEmployees);
                        
-                        var options = new JsonSerializerOptions { WriteIndented = true };                   //TODO: refactor to method
-                        string jsonString = JsonSerializer.Serialize(newEmployee, options);
-                        
-                        using (StreamWriter sw = File.AppendText(fileEmployees))
-                        {
-                            sw.WriteLine(jsonString);
-                        }
                         return; //back to main menu
                         
 
