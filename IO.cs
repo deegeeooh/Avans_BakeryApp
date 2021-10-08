@@ -2,7 +2,7 @@
 using System.Text;
 using System.Threading;
 
-namespace EmployeeMaint
+namespace Vlaaieboer
 {
 
     class IO
@@ -13,7 +13,7 @@ namespace EmployeeMaint
             IO.Color(5);
             Console.WriteLine("\n\n=============================================================================");
             IO.Color(4);
-            Console.Write("Bakker Vlaaieboer"); Console.Write("{0:dd/MM/yyyy}".PadLeft(30, ' '), DateTime.Now);
+            Console.Write("Bakker Vlaaieboer & Zn."); Console.Write("{0:dd/MM/yyyy}".PadLeft(30, ' '), DateTime.Now);
             IO.Color(5);
             if (Password.validPassword)
             {

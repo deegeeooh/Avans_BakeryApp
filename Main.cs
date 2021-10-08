@@ -8,7 +8,7 @@ using System.IO;
 using System.Text.Json;
 
 
-namespace EmployeeMaint
+namespace Vlaaieboer
 {
     class Program
     {
@@ -100,11 +100,12 @@ namespace EmployeeMaint
         private static void Employees()                 // TODO: read & count records into array, display first record, browse and delete
         {
             
-            Employee newEmployee = new Employee();      // instantiate temp object of class Employee
+            
+            Employee newEmployee = new Employee();      // instantiate object of class Employee
             string dateHelpstring;                      // temp string which is filled from console input to
             DateTime parsedDateHelpstring;              // be parsed into valid DateTime string;
 
-            newEmployee.RecordCounter = 1;              
+            newEmployee.RecordCounter = 1;              // TODO: get recordcounter from # records in file when initialising program           
             newEmployee.SurName = IO.GetInput("Surname:",checkinputStringAlpha, 30, 45, true, true, true, true, 1);
             newEmployee.Prefix = IO.GetInput("Prefix", checkinputStringAlpha, 30, 35, true, true, true, true, 0);
             newEmployee.FirstName = IO.GetInput("First Name:",checkinputStringAlpha, 30, 30, true, true, true, true, 1);
@@ -168,11 +169,7 @@ namespace EmployeeMaint
 
             } while (inputKey.Key != ConsoleKey.E);
 
-            //
-            // TODO: opslaan record in array en wegschrijven in textfile
-            //
-            //
-
+            
         }
 
         private static void Customers()

@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{3CC5349A-6B02-4168-AAF1-92C83E7A4415}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Collections_Excercise</RootNamespace>
-    <AssemblyName>Employee</AssemblyName>
+    <RootNamespace>vlaaieboer</RootNamespace>
+    <AssemblyName>vlaaieboer</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -71,7 +71,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Customer.cs" />
     <Compile Include="Classes.cs" />
+    <Compile Include="Employee.cs" />
     <Compile Include="IO.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
