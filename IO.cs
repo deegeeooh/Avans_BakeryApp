@@ -90,7 +90,7 @@ namespace Vlaaieboer
             int cursorLeft = Console.CursorLeft;                                    // store current cursorposition, left and top  
             int cursorTop = Console.CursorTop;                                      // TODO: Why doesn't Console.GetCursorPosition exist/Work? (see MS docs https://docs.microsoft.com/en-us/dotnet/api/system.console.getcursorposition?view=net-5.0 )
             StringBuilder inputStringbuilder = new StringBuilder();                 // stringbuilder to append the single input characters to
-            StringBuilder inputStringbuilderNoShow = new StringBuilder();           // helper string for passwords
+            StringBuilder inputStringbuilderNoShow = new StringBuilder();           // helper string for no show input (passwords)
             ConsoleKeyInfo inp = new ConsoleKeyInfo();
             int indexInStringbuilder = 1;
             string returnString;

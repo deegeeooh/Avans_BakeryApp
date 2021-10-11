@@ -20,21 +20,18 @@ namespace Vlaaieboer
         static string fileCustomers = "customers.json";
         static string fileEmployeeRoles = "employeeRoles.json";
 
-
         static void Main(string[] args)
         {
             //initialize variables
             // Prevent example from ending if CTL+C is pressed.
-            // Console.TreatControlCAsInput = true;                                         // doesn't seem to work correctly
+            // Console.TreatControlCAsInput = true;                                         // doesn't seem to work correctly ?
 
             // init console window properties
-            
             Console.Title = "Avans C# Console Application exercise";
             Console.SetWindowSize(80, 35);
-            //Console.SetWindowPosition(11, 9);
+            //Console.SetWindowPosition(11, 9);                     //TODO: figure out SetWindowsPosition
             IO.Color(5);
             Console.Clear();
-            
 
             do
             {
@@ -57,9 +54,8 @@ namespace Vlaaieboer
 
             if (inputKey.Key == ConsoleKey.L || !Login.validPassword & inputKey.Key != ConsoleKey.Escape)
             {
+                _ = new Login();
 
-                Login login = new Login();
-               
             }
             else if (inputKey.Key == ConsoleKey.E & Login.validPassword)             // Employees
             {
@@ -69,6 +65,7 @@ namespace Vlaaieboer
             else if (inputKey.Key == ConsoleKey.C & Login.validPassword)             // Customers
             {
                 IO.DisplayMenu("Edit Customer master data", "(A)dd\nArrows to browse\n(Del)ete\n");
+                Customers();
                 
             }
             else if (inputKey.Key == ConsoleKey.D & Login.validPassword)             // delete record
@@ -86,8 +83,8 @@ namespace Vlaaieboer
 
         private static void Employees()                 // TODO: read & count records into array, display first record, browse and delete
         {
-            
-            Employee newEmployee = new Employee(true, false);        // instantiate object of class Employee by calling constructor method 
+
+            Employee newEmployee = new Employee();        // instantiate object of class Employee by calling constructor method 
 
             IO.PrintOnConsole("Age: " + newEmployee.CalculateAge().ToString(), 34, 1);
 
@@ -105,7 +102,7 @@ namespace Vlaaieboer
 
                     case ConsoleKey.Enter:
 
-                        newEmployee.WriteToFile(fileEmployees);
+                        //newEmployee.WriteToFile(fileEmployees);
                        
                         return; //back to main menu
                         
@@ -123,6 +120,7 @@ namespace Vlaaieboer
 
         private static void Customers()
         {
+            Customer newCustomer = new Customer();
 
         }
         
