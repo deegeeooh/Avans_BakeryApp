@@ -12,22 +12,29 @@ namespace Vlaaieboer
     {
 
         // intialize field parameters
-        int surnameMaxLenght = 45; int surnameMinLenght = 1;
-        int prefixMaxLength = 35; int prefixMinLenght = 0;
-        int firstnameMaxLength = 30; int firstnameMinLength = 1;
-        int doBMaxLength = 10; int doBMinLenght = 10;
-        int addressMaxLenght = 45; int addressMinLenght = 0;
-        int zipCodeMaxLenght = 6; int zipCodeMinLength = 0;
-        int cityMaxLenght = 45; int cityMinLenght = 0;
-        int telMaxLenght = 14; int telMinLenght = 0;
-        int emailMaxLenght = 50; int emailMinLength = 1;
+        readonly int surnameMaxLenght = 45; readonly int surnameMinLenght = 1;
+        readonly int prefixMaxLength = 35; readonly int prefixMinLenght = 0;
+        readonly int firstnameMaxLength = 30; readonly int firstnameMinLength = 1;
+        readonly int doBMaxLength = 10; readonly int doBMinLenght = 10;
+        readonly int addressMaxLenght = 45; readonly int addressMinLenght = 0;
+        readonly int zipCodeMaxLenght = 6; readonly int zipCodeMinLength = 0;
+        readonly int cityMaxLenght = 45; readonly int cityMinLenght = 0;
+        readonly int telMaxLenght = 14; readonly int telMinLenght = 0;
+        readonly int emailMaxLenght = 50; readonly int emailMinLength = 1;
+        // input validation strings
+        readonly string checkinputStringAlpha = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789//-@| .,_";
+        readonly string checkinputStringDate = "0123456789/-";
+        // public accessible total record counter
+        public static int totalRecords = 0;
+
+        //private string firstName;
 
         /*
 
         {get; set;} is shorthand for:
 
-        private string name;                // this is the field
-        public String Name                  // this is the property (which is why it has a Capital, it's not a variable
+        private string name;                // this is the variable
+        public String Name                  // this is a class property (which is why it has a Capital, it's not a variable
         {
             get
             {
@@ -52,17 +59,14 @@ namespace Vlaaieboer
         public string City { get; set; }
         public string Telephone { get; set; }
         public string Email { get; set; }
-        public int SurnameMaxLenght { get => surnameMaxLenght; set => surnameMaxLenght = value; }
 
         public Employee(bool getInputFromConsole, bool readFromFile)           // Constructor method; gets executed whenever we call '= new Employee()'
         {
             if (getInputFromConsole)
             {
-                string checkinputStringAlpha = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789//-@| .,_";
-                string checkinputStringDate = "0123456789/-";
-                
+                                
                 RecordCounter = 1;              // TODO: get recordcounter from # records in file when initialising program           
-                SurName = IO.GetInput("Surname:", checkinputStringAlpha, 30, SurnameMaxLenght, true, true, true, true, surnameMinLenght);
+                SurName = IO.GetInput("Surname:", checkinputStringAlpha, 30, surnameMaxLenght, true, true, true, true, surnameMinLenght);
                 Prefix = IO.GetInput("Prefix", checkinputStringAlpha, 30, prefixMaxLength, true, true, true, true, prefixMinLenght);
                 FirstName = IO.GetInput("First Name:", checkinputStringAlpha, 30, firstnameMaxLength, true, true, true, true, firstnameMinLength);
                 DateOfBirth= ParseToDateTime(IO.GetInput("Date of Birth (dd/mm/yyyy):",checkinputStringDate, 30, doBMaxLength, true, true, false, true, doBMinLenght));
@@ -87,48 +91,43 @@ namespace Vlaaieboer
                 }
                 EmployeeID = b + a;
             }
-           
         }
 
         public void WriteToFile(string aFilename)
         {
-            var options = new JsonSerializerOptions { WriteIndented = true };                   
-            string jsonString = JsonSerializer.Serialize(this, options);
-
-            using (StreamWriter sw = File.AppendText(aFilename))
+            try
             {
-                sw.WriteLine(jsonString);
+                var options = new JsonSerializerOptions { WriteIndented = true };
+                string jsonString = JsonSerializer.Serialize(this, options);
+
+                using (StreamWriter sw = File.AppendText(aFilename))
+                {
+                    sw.WriteLine(jsonString);
+                }
+            }
+            catch (Exception)
+            {
+                IO.PrintOnConsole($"Error opening file {aFilename}", 1, 34);
             }
         }
 
         public int CalculateAge()
         {
-            // calculate age
-
-            try
+            var age = DateTime.Today.Year - DateOfBirth.Year;                   // not taking date into account eg. 2021-1997
+            int nowMonthandDay = int.Parse(DateTime.Now.ToString("MMdd"));      // convert month and day to int
+            int thenMonthandDay = int.Parse(DateOfBirth.ToString("MMdd"));
+            if (nowMonthandDay < thenMonthandDay)
             {
-                var age = DateTime.Today.Year - DateOfBirth.Year;                   // not taking date into account eg. 2021-1997
-                int nowMonthandDay = int.Parse(DateTime.Now.ToString("MMdd"));      // convert month and day to int
-                int thenMonthandDay = int.Parse(DateOfBirth.ToString("MMdd"));
-                // Console.WriteLine("Now {0} and then {1}", nowMonthandDay, thenMonthandDay);
-                if (nowMonthandDay < thenMonthandDay)
-                {
-                    age--;                                                          // if current date (in MMdd) < date of birth subtract 1 year
-                }
-                //
-                return age;
+                age--;                                                          // if current date (in MMdd) < date of birth subtract 1 year
             }
-            catch (Exception)
-            {
-                throw;
-            }
-            
+            //
+            return age;
         }
 
-        private static DateTime ParseToDateTime(string aDateHelpstring)
+        private static DateTime ParseToDateTime(string aDateString)
         {
             DateTime parsedDateHelpstring;
-            if (DateTime.TryParse(aDateHelpstring, out parsedDateHelpstring))   // Tryparse method passing back two values: bool and out var
+            if (DateTime.TryParse(aDateString, out parsedDateHelpstring))   // Tryparse method passing back two values: bool and out var
             {
                 IO.PrintOnConsole($"Parsed date string succesfully to {parsedDateHelpstring:dd-MM-yyyy}", 1, 34);
             }

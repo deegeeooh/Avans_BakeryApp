@@ -13,10 +13,10 @@ namespace Vlaaieboer
         public string Description { get; set; }
     }
 
-    class Password
-    {
-        public static string passWord = "bakker";
-        public static bool validPassword;
-    }
+    //class Password
+    //{
+    //    public static string passWord = "bakker";
+    //    public static bool validPassword;
+    //}
     
 }

@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{3CC5349A-6B02-4168-AAF1-92C83E7A4415}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>vlaaieboer</RootNamespace>
+    <RootNamespace>Vlaaieboer</RootNamespace>
     <AssemblyName>vlaaieboer</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -71,6 +71,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Login.cs" />
     <Compile Include="Customer.cs" />
     <Compile Include="Classes.cs" />
     <Compile Include="Employee.cs" />

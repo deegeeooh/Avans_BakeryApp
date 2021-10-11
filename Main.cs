@@ -13,10 +13,9 @@ namespace Vlaaieboer
     class Program
     {
         // declare variables 
-        
-        public static ConsoleKeyInfo inputKey = new ConsoleKeyInfo();
-        static string checkinputStringAlpha = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789//-@| .,_";
-        static string checkinputStringDate = "0123456789/-";
+        static ConsoleKeyInfo inputKey = new ConsoleKeyInfo();
+        //static string checkinputStringAlpha = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789//-@| .,_";
+        //static string checkinputStringDate = "0123456789/-";
         static string fileEmployees = "employee.json";
         static string fileCustomers = "customers.json";
         static string fileEmployeeRoles = "employeeRoles.json";
@@ -30,7 +29,7 @@ namespace Vlaaieboer
 
             // init console window properties
             
-            Console.Title = "Console Collections v0.1_alpha";
+            Console.Title = "Avans C# Console Application exercise";
             Console.SetWindowSize(80, 35);
             //Console.SetWindowPosition(11, 9);
             IO.Color(5);
@@ -56,35 +55,23 @@ namespace Vlaaieboer
             //inputKey = Console.ReadKey(true);               // 'true' | dont'display the input on the console
             //if ((inputKey.Modifiers & ConsoleModifiers.Control) != 0) { Console.Write("Control+"); }
 
-            if (inputKey.Key == ConsoleKey.L || !Password.validPassword & inputKey.Key != ConsoleKey.Escape)
+            if (inputKey.Key == ConsoleKey.L || !Login.validPassword & inputKey.Key != ConsoleKey.Escape)
             {
-                string passWordInput = IO.GetInput("Enter password: ", checkinputStringAlpha + "!#$%^&*", 18, 56, true, false, false, true, 0);
 
-                if (passWordInput == Password.passWord)
-                {
-                    Password.validPassword = true;
-                    IO.PrintOnConsole("You have been logged in succesfully", 1, 34);
-                    Thread.Sleep(500);
-                    return;                             // exit if statement
-                }
-                else
-                {
-                    Console.WriteLine("Invalid password");
-                    Password.validPassword = false;
-                    Thread.Sleep(500);
-                }
+                Login login = new Login();
+               
             }
-            else if (inputKey.Key == ConsoleKey.E & Password.validPassword)             // Employees
+            else if (inputKey.Key == ConsoleKey.E & Login.validPassword)             // Employees
             {
                 IO.DisplayMenu("Edit Employee master data", "(Ins)ert to Add\n(Enter)to Edit\n(Del)ete to remove Record\nUse arrow keys to browse\n");
                 Employees();
             }
-            else if (inputKey.Key == ConsoleKey.C & Password.validPassword)             // Customers
+            else if (inputKey.Key == ConsoleKey.C & Login.validPassword)             // Customers
             {
                 IO.DisplayMenu("Edit Customer master data", "(A)dd\nArrows to browse\n(Del)ete\n");
                 
             }
-            else if (inputKey.Key == ConsoleKey.D & Password.validPassword)             // delete record
+            else if (inputKey.Key == ConsoleKey.D & Login.validPassword)             // delete record
             {
                 Console.WriteLine("  You Pressed D");
                 
@@ -104,7 +91,6 @@ namespace Vlaaieboer
 
             IO.PrintOnConsole("Age: " + newEmployee.CalculateAge().ToString(), 34, 1);
 
-            
             Console.WriteLine("\nPress 'Enter' to store entry, (C)hange or (E)xit");
             do
             {

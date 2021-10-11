@@ -15,7 +15,7 @@ namespace Vlaaieboer
             IO.Color(4);
             Console.Write("Bakker Vlaaieboer & Zn."); Console.Write("{0:dd/MM/yyyy}".PadLeft(30, ' '), DateTime.Now);
             IO.Color(5);
-            if (Password.validPassword)
+            if (Login.validPassword)
             {
                 IO.Color(1); Console.Write("* Logged in *".PadLeft(25, ' ')); IO.Color(4);
             }
