@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Text.Json;
+//using System.Text.Json;
+using Newtonsoft.Json;
 using System.IO;
 
 namespace Vlaaieboer
@@ -20,12 +21,17 @@ namespace Vlaaieboer
         readonly int zipCodeMaxLenght = 6; readonly int zipCodeMinLength = 0;
         readonly int cityMaxLenght = 45; readonly int cityMinLenght = 0;
         readonly int telMaxLenght = 14; readonly int telMinLenght = 0;
-        readonly int emailMaxLenght = 50; readonly int emailMinLength = 1;
+        readonly int emailMaxLenght = 45; readonly int emailMinLength = 1;
+        readonly int lengthQuestionField = 30;
         // input validation strings
         readonly string checkinputStringAlpha = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789//-@| .,_";
         readonly string checkinputStringDate = "0123456789/-";
         // public accessible total record counter
         public static int totalRecords = 0;
+        readonly string fileEmployees = "employee.json";
+
+        // TODO: can't use list here
+        List<Employee> employees = new List<Employee>();
 
         //private string firstName;
 
@@ -60,56 +66,96 @@ namespace Vlaaieboer
         public string Telephone { get; set; }
         public string Email { get; set; }
 
-        public Employee(bool getInputFromConsole, bool readFromFile)           // Constructor method; gets executed whenever we call '= new Employee()'
+        public Employee()           // Constructor method; gets executed whenever we call '= new Employee()'
         {
-            if (getInputFromConsole)
-            {
-                                
-                RecordCounter = 1;              // TODO: get recordcounter from # records in file when initialising program           
-                SurName = IO.GetInput("Surname:", checkinputStringAlpha, 30, surnameMaxLenght, true, true, true, true, surnameMinLenght);
-                Prefix = IO.GetInput("Prefix", checkinputStringAlpha, 30, prefixMaxLength, true, true, true, true, prefixMinLenght);
-                FirstName = IO.GetInput("First Name:", checkinputStringAlpha, 30, firstnameMaxLength, true, true, true, true, firstnameMinLength);
-                DateOfBirth= ParseToDateTime(IO.GetInput("Date of Birth (dd/mm/yyyy):",checkinputStringDate, 30, doBMaxLength, true, true, false, true, doBMinLenght));
-                Address = IO.GetInput("Address:", checkinputStringAlpha, 30, addressMaxLenght, true, true, true, true, addressMinLenght);
-                Zipcode = IO.GetInput("Zipcode: (####ZZ)", checkinputStringAlpha, 30, zipCodeMaxLenght, true, true, true, true, zipCodeMinLength);
-                City = IO.GetInput("City:", checkinputStringAlpha, 30, cityMaxLenght, true, true, true, true, cityMinLenght);
-                Telephone = IO.GetInput("Telephone:", "0123456789+-", 30, telMaxLenght, true, true, true, true, telMinLenght);
-                Email = IO.GetInput("Email:", checkinputStringAlpha, 30, emailMaxLenght, true, true, true, true, emailMinLength);
 
-                // construct unique employee ID
-                string a = RecordCounter.ToString("D5");        // make a string consisting of 5 decimals
-                string b;
-                if (SurName.Length >= 3)
-                {
-                    b = SurName.Substring(0, 3).ToUpper();      // take first 3 chars in uppercase
-                }
-                else
-                {
-                    b = SurName.Substring(0, SurName.Length)    // or build to 3 chars with added "A" chars
-                        .ToUpper()
-                        .PadRight(3 - SurName.Length, 'A');
-                }
-                EmployeeID = b + a;
+            // ReadFromFile(fileEmployees);
+            totalRecords++;                                
+            
+            RecordCounter = totalRecords;             
+            SurName = IO.GetInput("Surname:", checkinputStringAlpha, lengthQuestionField, surnameMaxLenght, true, true, true, true, surnameMinLenght);
+            Prefix = IO.GetInput("Prefix", checkinputStringAlpha, lengthQuestionField, prefixMaxLength, true, true, true, true, prefixMinLenght);
+            FirstName = IO.GetInput("First Name:", checkinputStringAlpha, lengthQuestionField, firstnameMaxLength, true, true, true, true, firstnameMinLength);
+            DateOfBirth = ParseToDateTime(IO.GetInput("Date of Birth (dd/mm/yyyy):", checkinputStringDate, lengthQuestionField, doBMaxLength, true, true, false, true, doBMinLenght));
+            Address = IO.GetInput("Address:", checkinputStringAlpha, lengthQuestionField, addressMaxLenght, true, true, true, true, addressMinLenght);
+            Zipcode = IO.GetInput("Zipcode: (####ZZ)", checkinputStringAlpha, lengthQuestionField, zipCodeMaxLenght, true, true, true, true, zipCodeMinLength);
+            City = IO.GetInput("City:", checkinputStringAlpha, lengthQuestionField, cityMaxLenght, true, true, true, true, cityMinLenght);
+            Telephone = IO.GetInput("Telephone:", "0123456789+-", lengthQuestionField, telMaxLenght, true, true, true, true, telMinLenght);
+            Email = IO.GetInput("Email:", checkinputStringAlpha, lengthQuestionField, emailMaxLenght, true, true, true, true, emailMinLength);
+
+            // construct unique employee ID
+            string a = RecordCounter.ToString("D5");        // make a string consisting of 5 decimals
+            string b;
+            if (SurName.Length >= 3)
+            {
+                b = SurName.Substring(0, 3).ToUpper();      // take first 3 chars in uppercase
             }
+            else
+            {
+                b = SurName.Substring(0, SurName.Length)    // or build to 3 chars with added "A" chars
+                    .ToUpper()
+                    .PadRight(3 - SurName.Length, 'A');
+            }
+            
+            EmployeeID = b + a;
+               
+            // employees.Add(this);
+
+            
+
+            //var count = employees.Count();
+            //IO.PrintOnConsole(count.ToString(), 1, 34);
+            //Console.ReadKey();
+            //WriteToFile(fileEmployees);
+           
         }
 
         public void WriteToFile(string aFilename)
         {
             try
             {
-                var options = new JsonSerializerOptions { WriteIndented = true };
-                string jsonString = JsonSerializer.Serialize(this, options);
 
-                using (StreamWriter sw = File.AppendText(aFilename))
-                {
-                    sw.WriteLine(jsonString);
-                }
+                //var options = new JsonSerializerOptions { WriteIndented = true };
+                string jsonString = JsonConvert.SerializeObject(employees);
+                //Console.Clear();
+                //Console.Write(jsonString);
+                //Console.ReadKey();
+               // File.WriteAllText(aFilename, jsonString);
+                
+                //using (StreamWriter sw = File.WriteAllText(aFilename, jsonString))
+                //{
+                //    sw.WriteLine(jsonString);
+                //}
+
+            }
+            catch (Exception e)
+            {
+                IO.PrintOnConsole($"Error opening file {aFilename} {e}", 1, 34);
+            }
+        }
+
+        public void ReadFromFile(string aFilename)
+        {
+            try
+            {
+                string json = System.IO.File.ReadAllText(aFilename);
+                employees = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Employee>>(json);
+                var count = employees.Count();
+                totalRecords = count;
+                IO.PrintOnConsole(count.ToString(), 1, 34);
+                Console.ReadKey();
+
             }
             catch (Exception)
             {
-                IO.PrintOnConsole($"Error opening file {aFilename}", 1, 34);
+                IO.PrintOnConsole("Error reading from file", 1, 34);
+                totalRecords = 0;
+                //Console.ReadKey();
+                
             }
+
         }
+
 
         public int CalculateAge()
         {
