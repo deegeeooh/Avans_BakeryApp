@@ -1,20 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Threading;
-using Newtonsoft.Json;
-
-    
-
-
 
 namespace Vlaaieboer
 {
-    class Program
+    internal class Program
     {
         // declare variables
         private static ConsoleKeyInfo inputKey = new ConsoleKeyInfo();
-              
+
         private static string fileEmployees = "employees.json";
         private static string fileCustomers = "customers.json";
         private static string fileEmployeeRoles = "employeeRoles.json";
@@ -75,15 +68,13 @@ namespace Vlaaieboer
 
         private static void Employees()                 // TODO: read & count records into array, display first record, browse and delete
         {
-
             // var employeeList = new List<Employee>();
             var employeeList = Employee.PopulateList(fileEmployees);
-            
+
             employeeList.Add(new Employee(true));
-            
-                        
+
             Employee.WriteToFile(fileEmployees, employeeList);
-            
+
             // IO.PrintOnConsole("Age: " + newEmployee.CalculateAge().ToString(), 34, 1);
 
             Console.WriteLine("\nPress 'Enter' to store entry, (C)hange or (E)xit");
@@ -124,8 +115,6 @@ namespace Vlaaieboer
 
         //    return customers;
         //}
-
-
 
         private static void Customers()
         {

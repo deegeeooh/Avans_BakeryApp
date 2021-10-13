@@ -70,7 +70,7 @@ namespace Vlaaieboer
             }
         }
 
-        public static string GetInput(string displayString,          // string to display
+        public static string GetInput(string fieldName,          // string to display
                                       string checkinputString,       // accepted input
                                       int lengthQuestionField,       // field width displays string
                                       int lengthInputField,          // field width input field
@@ -101,11 +101,7 @@ namespace Vlaaieboer
 
             if (showBoundaries)
             {
-                IO.Color(4);
-                Console.Write(displayString.PadRight(lengthQuestionField, ' '));
-                Console.Write("|".PadRight(lengthInputField + 1, ' ') + "|");           // print input field boundaries
-                Console.SetCursorPosition(lengthQuestionField + 1, cursorTop);                   // reset cursorposition to beginning of the input field
-                IO.Color(1);
+                PrintBoundaries(fieldName, "", lengthQuestionField, lengthInputField, cursorTop);
             }
 
             do
@@ -232,6 +228,22 @@ namespace Vlaaieboer
             IO.Color(5);
             return returnString;
 
+        }
+
+        public static void PrintBoundaries(string displayString, string fieldValue, int lengthQuestionField, int lengthInputField, int cursorTop)
+        {
+            IO.Color(4);
+            Console.Write(displayString.PadRight(lengthQuestionField, ' '));
+            if (fieldValue != "")
+            {
+                Console.Write("|".PadRight(lengthInputField + 1, ' ') + "|");            // print input field boundaries
+            }
+            else                                                                         // if an existing field value is passed on, print that
+            {
+                Console.Write("|"+ fieldValue.PadRight((lengthInputField + 1)- fieldValue.Length, ' ') + "|");
+            }
+            Console.SetCursorPosition(lengthQuestionField + 1, cursorTop);                // reset cursorposition to beginning of the input field
+            IO.Color(1);
         }
 
         public static void Checkfieldlength(int lengthInputField, int indexInStringbuilder)
