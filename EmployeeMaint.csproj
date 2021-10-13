@@ -74,6 +74,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Products.cs" />
     <Compile Include="Login.cs" />
     <Compile Include="Customer.cs" />
     <Compile Include="Classes.cs" />

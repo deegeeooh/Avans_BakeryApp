@@ -1,26 +1,25 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
 using System.IO;
-using System.Text.Json;
+using System.Threading;
+using Newtonsoft.Json;
+
+    
+
 
 
 namespace Vlaaieboer
 {
     class Program
     {
-        // declare variables 
-        static ConsoleKeyInfo inputKey = new ConsoleKeyInfo();
-        //static string checkinputStringAlpha = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789//-@| .,_";
-        //static string checkinputStringDate = "0123456789/-";
-        static string fileEmployees = "employee.json";
-        static string fileCustomers = "customers.json";
-        static string fileEmployeeRoles = "employeeRoles.json";
+        // declare variables
+        private static ConsoleKeyInfo inputKey = new ConsoleKeyInfo();
+              
+        private static string fileEmployees = "employees.json";
+        private static string fileCustomers = "customers.json";
+        private static string fileEmployeeRoles = "employeeRoles.json";
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             //initialize variables
             // Prevent example from ending if CTL+C is pressed.
@@ -35,11 +34,9 @@ namespace Vlaaieboer
 
             do
             {
-                IO.DisplayMenu("Main Menu", "(L)ogin\n(E)mployees\n(C)ustomers\n");
+                IO.DisplayMenu("Main Menu", "(L)ogin\n(E)mployees\n(C)ustomers\n(P)roducts\n(M)asterdata");
                 inputKey = Console.ReadKey(true);               // 'true' | dont'display the input on the console
                 CheckMenuInput();
-
-
             } while (inputKey.Key != ConsoleKey.Escape);
 
             Console.WriteLine("\n\nYou have been logged out.. Goodbye!");
@@ -55,7 +52,6 @@ namespace Vlaaieboer
             if (inputKey.Key == ConsoleKey.L || !Login.validPassword & inputKey.Key != ConsoleKey.Escape)
             {
                 _ = new Login();
-
             }
             else if (inputKey.Key == ConsoleKey.E & Login.validPassword)             // Employees
             {
@@ -66,27 +62,29 @@ namespace Vlaaieboer
             {
                 IO.DisplayMenu("Edit Customer master data", "(A)dd\nArrows to browse\n(Del)ete\n");
                 Customers();
-                
             }
             else if (inputKey.Key == ConsoleKey.D & Login.validPassword)             // delete record
             {
                 Console.WriteLine("  You Pressed D");
-                
             }
             else if (inputKey.Key == ConsoleKey.Escape)                                 // exit program
             {
                 return;
-
             }
-
         }
 
         private static void Employees()                 // TODO: read & count records into array, display first record, browse and delete
         {
 
-            Employee newEmployee = new Employee();        // instantiate object of class Employee by calling constructor method 
-
-            IO.PrintOnConsole("Age: " + newEmployee.CalculateAge().ToString(), 34, 1);
+            // var employeeList = new List<Employee>();
+            var employeeList = Employee.PopulateList(fileEmployees);
+            
+            employeeList.Add(new Employee(true));
+            
+                        
+            Employee.WriteToFile(fileEmployees, employeeList);
+            
+            // IO.PrintOnConsole("Age: " + newEmployee.CalculateAge().ToString(), 34, 1);
 
             Console.WriteLine("\nPress 'Enter' to store entry, (C)hange or (E)xit");
             do
@@ -96,34 +94,42 @@ namespace Vlaaieboer
                 switch (inputKey.Key)
                 {
                     case ConsoleKey.C:
-                        IO.DisplayMenu("Add Record", "(L)ogin\n(A)dd Employee\n(V)iew Employees\n(D)elete Employee\n");
-                        Employees();
+                        //IO.DisplayMenu("Add Record", "(L)ogin\n(A)dd Employee\n(V)iew Employees\n(D)elete Employee\n");
+                        //Employees();
                         break;
 
-                    case ConsoleKey.Enter:
+                    case ConsoleKey.Enter:                  // save record to file
 
-                        //newEmployee.WriteToFile(fileEmployees);
-                       
                         return; //back to main menu
-                        
 
                     default:
 
                         break;
                 }
-
-
             } while (inputKey.Key != ConsoleKey.E);
-
-            
         }
+
+        //static List<Employee> ExampleOneSimpleClassObject()
+        //{
+        //    string filename = fileEmployees;
+        //    var customers = new List<Employee>();
+
+        //    if (File.Exists(filename))
+        //    {
+        //        customers = JsonConvert.DeserializeObject<List<Employee>>
+        //            (File.ReadAllText(filename));
+
+        //        return customers;
+        //    }
+
+        //    return customers;
+        //}
+
+
 
         private static void Customers()
         {
             Customer newCustomer = new Customer();
-
         }
-        
     }
-
 }

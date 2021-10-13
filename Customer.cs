@@ -16,9 +16,9 @@ namespace Vlaaieboer
         readonly int telMaxLenght = 45; readonly int telMinLenght = 0;
         readonly int emailMaxLenght = 45; readonly int emailMinLenght = 1;
         readonly int lengthQuestionField = 30;
-        static int totalRecords = 0;
-
         readonly string checkinputStringAlpha = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789//-@| .,_";
+
+        static int totalRecords = 0;            // public accessible recordcounter
 
         public int RecordCounter { get; set; }
         public string CustomerID { get; set; }
@@ -32,7 +32,7 @@ namespace Vlaaieboer
         public Customer()
         {
             // TODO: Getinput customer
-            RecordCounter = 1;          // TODO read from file
+            RecordCounter++;         // TODO read from file
             Name = IO.GetInput("Name: ", checkinputStringAlpha, lengthQuestionField, nameMaxLenght, true, true, true, true, nameMinLenght);
             Address = IO.GetInput("Adress: ", checkinputStringAlpha, lengthQuestionField, addressMaxLenght, true, true, true, true, addressMinLenght);
             Zipcode = IO.GetInput("Zipcode: ", checkinputStringAlpha, lengthQuestionField, zipMaxLenght, true, true, true, true, zipMinLenght);
