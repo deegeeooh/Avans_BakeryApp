@@ -70,7 +70,8 @@ namespace Vlaaieboer
             }
         }
 
-        public static string GetInput(string fieldName,          // string to display
+        public static string GetInput(string fieldName,              // string to display
+                                      string fieldValue,             // string value for editing
                                       string checkinputString,       // accepted input
                                       int lengthQuestionField,       // field width displays string
                                       int lengthInputField,          // field width input field
@@ -87,21 +88,27 @@ namespace Vlaaieboer
 
             // declare local variables
 
-            int cursorLeft = Console.CursorLeft;                                    // store current cursorposition, left and top  
-            int cursorTop = Console.CursorTop;                                      // TODO: Why doesn't Console.GetCursorPosition exist/Work? (see MS docs https://docs.microsoft.com/en-us/dotnet/api/system.console.getcursorposition?view=net-5.0 )
-            StringBuilder inputStringbuilder = new StringBuilder();                 // stringbuilder to append the single input characters to
-            StringBuilder inputStringbuilderNoShow = new StringBuilder();           // helper string for no show input (passwords)
+            int cursorLeft = Console.CursorLeft;                           // store current cursorposition, left and top  
+            int cursorTop = Console.CursorTop;                             // TODO: Why doesn't Console.GetCursorPosition exist/Work? (see MS docs https://docs.microsoft.com/en-us/dotnet/api/system.console.getcursorposition?view=net-5.0 )
+            StringBuilder inputStringbuilder = new StringBuilder();        // stringbuilder to append the single input characters to
+            StringBuilder inputStringbuilderNoShow = new StringBuilder();  // helper string for no show input (passwords)
             ConsoleKeyInfo inp = new ConsoleKeyInfo();
             int indexInStringbuilder = 1;
             string returnString;
             bool checkedValidLength = false;
             
 
+
+            if (fieldValue != "")                                          // if a edit value is given, assign to inputStringbuilder and print it
+            {
+                inputStringbuilder.Append(fieldValue);                                  
+                PrintInputString(showInput, false, inputStringbuilder, inputStringbuilderNoShow);
+            }
             // display field boundaries with padded spaces
 
             if (showBoundaries)
             {
-                PrintBoundaries(fieldName, "", lengthQuestionField, lengthInputField, cursorTop);
+                PrintBoundaries(fieldName, fieldValue, lengthQuestionField, lengthInputField, cursorTop);
             }
 
             do
@@ -114,12 +121,13 @@ namespace Vlaaieboer
                     if (checkinputString.Contains(inp.KeyChar.ToString()) & indexInStringbuilder <= lengthInputField)         // only accept valid characters other than functions
 
                     {
+
                         indexInStringbuilder++;
                         Checkfieldlength(lengthInputField, indexInStringbuilder - 1);
                         inputStringbuilder.Append(inp.KeyChar);
                         inputStringbuilderNoShow.Append("*");
                         Console.SetCursorPosition(lengthQuestionField + 1, cursorTop);      // position cursor at start inputfield
-
+                        IO.Color(1);
                         PrintInputString(showInput, false, inputStringbuilder, inputStringbuilderNoShow);
 
                     }
@@ -181,10 +189,10 @@ namespace Vlaaieboer
 
                     else if (inp.Key == ConsoleKey.Escape)
                     {
-                        IO.PrintOnConsole("Do you want to stop editing this record?", 1, 34);
-                        var respons = IO.GetInput("", "YyNn", 0, 1, false, true, true, false, 1);
-
-                        Console.ReadKey();
+                        break; 
+                        //IO.PrintOnConsole("Do you want to stop editing this record?", 1, 34);
+                        //var respons = IO.GetInput("", "", "YyNn", 0, 1, false, true, true, false, 1);
+                        //Console.ReadKey();
                     }
 
                 } while (inp.Key != ConsoleKey.Enter);
@@ -198,7 +206,7 @@ namespace Vlaaieboer
                 {
                     IO.Color(3);
                     IO.PrintOnConsole("Field cannot be empty", 1, 1);
-                    IO.Color(1);
+                    IO.Color(5);
                 }
 
             } while (!checkedValidLength);
@@ -234,16 +242,16 @@ namespace Vlaaieboer
         {
             IO.Color(4);
             Console.Write(displayString.PadRight(lengthQuestionField, ' '));
-            if (fieldValue != "")
+            if (fieldValue == "")
             {
                 Console.Write("|".PadRight(lengthInputField + 1, ' ') + "|");            // print input field boundaries
             }
             else                                                                         // if an existing field value is passed on, print that
             {
-                Console.Write("|"+ fieldValue.PadRight((lengthInputField + 1)- fieldValue.Length, ' ') + "|");
+                Console.Write("|"+ fieldValue.PadRight(lengthInputField, ' ') + "|");
             }
             Console.SetCursorPosition(lengthQuestionField + 1, cursorTop);                // reset cursorposition to beginning of the input field
-            IO.Color(1);
+            IO.Color(5);
         }
 
         public static void Checkfieldlength(int lengthInputField, int indexInStringbuilder)
@@ -252,7 +260,7 @@ namespace Vlaaieboer
             {
                 IO.Color(3);
                 IO.PrintOnConsole("Max field length", 1, 1);
-                IO.Color(1);
+                IO.Color(5);
             }
             else
             {

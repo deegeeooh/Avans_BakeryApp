@@ -14,7 +14,7 @@ namespace Vlaaieboer
 
         public Login()
         {
-            string passWordInput = IO.GetInput("Enter password: ", checkInputString, 18, 56, true, false, false, true, 0);
+            string passWordInput = IO.GetInput("Enter password: ", "", checkInputString, 18, 56, true, false, false, true, 0);
 
             if (passWordInput == this.passWord)
             {
@@ -30,6 +30,7 @@ namespace Vlaaieboer
                 //Log.validPassword = false;
                 Thread.Sleep(500);
             }
+
         }
     }
 

@@ -33,12 +33,12 @@ namespace Vlaaieboer
         {
             // TODO: Getinput customer
             RecordCounter++;         // TODO read from file
-            Name = IO.GetInput("Name: ", checkinputStringAlpha, lengthQuestionField, nameMaxLenght, true, true, true, true, nameMinLenght);
-            Address = IO.GetInput("Adress: ", checkinputStringAlpha, lengthQuestionField, addressMaxLenght, true, true, true, true, addressMinLenght);
-            Zipcode = IO.GetInput("Zipcode: ", checkinputStringAlpha, lengthQuestionField, zipMaxLenght, true, true, true, true, zipMinLenght);
-            City = IO.GetInput("City: ", checkinputStringAlpha, lengthQuestionField, cityMaxLenght, true, true, true, true, cityMinLenght);
-            Telephone = IO.GetInput("Telephone: ", checkinputStringAlpha, lengthQuestionField, telMaxLenght, true, true, true, true, telMinLenght);
-            Email = IO.GetInput("Email: ", checkinputStringAlpha, lengthQuestionField, emailMaxLenght, true, true, true, true, emailMinLenght);
+            Name = IO.GetInput("Name: ", "", checkinputStringAlpha, lengthQuestionField, nameMaxLenght, true, true, true, true, nameMinLenght);
+            Address = IO.GetInput("Adress: ", "", checkinputStringAlpha, lengthQuestionField, addressMaxLenght, true, true, true, true, addressMinLenght);
+            Zipcode = IO.GetInput("Zipcode: ", "", checkinputStringAlpha, lengthQuestionField, zipMaxLenght, true, true, true, true, zipMinLenght);
+            City = IO.GetInput("City: ", "", checkinputStringAlpha, lengthQuestionField, cityMaxLenght, true, true, true, true, cityMinLenght);
+            Telephone = IO.GetInput("Telephone: ", "", checkinputStringAlpha, lengthQuestionField, telMaxLenght, true, true, true, true, telMinLenght);
+            Email = IO.GetInput("Email: ", "", checkinputStringAlpha, lengthQuestionField, emailMaxLenght, true, true, true, true, emailMinLenght);
 
             // TODO: build customer ID
             // TODO; store record

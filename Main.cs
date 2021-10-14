@@ -71,9 +71,20 @@ namespace Vlaaieboer
             // var employeeList = new List<Employee>();
             var employeeList = Employee.PopulateList(fileEmployees);
 
-            employeeList.Add(new Employee(true));
+            int cursorLeft = Console.CursorLeft;                           // store current cursorposition, left and top
+            int cursorTop = Console.CursorTop;
+            int recordIndex = 0;
+            int maxRecords = 0;
 
-            Employee.WriteToFile(fileEmployees, employeeList);
+            if (employeeList.Count > 0)
+            {
+                maxRecords = employeeList.Count;
+                recordIndex = 1;
+                Employee.DisplayRecord(employeeList, recordIndex, false);
+            }
+
+            //employeeList.Add(new Employee(true));
+            //Employee.WriteToFile(fileEmployees, employeeList);
 
             // IO.PrintOnConsole("Age: " + newEmployee.CalculateAge().ToString(), 34, 1);
 
@@ -92,6 +103,38 @@ namespace Vlaaieboer
                     case ConsoleKey.Enter:                  // save record to file
 
                         return; //back to main menu
+
+                    case ConsoleKey.Insert:                 // add record
+
+                        //IO.DisplayMenu("Edit Customer master data", "Enter to validate field\nDel/Insert character\nArrow keys, Home, End to navigate\n");
+                        Console.SetCursorPosition(cursorLeft, cursorTop);
+                        Employee.DisplayRecord(employeeList, recordIndex, true);
+                        Console.SetCursorPosition(cursorLeft, cursorTop + 1);
+                        employeeList.Add(new Employee(true));
+                        Employee.WriteToFile(fileEmployees, employeeList);
+
+                        break;
+
+                    case ConsoleKey.LeftArrow:
+
+                        if (recordIndex > 1)
+                        {
+                            recordIndex--;
+                            Console.SetCursorPosition(cursorLeft, cursorTop);
+                            Employee.DisplayRecord(employeeList, recordIndex, false);
+                        }
+                        break;
+
+                    case ConsoleKey.RightArrow:
+
+                        if (recordIndex < maxRecords)
+                        {
+                            recordIndex++;
+                            Console.SetCursorPosition(cursorLeft, cursorTop);
+                            Employee.DisplayRecord(employeeList, recordIndex, false);
+                        }
+
+                        break;
 
                     default:
 
