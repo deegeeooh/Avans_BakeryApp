@@ -81,10 +81,14 @@ namespace Vlaaieboer
                 maxRecords = employeeList.Count;
                 recordIndex = 1;
                 Employee.DisplayRecord(employeeList, recordIndex, false);
+                IO.Color(2);
+                IO.PrintOnConsole("[" + maxRecords.ToString() + "] employee records", 30, 5);
+                IO.Color(5);
             }
-
-            //employeeList.Add(new Employee(true));
-            //Employee.WriteToFile(fileEmployees, employeeList);
+            else
+            {
+                Employee.DisplayRecord(employeeList, recordIndex, true);
+            }
 
             // IO.PrintOnConsole("Age: " + newEmployee.CalculateAge().ToString(), 34, 1);
 
