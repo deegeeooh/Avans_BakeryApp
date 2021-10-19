@@ -1,24 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Vlaaieboer
+﻿namespace Vlaaieboer
 {
-    class Customer
+    internal class Customer
     {
+        private static int nameMaxLenght = 45; private static int nameMinLenght = 1;
+        private static int addressMaxLenght = 45; private static int addressMinLenght = 1;
+        private static int zipMaxLenght = 45; private static int zipMinLenght = 1;
+        private static int cityMaxLenght = 45; private static int cityMinLenght = 1;
+        private static int telMaxLenght = 45; private static int telMinLenght = 0;
+        private static int emailMaxLenght = 45; private static int emailMinLenght = 1;
+        private static int lengthQuestionField = 30;
+        private static string checkinputStringAlpha = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789//-@| .,_";
 
-        readonly int nameMaxLenght = 45; readonly int nameMinLenght = 1;
-        readonly int addressMaxLenght = 45; readonly int addressMinLenght = 1;
-        readonly int zipMaxLenght = 45; readonly int zipMinLenght = 1;
-        readonly int cityMaxLenght = 45; readonly int cityMinLenght = 1;
-        readonly int telMaxLenght = 45; readonly int telMinLenght = 0;
-        readonly int emailMaxLenght = 45; readonly int emailMinLenght = 1;
-        readonly int lengthQuestionField = 30;
-        readonly string checkinputStringAlpha = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789//-@| .,_";
-
-        static int totalRecords = 0;            // public accessible recordcounter
+        private static int totalRecords = 0;            // public accessible recordcounter
 
         public int RecordCounter { get; set; }
         public string CustomerID { get; set; }
@@ -43,9 +36,6 @@ namespace Vlaaieboer
             // TODO: build customer ID
             // TODO; store record
             totalRecords++;
-
         }
-
-
     }
 }

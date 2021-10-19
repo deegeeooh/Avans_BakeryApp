@@ -6,10 +6,11 @@ using System.Threading;
 
 namespace Vlaaieboer
 {
-    internal class Employee 
+    internal class Employee
     {
         // intialize field parameters
         private static int surnameMaxLenght = 45; private static int surnameMinLenght = 1;
+
         private static int prefixMaxLength = 35; private static int prefixMinLenght = 0;
         private static int firstnameMaxLength = 30; private static int firstnameMinLength = 1;
         private static int doBMaxLength = 10; private static int doBMinLenght = 10;
@@ -27,6 +28,7 @@ namespace Vlaaieboer
 
         // public accessible total record counter
         public static int totalRecords = 0;
+
         private static String[] fieldNames = {"EmployeeID: ","Surname: " ,"Prefix:", "First Name:",
                                             "Date of Birth: (dd/mm/yyyy)", "Address: ", "Zipcode: (####ZZ)", "City: ",
                                             "Telephone: ", "Email: " };
@@ -55,7 +57,7 @@ namespace Vlaaieboer
        */
         public int RecordCounter { get; set; }
         public string EmployeeID { get; set; }
-        public string JobTitle { get; set; }
+        public string JobTitle { get; set; }                //TODO: jobtitle maintenance
         public string FirstName { get; set; }
         public string SurName { get; set; }
         public string Prefix { get; set; }
@@ -101,9 +103,8 @@ namespace Vlaaieboer
             }
         }
 
-        public static void DisplayRecord(List<Employee> aList, int aRecord, bool aClearform)                  
+        public static void DisplayRecord(List<Employee> aList, int aRecord, bool aClearform)             //TODO: Somehow make this compacter with foreach or whatever
         {
-
             var cursor = Console.CursorTop;
             if (aClearform)
             {
@@ -117,11 +118,10 @@ namespace Vlaaieboer
                 IO.PrintBoundaries(fieldNames[7], "", lengthQuestionField, cityMaxLenght, cursor); Console.WriteLine(); cursor++;
                 IO.PrintBoundaries(fieldNames[8], "", lengthQuestionField, telMaxLenght, cursor); Console.WriteLine(); cursor++;
                 IO.PrintBoundaries(fieldNames[9], "", lengthQuestionField, emailMaxLenght, cursor); Console.WriteLine(); cursor++;
-
             }
             else
             {
-                IO.PrintBoundaries(fieldNames[0], aList[aRecord - 1].EmployeeID, lengthQuestionField, 8, cursor);Console.WriteLine();cursor++;
+                IO.PrintBoundaries(fieldNames[0], aList[aRecord - 1].EmployeeID, lengthQuestionField, 8, cursor); Console.WriteLine(); cursor++;
                 IO.PrintBoundaries(fieldNames[1], aList[aRecord - 1].SurName.ToString(), lengthQuestionField, surnameMaxLenght, cursor); Console.WriteLine(); cursor++;
                 IO.PrintBoundaries(fieldNames[2], aList[aRecord - 1].Prefix.ToString(), lengthQuestionField, prefixMaxLength, cursor); Console.WriteLine(); cursor++;
                 IO.PrintBoundaries(fieldNames[3], aList[aRecord - 1].FirstName.ToString(), lengthQuestionField, firstnameMaxLength, cursor); Console.WriteLine(); cursor++;
@@ -134,8 +134,6 @@ namespace Vlaaieboer
                 IO.PrintBoundaries(fieldNames[8], aList[aRecord - 1].Telephone.ToString(), lengthQuestionField, telMaxLenght, cursor); Console.WriteLine(); cursor++;
                 IO.PrintBoundaries(fieldNames[9], aList[aRecord - 1].Email.ToString(), lengthQuestionField, emailMaxLenght, cursor); Console.WriteLine(); cursor++;
             }
-            
-            
 
             //Console.ReadKey();
 
@@ -146,8 +144,6 @@ namespace Vlaaieboer
             //    index++;
             //}
         }
-
-
 
         public static void WriteToFile(string aFilename, List<Employee> aEmployeeList)
         {
