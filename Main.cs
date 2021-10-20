@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using System.Text;
 
 namespace Vlaaieboer
 {
@@ -30,6 +31,7 @@ namespace Vlaaieboer
                 IO.DisplayMenu("Main Menu", "(L)ogin\n(E)mployees\n(C)ustomers\n(P)roducts\n(M)asterdata\n\nEnter your choice, Escape to Exit program\n\n", 2);
                 inputKey = Console.ReadKey(true);               // 'true' | dont'display the input on the console
                 CheckMenuInput();
+
             } while (inputKey.Key != ConsoleKey.Escape);
 
             Console.WriteLine("\n\nYou have been logged out.. Goodbye!");
@@ -48,7 +50,7 @@ namespace Vlaaieboer
             }
             else if (inputKey.Key == ConsoleKey.E & Login.validPassword)             // Employees
             {
-                IO.DisplayMenu("Browse/edit employee records", "(Ins)ert to Add\n(Enter)to Edit\n(Del)ete to remove Record\nUse arrow keys to browse\nBack to (M)ain menu\n\n", 2);
+                IO.DisplayMenu("Browse/edit employee records", "(Ins)ert to Add\n(Enter)to Edit\n(Del)ete to remove Record\nUse arrow keys to browse\n(Home) Main menu\n\n", 2);
                 Employees();
             }
             else if (inputKey.Key == ConsoleKey.C & Login.validPassword)             // Customers
@@ -82,9 +84,7 @@ namespace Vlaaieboer
                 maxRecords = employeeList.Count;
                 recordIndex = 1;
                 Employee.DisplayRecord(employeeList, recordIndex, false);
-                IO.Color(2);
-                IO.PrintOnConsole("[" + maxRecords.ToString() + "] employee records", 30, 5);
-                IO.Color(5);
+                UpdateTotalRecordsOnScreen(maxRecords);
             }
             else
             {
@@ -92,20 +92,16 @@ namespace Vlaaieboer
             }
 
             // IO.PrintOnConsole("Age: " + newEmployee.CalculateAge().ToString(), 34, 1);
-            //string stringetje = "abcdefghijklmnopqrstuvwxyz";
+            string inputString = "abcdefghijklmnopqrstuvwxyz" + ConsoleKey.Backspace.ToString();
+            StringBuilder zoekstring = new StringBuilder();
             // Console.WriteLine("Return to (M)ain menu\n");
             do
             {
                 inputKey = Console.ReadKey(true);
-                
+
                 switch (inputKey.Key)
                 {
 
-
-                    case ConsoleKey.C:
-                        //IO.DisplayMenu("Add Record", "(L)ogin\n(A)dd Employee\n(V)iew Employees\n(D)elete Employee\n");
-                        //Employees();
-                        break;
 
                     case ConsoleKey.Enter:                  // edit current record in browsemode
 
@@ -114,9 +110,10 @@ namespace Vlaaieboer
                             Console.SetCursorPosition(cursorLeft, cursorTop + 1);       // set cursor on first inputfield
                             //employeeList[recordIndex].SurName = new Employee(employeeList, recordIndex);
                             //(employeeList, recordIndex);             // edit current record
-                            Employee.EditRecord(employeeList, recordIndex);
-                            Employee.WriteToFile(fileEmployees, employeeList);
-
+                            Employee.EditRecord(employeeList, recordIndex);             // edit current record
+                            Employee.WriteToFile(fileEmployees, employeeList);          // write to file
+                            Console.SetCursorPosition(cursorLeft, cursorTop);           // cursor back to top
+                            Employee.DisplayRecord(employeeList, recordIndex, false);   // display record for updated employeeID and age
                         }
 
                         break;
@@ -128,6 +125,8 @@ namespace Vlaaieboer
                         Employee.DisplayRecord(employeeList, recordIndex, true);
                         Console.SetCursorPosition(cursorLeft, cursorTop + 1);
                         employeeList.Add(new Employee(true));
+                        maxRecords = Employee.totalRecords;
+                        UpdateTotalRecordsOnScreen(maxRecords);
                         Employee.WriteToFile(fileEmployees, employeeList);
 
                         break;
@@ -155,17 +154,44 @@ namespace Vlaaieboer
 
                     default:
 
-                        //if (stringetje.Contains(inputKey.KeyChar.ToString()))
-                        //{
-                        //    employeeList.
+                        zoekstring.Append(inputKey.KeyChar.ToString());
+                        IO.PrintOnConsole("Searching: [ " + zoekstring.ToString() + " ]".PadRight(20, ' '), 1, cursorTop - 1);
 
-                        //}
+                        if (zoekstring.ToString().Contains(inputKey.KeyChar.ToString()))
+                        
+                        {
 
+                            Employee empResult = employeeList.Find(delegate (Employee emp)
+                            {
+                                return emp.SurName.StartsWith(zoekstring.ToString());
+
+                            }
+                            );
+                            if (empResult != null)
+                            {
+                                //var ix = empResult.RecordCounter;
+                                Console.SetCursorPosition(cursorLeft, cursorTop);
+                                Employee.DisplayRecord(employeeList, empResult.RecordCounter, false);
+                                recordIndex = empResult.RecordCounter;
+                            }
+                            else
+                            {
+                                zoekstring.Clear();
+                            }
+
+                        }
 
                         break;
-                        
+
                 }
-            } while (inputKey.Key != ConsoleKey.M);
+            } while (inputKey.Key != ConsoleKey.Home);
+        }
+
+        private static void UpdateTotalRecordsOnScreen(int maxRecords)
+        {
+            IO.Color(2);
+            IO.PrintOnConsole("[" + maxRecords.ToString() + "] employee records", 30, 5);
+            IO.Color(5);
         }
 
         private static void Customers()
