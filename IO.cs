@@ -28,7 +28,7 @@ namespace Vlaaieboer
 
             PrintMenuString(menuString, aColorMenuOption);
 
-            Console.WriteLine("Enter your choice, press <Escape> to exit\n");
+            //Console.WriteLine("Enter your choice, press <Escape> to exit\n");
             Console.WriteLine("=============================================================================\n");
             IO.PrintOnConsole("___________________________________________________________________________", 1, 33);
         }
@@ -131,18 +131,24 @@ namespace Vlaaieboer
             string returnString;
             bool checkedValidLength = false;
 
-            if (fieldValue != "")                                          // if a edit value is given, assign to inputStringbuilder and print it
-            {
-                inputStringbuilder.Append(fieldValue);
-                PrintInputString(showInput, false, inputStringbuilder, inputStringbuilderNoShow);
-            }
+            
             // display field boundaries with padded spaces
 
             if (showBoundaries)
             {
                 PrintBoundaries(fieldName, fieldValue, lengthQuestionField, lengthInputField, cursorTop);
             }
-
+            
+            if (fieldValue != "")                                          // if a edit value is given, assign to inputStringbuilder and print it
+            {
+                inputStringbuilder.Append(fieldValue);
+                inputStringbuilderNoShow.Append(fieldValue);
+                indexInStringbuilder = inputStringbuilder.Length + 1;      // cursor 1 position after string
+                Checkfieldlength(lengthInputField, indexInStringbuilder - 1);
+                IO.Color(1);
+                PrintInputString(showInput, false, inputStringbuilder, inputStringbuilderNoShow);
+                IO.Color(5);
+            }
             do
             {
                 do
@@ -167,9 +173,7 @@ namespace Vlaaieboer
                         inputStringbuilder.Remove(indexInStringbuilder - 1, 1);
                         inputStringbuilderNoShow.Remove(indexInStringbuilder - 1, 1);
                         Console.SetCursorPosition(lengthQuestionField + 1, cursorTop);
-
                         PrintInputString(showInput, true, inputStringbuilder, inputStringbuilderNoShow);
-
                         int helpCursorLeft = Console.CursorLeft;
                         Console.SetCursorPosition(helpCursorLeft - 1, cursorTop);             // and place the curser back one position
                     }
@@ -185,7 +189,7 @@ namespace Vlaaieboer
                             Console.SetCursorPosition(lengthQuestionField + indexInStringbuilder, cursorTop);
                         }
                     }
-                    else if (inp.Key == ConsoleKey.LeftArrow ||
+                    else if (inp.Key == ConsoleKey.LeftArrow ||                         // move cursor
                              inp.Key == ConsoleKey.RightArrow ||
                              inp.Key == ConsoleKey.Home ||
                              inp.Key == ConsoleKey.End)
@@ -213,14 +217,14 @@ namespace Vlaaieboer
 
                         IO.PrintOnConsole(indexInStringbuilder.ToString() + " " + inputStringbuilder + "       ", 1, 1);
                     }
-                    else if (inp.Key == ConsoleKey.Escape)
-                    {
-                        break;
-                        //IO.PrintOnConsole("Do you want to stop editing this record?", 1, 34);
-                        //var respons = IO.GetInput("", "", "YyNn", 0, 1, false, true, true, false, 1);
-                        //Console.ReadKey();
-                    }
-                } while (inp.Key != ConsoleKey.Enter);
+                    //else if (inp.Key == ConsoleKey.Escape)
+                    //{
+                    //    ///break;
+                    //    //IO.PrintOnConsole("Do you want to stop editing this record?", 1, 34);
+                    //    //var respons = IO.GetInput("", "", "YyNn", 0, 1, false, true, true, false, 1);
+                    //    //Console.ReadKey();
+                    //}
+                } while (inp.Key != ConsoleKey.Enter & inp.Key != ConsoleKey.Escape);
 
                 if (inputStringbuilder.Length >= minInputLength)
                 {
@@ -249,6 +253,7 @@ namespace Vlaaieboer
             Console.SetCursorPosition(lengthQuestionField + 1, cursorTop);
             if (showInput)                                                  // not with password
             {
+                IO.Color(4);
                 Console.Write(returnString.PadRight(lengthInputField, ' ')); // pad with spaces to length field
             }
 
@@ -266,8 +271,9 @@ namespace Vlaaieboer
                                            int lengthInputField,            // idem input field
                                            int cursorTop)                   // reset cursor to row
         {
-            IO.Color(4);
+            IO.Color(5);        //White
             Console.Write(displayString.PadRight(lengthQuestionField, ' '));
+            IO.Color(4);
             if (fieldValue == "")
             {
                 Console.Write("|".PadRight(lengthInputField + 1, ' ') + "|");            // print input field boundaries
@@ -277,7 +283,7 @@ namespace Vlaaieboer
                 Console.Write("|" + fieldValue.PadRight(lengthInputField, ' ') + "|");
             }
             Console.SetCursorPosition(lengthQuestionField + 1, cursorTop);                // reset cursorposition to beginning of the input field
-            IO.Color(5);
+            IO.Color(5);        //Grey
         }
 
         public static void Checkfieldlength(int lengthInputField, int indexInStringbuilder)
@@ -308,6 +314,7 @@ namespace Vlaaieboer
             {
                 Console.Write(" ");
             }
+            
         }
     }
 }

@@ -22,9 +22,9 @@ namespace Vlaaieboer
         private static int lengthQuestionField = 30;
 
         // input validation strings
-        private readonly string checkinputStringAlpha = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789//-@| .,_";
+        private static string checkinputStringAlpha = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789//-@| .,_";
 
-        private readonly string checkinputStringDate = "0123456789/-";
+        private static string checkinputStringDate = "0123456789/-";
 
         // public accessible total record counter
         public static int totalRecords = 0;
@@ -91,7 +91,7 @@ namespace Vlaaieboer
                 if (SurName.Length >= 3)
                 {
                     b = SurName.Substring(0, 3).ToUpper();      // take first 3 chars in uppercase
-                }
+                }                                               // TODO: remove whitespace if exists ("de Groot")
                 else
                 {
                     b = SurName.Substring(0, SurName.Length)    // or build to 3 chars with added "A" chars
@@ -101,6 +101,23 @@ namespace Vlaaieboer
 
                 EmployeeID = b + a;
             }
+        }
+
+        public static void EditRecord(List<Employee> aList, int aRecord)
+        {
+            // start editing the first field
+            aList[aRecord - 1].SurName = IO.GetInput("Surname:", aList[aRecord - 1].SurName, checkinputStringAlpha, lengthQuestionField, surnameMaxLenght, true, true, true, true, surnameMinLenght);
+            aList[aRecord - 1].Prefix = IO.GetInput("Prefix:", aList[aRecord - 1].Prefix, checkinputStringAlpha, lengthQuestionField, prefixMaxLength, true, true, true, true, prefixMinLenght);
+            aList[aRecord - 1].FirstName = IO.GetInput("First Name:", aList[aRecord - 1].FirstName, checkinputStringAlpha, lengthQuestionField, firstnameMaxLength, true, true, true, true, firstnameMinLength);
+            aList[aRecord - 1].DateOfBirth = ParseToDateTime(IO.GetInput("Date of Birth: (dd/mm/yyyy)", aList[aRecord - 1].DateOfBirth.ToString("dd/MM/yyyy"), checkinputStringDate, lengthQuestionField, doBMaxLength, true, true, false, true, doBMinLenght));
+            aList[aRecord - 1].Address = IO.GetInput("Address:", aList[aRecord - 1].Address, checkinputStringAlpha, lengthQuestionField, addressMaxLenght, true, true, true, true, addressMinLenght);
+            aList[aRecord - 1].Zipcode = IO.GetInput("Zipcode: (####ZZ)", aList[aRecord - 1].Zipcode, checkinputStringAlpha, lengthQuestionField, zipCodeMaxLenght, true, true, true, true, zipCodeMinLength);
+            aList[aRecord - 1].City = IO.GetInput("City:", aList[aRecord - 1].City, checkinputStringAlpha, lengthQuestionField, cityMaxLenght, true, true, true, true, cityMinLenght);
+            aList[aRecord - 1].Telephone = IO.GetInput("Telephone:", aList[aRecord - 1].Telephone, "0123456789+-", lengthQuestionField, telMaxLenght, true, true, true, true, telMinLenght);
+            aList[aRecord - 1].Email = IO.GetInput("Email:", aList[aRecord - 1].Email, checkinputStringAlpha, lengthQuestionField, emailMaxLenght, true, true, true, true, emailMinLength);
+
+            //IO.GetInput("Surname:", aList[aRecord].SurName, checkinputStringAlpha, lengthQuestionField, surnameMaxLenght, true, true, true, true, surnameMinLenght);
+            //Prefix = IO.GetInput("Prefix:", "", checkinputStringAlpha, lengthQuestionField, prefixMaxLength, true, true, true, true, prefixMinLenght);
         }
 
         public static void DisplayRecord(List<Employee> aList, int aRecord, bool aClearform)             //TODO: Somehow make this compacter => probably via an interface?
@@ -127,22 +144,13 @@ namespace Vlaaieboer
                 IO.PrintBoundaries(fieldNames[3], aList[aRecord - 1].FirstName.ToString(), lengthQuestionField, firstnameMaxLength, cursor); Console.WriteLine(); cursor++;
                 IO.PrintBoundaries(fieldNames[4], aList[aRecord - 1].DateOfBirth.ToString("dd/MM/yyyy"), lengthQuestionField, doBMaxLength, cursor); // Console.WriteLine(); // cursor++;
                 Console.SetCursorPosition(lengthQuestionField + doBMaxLength + 5, cursor);
-                Console.WriteLine("(Age: "+ (CalculateAge(aList[aRecord - 1].DateOfBirth).ToString())+")    "); cursor++;
+                Console.WriteLine("(Age: " + (CalculateAge(aList[aRecord - 1].DateOfBirth).ToString()) + ")    "); cursor++;
                 IO.PrintBoundaries(fieldNames[5], aList[aRecord - 1].Address, lengthQuestionField, addressMaxLenght, cursor); Console.WriteLine(); cursor++;
                 IO.PrintBoundaries(fieldNames[6], aList[aRecord - 1].Zipcode.ToString(), lengthQuestionField, zipCodeMaxLenght, cursor); Console.WriteLine(); cursor++;
                 IO.PrintBoundaries(fieldNames[7], aList[aRecord - 1].City.ToString(), lengthQuestionField, cityMaxLenght, cursor); Console.WriteLine(); cursor++;
                 IO.PrintBoundaries(fieldNames[8], aList[aRecord - 1].Telephone.ToString(), lengthQuestionField, telMaxLenght, cursor); Console.WriteLine(); cursor++;
                 IO.PrintBoundaries(fieldNames[9], aList[aRecord - 1].Email.ToString(), lengthQuestionField, emailMaxLenght, cursor); Console.WriteLine(); cursor++;
             }
-
-            //Console.ReadKey();
-
-            //foreach (var element in aEmployeeList)
-            //{
-            //    var index = 0;
-            //    IO.PrintBoundaries(fieldNames[index], element.FirstName, lengthQuestionField, 40, cursor);
-            //    index++;
-            //}
         }
 
         public static void WriteToFile(string aFilename, List<Employee> aEmployeeList)
@@ -164,7 +172,7 @@ namespace Vlaaieboer
         public static List<Employee> PopulateList(string aFilename)
         {
             var getemployeelist = DeserializeJSONfile(aFilename);
-            if (getemployeelist != null)                           // file Exists
+            if (getemployeelist != null)                            // file Exists
             {
                 Employee.totalRecords = getemployeelist.Count;      // set total Record static field in Employee Class
             }
@@ -215,9 +223,9 @@ namespace Vlaaieboer
         {
             DateTime parsedDateHelpstring;
             if (DateTime.TryParse(aDateString, out parsedDateHelpstring))   // Tryparse method passing back two values: bool and out var
-            {`
+            {
                 if (CalculateAge(parsedDateHelpstring) > 100 || CalculateAge(parsedDateHelpstring) < 18)      //TODO: move age check to set; of DoB?
-                {`
+                {
                     IO.PrintOnConsole($"Invalid Age: {CalculateAge(parsedDateHelpstring)} ", 1, 34);
                     parsedDateHelpstring = DateTime.Parse("01/01/0001");
                 }
@@ -225,7 +233,6 @@ namespace Vlaaieboer
                 {
                     IO.PrintOnConsole($"Parsed date string succesfully to {parsedDateHelpstring:dd-MM-yyyy}", 1, 34);
                 }
-
             }
             else
             {

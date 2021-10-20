@@ -19,7 +19,7 @@ namespace Vlaaieboer
             // Console.TreatControlCAsInput = true;                                         // doesn't seem to work correctly ?
 
             // init console window properties
-            Console.Title = "Avans C# Console Application exercise";
+            Console.Title = "Avans C# Console Application prototype";
             Console.SetWindowSize(80, 35);
             //Console.SetWindowPosition(11, 9);                     //TODO: figure out SetWindowsPosition
             IO.Color(5);
@@ -27,7 +27,7 @@ namespace Vlaaieboer
 
             do
             {
-                IO.DisplayMenu("Main Menu", "(L)ogin\n(E)mployees\n(C)ustomers\n(P)roducts\n(M)asterdata");
+                IO.DisplayMenu("Main Menu", "(L)ogin\n(E)mployees\n(C)ustomers\n(P)roducts\n(M)asterdata\n\nEnter your choice, Escape to Exit program\n\n", 2);
                 inputKey = Console.ReadKey(true);               // 'true' | dont'display the input on the console
                 CheckMenuInput();
             } while (inputKey.Key != ConsoleKey.Escape);
@@ -44,20 +44,21 @@ namespace Vlaaieboer
 
             if (inputKey.Key == ConsoleKey.L || !Login.validPassword & inputKey.Key != ConsoleKey.Escape)
             {
-                _ = new Login();
+                _ = new Login();            // _ discard unnecessary var declaration
             }
             else if (inputKey.Key == ConsoleKey.E & Login.validPassword)             // Employees
             {
-                IO.DisplayMenu("Edit Employee master data", "(Ins)ert to Add\n(Enter)to Edit\n(Del)ete to remove Record\nUse arrow keys to browse\n");
+                IO.DisplayMenu("Browse/edit employee records", "(Ins)ert to Add\n(Enter)to Edit\n(Del)ete to remove Record\nUse arrow keys to browse\nBack to (M)ain menu\n\n", 2);
                 Employees();
             }
             else if (inputKey.Key == ConsoleKey.C & Login.validPassword)             // Customers
             {
-                IO.DisplayMenu("Edit Customer master data", "(A)dd\nArrows to browse\n(Del)ete\n");
+                IO.DisplayMenu("Browse/edit customer records", "(A)dd\nArrows to browse\n(Del)ete\n", 2);
                 Customers();
             }
-            else if (inputKey.Key == ConsoleKey.D & Login.validPassword)             // delete record
+            else if (inputKey.Key == ConsoleKey.M & Login.validPassword)             // Master Data
             {
+                IO.DisplayMenu("Edit Master Data", "(A)dd\nArrows to browse\n(Del)ete\n", 2);
                 Console.WriteLine("  You Pressed D");
             }
             else if (inputKey.Key == ConsoleKey.Escape)                                 // exit program
@@ -66,7 +67,7 @@ namespace Vlaaieboer
             }
         }
 
-        private static void Employees()                 // TODO: read & count records into array, display first record, browse and delete
+        private static void Employees()                 
         {
             // var employeeList = new List<Employee>();
             var employeeList = Employee.PopulateList(fileEmployees);
@@ -91,22 +92,34 @@ namespace Vlaaieboer
             }
 
             // IO.PrintOnConsole("Age: " + newEmployee.CalculateAge().ToString(), 34, 1);
-
-            Console.WriteLine("\nPress 'Enter' to store entry, (C)hange or (E)xit");
+            //string stringetje = "abcdefghijklmnopqrstuvwxyz";
+            // Console.WriteLine("Return to (M)ain menu\n");
             do
             {
                 inputKey = Console.ReadKey(true);
-
+                
                 switch (inputKey.Key)
                 {
+
+
                     case ConsoleKey.C:
                         //IO.DisplayMenu("Add Record", "(L)ogin\n(A)dd Employee\n(V)iew Employees\n(D)elete Employee\n");
                         //Employees();
                         break;
 
-                    case ConsoleKey.Enter:                  // save record to file
+                    case ConsoleKey.Enter:                  // edit current record in browsemode
 
-                        return; //back to main menu
+                        if (maxRecords > 0)                 // some record is being displayed
+                        {
+                            Console.SetCursorPosition(cursorLeft, cursorTop + 1);       // set cursor on first inputfield
+                            //employeeList[recordIndex].SurName = new Employee(employeeList, recordIndex);
+                            //(employeeList, recordIndex);             // edit current record
+                            Employee.EditRecord(employeeList, recordIndex);
+                            Employee.WriteToFile(fileEmployees, employeeList);
+
+                        }
+
+                        break;
 
                     case ConsoleKey.Insert:                 // add record
 
@@ -142,26 +155,18 @@ namespace Vlaaieboer
 
                     default:
 
+                        //if (stringetje.Contains(inputKey.KeyChar.ToString()))
+                        //{
+                        //    employeeList.
+
+                        //}
+
+
                         break;
+                        
                 }
-            } while (inputKey.Key != ConsoleKey.E);
+            } while (inputKey.Key != ConsoleKey.M);
         }
-
-        //static List<Employee> ExampleOneSimpleClassObject()
-        //{
-        //    string filename = fileEmployees;
-        //    var customers = new List<Employee>();
-
-        //    if (File.Exists(filename))
-        //    {
-        //        customers = JsonConvert.DeserializeObject<List<Employee>>
-        //            (File.ReadAllText(filename));
-
-        //        return customers;
-        //    }
-
-        //    return customers;
-        //}
 
         private static void Customers()
         {
