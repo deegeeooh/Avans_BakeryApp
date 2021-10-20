@@ -5,13 +5,13 @@ namespace Vlaaieboer
 {
     internal class IO
     {
-        public static void DisplayMenu(string title, string menuString)
+        public static void DisplayMenu(string title, string menuString, int aColorMenuOption)
         {
             Console.Clear();
             IO.Color(5);
             Console.WriteLine("\n\n=============================================================================");
-            IO.Color(4);
-            Console.Write("Bakker Vlaaieboer & Zn."); Console.Write("{0:dd/MM/yyyy hh:mm}".PadLeft(30, ' '), DateTime.Now);
+            IO.Color(7);
+            Console.Write("Bakker Vlaaieboer & Zn."); IO.Color(4); Console.Write("{0:dd/MM/yyyy hh:mm}".PadLeft(30, ' '), DateTime.Now);
             IO.Color(5);
             if (Login.validPassword)
             {
@@ -24,11 +24,38 @@ namespace Vlaaieboer
             Console.Write("\n");
             Console.WriteLine("=============================================================================");
             IO.Color(2); Console.WriteLine(title + "\n"); IO.Color(4);
-            Console.WriteLine(menuString);
-            //Console.Write("(L)ogin\n(A)dd Employee\n(V)iew Employees\n(D)elete Employee\n");
+            //Console.WriteLine(menuString);
+
+            PrintMenuString(menuString, aColorMenuOption);
+
             Console.WriteLine("Enter your choice, press <Escape> to exit\n");
             Console.WriteLine("=============================================================================\n");
             IO.PrintOnConsole("___________________________________________________________________________", 1, 33);
+        }
+
+        private static void PrintMenuString(string menuString, int aColorMenuOption)
+        {
+            IO.Color(5);
+            var menustringCharArray = menuString.ToCharArray();
+            for (int i = 0; i < menuString.Length; i++)
+            {
+                if (menustringCharArray[i].ToString() == "(")
+                {
+                    Console.Write(menustringCharArray[i]);      // print the "("
+                    i++;
+                    do
+                    {                                           
+                        IO.Color(aColorMenuOption);
+                        Console.Write(menustringCharArray[i]);
+                        i++;
+
+                    } while (menustringCharArray[i].ToString() != ")");
+
+                    IO.Color(5);
+                }
+                
+                Console.Write(menustringCharArray[i]);
+            }
         }
 
         public static void PrintOnConsole(string consoleString, int left, int top)              //TODO: capture screenbuffer to display 'windows'
@@ -61,12 +88,16 @@ namespace Vlaaieboer
                     Console.ForegroundColor = ConsoleColor.White;
                     break;
 
-                case 5:
-                    Console.ForegroundColor = ConsoleColor.Gray;
+                case 5:                                         // Standard foreground color 
+                    Console.ForegroundColor = ConsoleColor.Gray;        
                     break;
 
                 case 6:
                     Console.ForegroundColor = ConsoleColor.Blue;
+                    break;
+
+                case 7:
+                    Console.ForegroundColor = ConsoleColor.Yellow;
                     break;
 
                 default:
@@ -229,7 +260,11 @@ namespace Vlaaieboer
             return returnString;
         }
 
-        public static void PrintBoundaries(string displayString, string fieldValue, int lengthQuestionField, int lengthInputField, int cursorTop)
+        public static void PrintBoundaries(string displayString,            // textstring of name of field
+                                           string fieldValue,               // current value of this field (for edit purposes)
+                                           int lengthQuestionField,         // Length of the name of field to be padded
+                                           int lengthInputField,            // idem input field
+                                           int cursorTop)                   // reset cursor to row
         {
             IO.Color(4);
             Console.Write(displayString.PadRight(lengthQuestionField, ' '));
