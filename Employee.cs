@@ -103,7 +103,7 @@ namespace Vlaaieboer
             }
         }
 
-        public static void DisplayRecord(List<Employee> aList, int aRecord, bool aClearform)             //TODO: Somehow make this compacter with foreach or whatever
+        public static void DisplayRecord(List<Employee> aList, int aRecord, bool aClearform)             //TODO: Somehow make this compacter => probably via an interface?
         {
             var cursor = Console.CursorTop;
             if (aClearform)
@@ -125,9 +125,9 @@ namespace Vlaaieboer
                 IO.PrintBoundaries(fieldNames[1], aList[aRecord - 1].SurName.ToString(), lengthQuestionField, surnameMaxLenght, cursor); Console.WriteLine(); cursor++;
                 IO.PrintBoundaries(fieldNames[2], aList[aRecord - 1].Prefix.ToString(), lengthQuestionField, prefixMaxLength, cursor); Console.WriteLine(); cursor++;
                 IO.PrintBoundaries(fieldNames[3], aList[aRecord - 1].FirstName.ToString(), lengthQuestionField, firstnameMaxLength, cursor); Console.WriteLine(); cursor++;
-                IO.PrintBoundaries(fieldNames[4], aList[aRecord - 1].DateOfBirth.ToString("dd/MM/yyyy"), lengthQuestionField, doBMaxLength, cursor); Console.WriteLine(); cursor++;
-                //Console.SetCursorPosition(lengthQuestionField + doBMaxLegth + 5, cursor);
-                //Console.WriteLine("(Age: "+ (CalculateAge(aList[aRecord - 1].DateOfBirth).ToString())+")    "); cursor++;
+                IO.PrintBoundaries(fieldNames[4], aList[aRecord - 1].DateOfBirth.ToString("dd/MM/yyyy"), lengthQuestionField, doBMaxLength, cursor); // Console.WriteLine(); // cursor++;
+                Console.SetCursorPosition(lengthQuestionField + doBMaxLength + 5, cursor);
+                Console.WriteLine("(Age: "+ (CalculateAge(aList[aRecord - 1].DateOfBirth).ToString())+")    "); cursor++;
                 IO.PrintBoundaries(fieldNames[5], aList[aRecord - 1].Address, lengthQuestionField, addressMaxLenght, cursor); Console.WriteLine(); cursor++;
                 IO.PrintBoundaries(fieldNames[6], aList[aRecord - 1].Zipcode.ToString(), lengthQuestionField, zipCodeMaxLenght, cursor); Console.WriteLine(); cursor++;
                 IO.PrintBoundaries(fieldNames[7], aList[aRecord - 1].City.ToString(), lengthQuestionField, cityMaxLenght, cursor); Console.WriteLine(); cursor++;
@@ -215,8 +215,17 @@ namespace Vlaaieboer
         {
             DateTime parsedDateHelpstring;
             if (DateTime.TryParse(aDateString, out parsedDateHelpstring))   // Tryparse method passing back two values: bool and out var
-            {
-                IO.PrintOnConsole($"Parsed date string succesfully to {parsedDateHelpstring:dd-MM-yyyy}", 1, 34);
+            {`
+                if (CalculateAge(parsedDateHelpstring) > 100 || CalculateAge(parsedDateHelpstring) < 18)      //TODO: move age check to set; of DoB?
+                {`
+                    IO.PrintOnConsole($"Invalid Age: {CalculateAge(parsedDateHelpstring)} ", 1, 34);
+                    parsedDateHelpstring = DateTime.Parse("01/01/0001");
+                }
+                else
+                {
+                    IO.PrintOnConsole($"Parsed date string succesfully to {parsedDateHelpstring:dd-MM-yyyy}", 1, 34);
+                }
+
             }
             else
             {
