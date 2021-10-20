@@ -86,21 +86,26 @@ namespace Vlaaieboer
                 Email = IO.GetInput("Email:", "", checkinputStringAlpha, lengthQuestionField, emailMaxLenght, true, true, true, true, emailMinLength);
 
                 // construct unique employee ID
-                string a = RecordCounter.ToString("D5");        // make a string consisting of 5 decimals
-                string b;
-                if (SurName.Length >= 3)
-                {
-                    b = SurName.Substring(0, 3).ToUpper();      // take first 3 chars in uppercase
-                }                                               // TODO: remove whitespace if exists ("de Groot")
-                else
-                {
-                    b = SurName.Substring(0, SurName.Length)    // or build to 3 chars with added "A" chars
-                        .ToUpper()
-                        .PadRight(3, 'A');
-                }
-
-                EmployeeID = b + a;
+                EmployeeID = ConstructID(this);
             }
+        }
+
+        private static string ConstructID(Employee anEmployee)
+        {
+            string a = anEmployee.RecordCounter.ToString("D5");        // make a string consisting of 5 decimals
+            string b;
+            if (anEmployee.SurName.Length >= 3)
+            {
+                b = anEmployee.SurName.Substring(0, 3).ToUpper();      // take first 3 chars in uppercase
+            }                                               // TODO: remove whitespace if exists ("de Groot")
+            else
+            {
+                b = anEmployee.SurName.Substring(0, anEmployee.SurName.Length)    // or build to 3 chars with added "A" chars
+                    .ToUpper()
+                    .PadRight(3, 'A');
+            }
+
+            return b + a;
         }
 
         public static void EditRecord(List<Employee> aList, int aRecord)
@@ -115,6 +120,9 @@ namespace Vlaaieboer
             aList[aRecord - 1].City = IO.GetInput("City:", aList[aRecord - 1].City, checkinputStringAlpha, lengthQuestionField, cityMaxLenght, true, true, true, true, cityMinLenght);
             aList[aRecord - 1].Telephone = IO.GetInput("Telephone:", aList[aRecord - 1].Telephone, "0123456789+-", lengthQuestionField, telMaxLenght, true, true, true, true, telMinLenght);
             aList[aRecord - 1].Email = IO.GetInput("Email:", aList[aRecord - 1].Email, checkinputStringAlpha, lengthQuestionField, emailMaxLenght, true, true, true, true, emailMinLength);
+
+            aList[aRecord - 1].EmployeeID = ConstructID(aList[aRecord -1]);
+
 
             //IO.GetInput("Surname:", aList[aRecord].SurName, checkinputStringAlpha, lengthQuestionField, surnameMaxLenght, true, true, true, true, surnameMinLenght);
             //Prefix = IO.GetInput("Prefix:", "", checkinputStringAlpha, lengthQuestionField, prefixMaxLength, true, true, true, true, prefixMinLenght);
@@ -220,6 +228,7 @@ namespace Vlaaieboer
         }
 
         private static DateTime ParseToDateTime(string aDateString)
+        
         {
             DateTime parsedDateHelpstring;
             if (DateTime.TryParse(aDateString, out parsedDateHelpstring))   // Tryparse method passing back two values: bool and out var
