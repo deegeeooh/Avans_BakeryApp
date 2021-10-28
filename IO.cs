@@ -43,17 +43,15 @@ namespace Vlaaieboer
                 {
                     Console.Write(menustringCharArray[i]);      // print the "("
                     i++;
-                    do
-                    {                                           
+                    do                                          // until ")" is found print every char in color
+                    {
                         IO.Color(aColorMenuOption);
                         Console.Write(menustringCharArray[i]);
                         i++;
-
                     } while (menustringCharArray[i].ToString() != ")");
 
                     IO.Color(5);
                 }
-                
                 Console.Write(menustringCharArray[i]);
             }
         }
@@ -88,8 +86,8 @@ namespace Vlaaieboer
                     Console.ForegroundColor = ConsoleColor.White;
                     break;
 
-                case 5:                                         // Standard foreground color 
-                    Console.ForegroundColor = ConsoleColor.Gray;        
+                case 5:                                         // Standard foreground color
+                    Console.ForegroundColor = ConsoleColor.Gray;
                     break;
 
                 case 6:
@@ -111,9 +109,10 @@ namespace Vlaaieboer
                                       string checkinputString,       // accepted input
                                       int lengthQuestionField,       // field width displays string
                                       int lengthInputField,          // field width input field
+                                      bool toUpper,                  // convert to uppercase
                                       bool lineFeed,                 // linefeed after input?
                                       bool showInput,                // display the typed characters?
-                                      bool trim,                     // return with trimmed spaces ?
+                                      bool trim,                     // return trimmed string ?
                                       bool showBoundaries,           // print field boundaries?
                                       int minInputLength)            // minimal inputlength required
         {
@@ -125,28 +124,25 @@ namespace Vlaaieboer
             int cursorLeft = Console.CursorLeft;                           // store current cursorposition, left and top
             int cursorTop = Console.CursorTop;                             // TODO: Why doesn't Console.GetCursorPosition exist/Work? (see MS docs https://docs.microsoft.com/en-us/dotnet/api/system.console.getcursorposition?view=net-5.0 )
             StringBuilder inputStringbuilder = new StringBuilder();        // stringbuilder to append the single input characters to
-            StringBuilder inputStringbuilderNoShow = new StringBuilder();  // helper string for no show input (passwords)
             ConsoleKeyInfo inp = new ConsoleKeyInfo();
             int indexInStringbuilder = 1;
             string returnString;
             bool checkedValidLength = false;
 
-            
             // display field boundaries with padded spaces
 
             if (showBoundaries)
             {
                 PrintBoundaries(fieldName, fieldValue, lengthQuestionField, lengthInputField, cursorTop);
             }
-            
+
             if (fieldValue != "")                                          // if a edit value is given, assign to inputStringbuilder and print it
             {
                 inputStringbuilder.Append(fieldValue);
-                inputStringbuilderNoShow.Append(fieldValue);
                 indexInStringbuilder = inputStringbuilder.Length + 1;      // cursor 1 position after string
                 Checkfieldlength(lengthInputField, indexInStringbuilder - 1);
                 IO.Color(1);
-                PrintInputString(showInput, false, inputStringbuilder, inputStringbuilderNoShow);
+                PrintInputString(showInput, false, inputStringbuilder);
                 IO.Color(5);
             }
             do
@@ -154,37 +150,52 @@ namespace Vlaaieboer
                 do
                 {
                     inp = Console.ReadKey(true);                            // read 1 key, don't display the readkey input (true)
-
+                    string tempString;
                     if (checkinputString.Contains(inp.KeyChar.ToString()) & indexInStringbuilder <= lengthInputField)         // only accept valid characters other than functions
 
                     {
                         indexInStringbuilder++;
                         Checkfieldlength(lengthInputField, indexInStringbuilder - 1);
-                        inputStringbuilder.Append(inp.KeyChar);
-                        inputStringbuilderNoShow.Append("*");
+
+                        if (toUpper)
+                        {
+                            tempString = inp.KeyChar.ToString().ToUpper();
+                        }
+                        else
+                        {
+                            tempString = inp.KeyChar.ToString();
+                        }
+
+                        if (inputStringbuilder.Length + 1 < indexInStringbuilder)
+                        {
+                            inputStringbuilder.Append(tempString);
+                        }
+                        else
+                        {
+                            inputStringbuilder.Insert(indexInStringbuilder - 2, tempString);
+                        }
+
                         Console.SetCursorPosition(lengthQuestionField + 1, cursorTop);      // position cursor at start inputfield
                         IO.Color(1);
-                        PrintInputString(showInput, false, inputStringbuilder, inputStringbuilderNoShow);
+                        PrintInputString(showInput, false, inputStringbuilder);
+                        Console.SetCursorPosition(lengthQuestionField + indexInStringbuilder, cursorTop);
                     }
                     else if (inp.Key == ConsoleKey.Backspace & indexInStringbuilder > 1)
                     {
                         indexInStringbuilder--;
                         Checkfieldlength(lengthInputField, indexInStringbuilder - 1);
                         inputStringbuilder.Remove(indexInStringbuilder - 1, 1);
-                        inputStringbuilderNoShow.Remove(indexInStringbuilder - 1, 1);
                         Console.SetCursorPosition(lengthQuestionField + 1, cursorTop);
-                        PrintInputString(showInput, true, inputStringbuilder, inputStringbuilderNoShow);
-                        int helpCursorLeft = Console.CursorLeft;
-                        Console.SetCursorPosition(helpCursorLeft - 1, cursorTop);             // and place the curser back one position
+                        PrintInputString(showInput, true, inputStringbuilder);
+                        Console.SetCursorPosition(lengthQuestionField + indexInStringbuilder, cursorTop);
                     }
                     else if (inp.Key == ConsoleKey.Delete)
                     {
                         if (inputStringbuilder.Length > 0 & indexInStringbuilder <= inputStringbuilder.Length)
                         {
                             inputStringbuilder.Remove(indexInStringbuilder - 1, 1);
-                            inputStringbuilderNoShow.Remove(indexInStringbuilder - 1, 1);
                             Console.SetCursorPosition(lengthQuestionField + 1, cursorTop);
-                            PrintInputString(showInput, true, inputStringbuilder, inputStringbuilderNoShow);
+                            PrintInputString(showInput, true, inputStringbuilder);
                             IO.PrintOnConsole(indexInStringbuilder.ToString() + " " + inputStringbuilder + "       ", 1, 1);
                             Console.SetCursorPosition(lengthQuestionField + indexInStringbuilder, cursorTop);
                         }
@@ -199,7 +210,7 @@ namespace Vlaaieboer
                             indexInStringbuilder--;         // one to the left
                             Console.SetCursorPosition(lengthQuestionField + indexInStringbuilder, cursorTop);
                         }
-                        else if (inp.Key == ConsoleKey.RightArrow & indexInStringbuilder < inputStringbuilder.Length)
+                        else if (inp.Key == ConsoleKey.RightArrow & indexInStringbuilder <= inputStringbuilder.Length)
                         {
                             indexInStringbuilder++;
                             Console.SetCursorPosition(lengthQuestionField + indexInStringbuilder, cursorTop);
@@ -207,23 +218,16 @@ namespace Vlaaieboer
                         else if (inp.Key == ConsoleKey.Home)
                         {
                             indexInStringbuilder = 1;
-                            Console.SetCursorPosition(lengthQuestionField + 1, cursorTop);
+                            Console.SetCursorPosition(lengthQuestionField + indexInStringbuilder, cursorTop);
                         }
                         else if (inp.Key == ConsoleKey.End & inputStringbuilder.Length > 0)
                         {
-                            indexInStringbuilder = inputStringbuilder.Length;
+                            indexInStringbuilder = inputStringbuilder.Length + 1;
                             Console.SetCursorPosition(lengthQuestionField + indexInStringbuilder, cursorTop);
                         }
 
                         IO.PrintOnConsole(indexInStringbuilder.ToString() + " " + inputStringbuilder + "       ", 1, 1);
                     }
-                    //else if (inp.Key == ConsoleKey.Escape)
-                    //{
-                    //    ///break;
-                    //    //IO.PrintOnConsole("Do you want to stop editing this record?", 1, 34);
-                    //    //var respons = IO.GetInput("", "", "YyNn", 0, 1, false, true, true, false, 1);
-                    //    //Console.ReadKey();
-                    //}
                 } while (inp.Key != ConsoleKey.Enter & inp.Key != ConsoleKey.Escape);
 
                 if (inputStringbuilder.Length >= minInputLength)
@@ -300,7 +304,7 @@ namespace Vlaaieboer
             }
         }
 
-        private static void PrintInputString(bool showInput, bool deltrailspace, StringBuilder inputStringbuilder, StringBuilder inputStringbuilderNoShow)
+        private static void PrintInputString(bool showInput, bool deltrailspace, StringBuilder inputStringbuilder)
         {
             if (showInput)
             {
@@ -308,13 +312,13 @@ namespace Vlaaieboer
             }
             else
             {
-                Console.Write(inputStringbuilderNoShow);                        // show the dummy inputstring
+                Console.Write("".PadRight(inputStringbuilder.Length, '*'));
+                //Console.Write(inputStringbuilderNoShow);                        // show the dummy inputstring
             }
             if (deltrailspace)
             {
                 Console.Write(" ");
             }
-            
         }
     }
 }
