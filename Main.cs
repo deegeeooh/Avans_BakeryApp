@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Threading;
 using System.Text;
+using System.Threading;
 
 namespace Vlaaieboer
 {
@@ -9,7 +9,7 @@ namespace Vlaaieboer
         // declare variables
         private static ConsoleKeyInfo inputKey = new ConsoleKeyInfo();
 
-        private static string fileEmployees = "employees.json";
+        private static string filePeople = "employees.json";
         private static string fileCustomers = "customers.json";
         private static string fileEmployeeRoles = "employeeRoles.json";
 
@@ -20,6 +20,7 @@ namespace Vlaaieboer
             // Console.TreatControlCAsInput = true;                                         // doesn't seem to work correctly ?
 
             // init console window properties
+
             Console.Title = "Avans C# Console Application prototype";
             Console.SetWindowSize(80, 35);
             //Console.SetWindowPosition(11, 9);                     //TODO: figure out SetWindowsPosition
@@ -28,10 +29,9 @@ namespace Vlaaieboer
 
             do
             {
-                IO.DisplayMenu("Main Menu", "(L)ogin\n(E)mployees\n(C)ustomers\n(P)roducts\n(M)asterdata\n\nEnter your choice, Escape to Exit program\n\n", 2);
+                IO.DisplayMenu("Main Menu", "(L)ogin\n(P)eople\n(C)ustomers\nPro(D)ucts\n(M)asterdata\n\nEnter your choice, Escape to Exit program\n\n", 2);
                 inputKey = Console.ReadKey(true);               // 'true' | dont'display the input on the console
                 CheckMenuInput();
-
             } while (inputKey.Key != ConsoleKey.Escape);
 
             Console.WriteLine("\n\nYou have been logged out.. Goodbye!");
@@ -48,15 +48,20 @@ namespace Vlaaieboer
             {
                 _ = new Login();            // _ discard unnecessary var declaration
             }
-            else if (inputKey.Key == ConsoleKey.E & Login.validPassword)             // Employees
+            else if (inputKey.Key == ConsoleKey.P & Login.validPassword)             // People
             {
-                IO.DisplayMenu("Browse/edit employee records", "(Ins)ert to Add\n(Enter)to Edit\n(Del)ete to remove Record\nUse arrow keys to browse\n(Home) Main menu\n\n", 2);
+                IO.DisplayMenu("Browse/edit People", "(Ins)ert to Add\n(Enter)to Edit\n(Del)ete to remove Record\nUse arrow keys to browse\n(Home) Main menu\n\n", 2);
                 Employees();
             }
             else if (inputKey.Key == ConsoleKey.C & Login.validPassword)             // Customers
             {
                 IO.DisplayMenu("Browse/edit customer records", "(A)dd\nArrows to browse\n(Del)ete\n", 2);
                 Customers();
+            }
+            else if (inputKey.Key == ConsoleKey.D & Login.validPassword)             // Products
+            {
+                IO.DisplayMenu("Browse/edit product records", "(A)dd\nArrows to browse\n(Del)ete\n", 2);
+                //Products();
             }
             else if (inputKey.Key == ConsoleKey.M & Login.validPassword)             // Master Data
             {
@@ -69,11 +74,9 @@ namespace Vlaaieboer
             }
         }
 
-        private static void Employees()                 
+        private static void Employees()
         {
-            // var employeeList = new List<Employee>();
-            var employeeList = Employee.PopulateList(fileEmployees);
-
+            var employeeList = Person.PopulateList(filePeople);
             int cursorLeft = Console.CursorLeft;                           // store current cursorposition, left and top
             int cursorTop = Console.CursorTop;
             int recordIndex = 0;
@@ -83,37 +86,33 @@ namespace Vlaaieboer
             {
                 maxRecords = employeeList.Count;
                 recordIndex = 1;
-                Employee.DisplayRecord(employeeList, recordIndex, false);
-                UpdateTotalRecordsOnScreen(maxRecords);
+                Person.DisplayRecord(employeeList, recordIndex, false);
             }
             else
             {
-                Employee.DisplayRecord(employeeList, recordIndex, true);
+                maxRecords = 0;
+                recordIndex = 1;
+                Person.DisplayRecord(employeeList, recordIndex, true);
             }
-
-            // IO.PrintOnConsole("Age: " + newEmployee.CalculateAge().ToString(), 34, 1);
+            UpdateTotalRecordsOnScreen(maxRecords);
             string inputString = "abcdefghijklmnopqrstuvwxyz" + ConsoleKey.Backspace.ToString();
             StringBuilder zoekstring = new StringBuilder();
-            // Console.WriteLine("Return to (M)ain menu\n");
+
             do
             {
                 inputKey = Console.ReadKey(true);
 
                 switch (inputKey.Key)
                 {
-
-
                     case ConsoleKey.Enter:                  // edit current record in browsemode
 
                         if (maxRecords > 0)                 // some record is being displayed
                         {
                             Console.SetCursorPosition(cursorLeft, cursorTop + 1);       // set cursor on first inputfield
-                            //employeeList[recordIndex].SurName = new Employee(employeeList, recordIndex);
-                            //(employeeList, recordIndex);             // edit current record
-                            Employee.EditRecord(employeeList, recordIndex);             // edit current record
-                            Employee.WriteToFile(fileEmployees, employeeList);          // write to file
+                            Person.EditRecord(employeeList, recordIndex);             // edit current record
+                            Person.WriteToFile(filePeople, employeeList);          // write to file
                             Console.SetCursorPosition(cursorLeft, cursorTop);           // cursor back to top
-                            Employee.DisplayRecord(employeeList, recordIndex, false);   // display record for updated employeeID and age
+                            Person.DisplayRecord(employeeList, recordIndex, false);   // display record for updated employeeID and age
                         }
 
                         break;
@@ -122,32 +121,41 @@ namespace Vlaaieboer
 
                         //IO.DisplayMenu("Edit Customer master data", "Enter to validate field\nDel/Insert character\nArrow keys, Home, End to navigate\n");
                         Console.SetCursorPosition(cursorLeft, cursorTop);
-                        Employee.DisplayRecord(employeeList, recordIndex, true);
+                        Person.DisplayRecord(employeeList, recordIndex, true);
                         Console.SetCursorPosition(cursorLeft, cursorTop + 1);
-                        employeeList.Add(new Employee(true));
-                        maxRecords = Employee.totalRecords;
+                        employeeList.Add(new Person(true));
+                        maxRecords = Person.totalRecords;
+                        recordIndex++;
                         UpdateTotalRecordsOnScreen(maxRecords);
-                        Employee.WriteToFile(fileEmployees, employeeList);
+                        Console.SetCursorPosition(cursorLeft, cursorTop);
+                        Person.DisplayRecord(employeeList, recordIndex, false);
+                        Person.WriteToFile(filePeople, employeeList);
+
+                        break;
+
+                    case ConsoleKey.Delete:             // delete current record
 
                         break;
 
                     case ConsoleKey.LeftArrow:
+                    case ConsoleKey.UpArrow:
 
                         if (recordIndex > 1)
                         {
                             recordIndex--;
                             Console.SetCursorPosition(cursorLeft, cursorTop);
-                            Employee.DisplayRecord(employeeList, recordIndex, false);
+                            Person.DisplayRecord(employeeList, recordIndex, false);
                         }
                         break;
 
                     case ConsoleKey.RightArrow:
+                    case ConsoleKey.DownArrow:
 
                         if (recordIndex < maxRecords)
                         {
                             recordIndex++;
                             Console.SetCursorPosition(cursorLeft, cursorTop);
-                            Employee.DisplayRecord(employeeList, recordIndex, false);
+                            Person.DisplayRecord(employeeList, recordIndex, false);
                         }
 
                         break;
@@ -158,31 +166,27 @@ namespace Vlaaieboer
                         IO.PrintOnConsole("Searching: [ " + zoekstring.ToString() + " ]".PadRight(20, ' '), 1, cursorTop - 1);
 
                         if (zoekstring.ToString().Contains(inputKey.KeyChar.ToString()))
-                        
-                        {
 
-                            Employee empResult = employeeList.Find(delegate (Employee emp)
+                        {
+                            Person employeeSearchResult = employeeList.Find(delegate (Person emp)
                             {
                                 return emp.SurName.StartsWith(zoekstring.ToString());
-
                             }
                             );
-                            if (empResult != null)
+                            if (employeeSearchResult != null)
                             {
                                 //var ix = empResult.RecordCounter;
                                 Console.SetCursorPosition(cursorLeft, cursorTop);
-                                Employee.DisplayRecord(employeeList, empResult.RecordCounter, false);
-                                recordIndex = empResult.RecordCounter;
+                                Person.DisplayRecord(employeeList, employeeSearchResult.RecordCounter, false);
+                                recordIndex = employeeSearchResult.RecordCounter;
                             }
                             else
                             {
                                 zoekstring.Clear();
                             }
-
                         }
 
                         break;
-
                 }
             } while (inputKey.Key != ConsoleKey.Home);
         }

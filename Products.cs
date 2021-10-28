@@ -8,6 +8,6 @@ namespace Vlaaieboer
 {
     class Products
     {
-        // naam cijfer, adres geboortedatum
+        
     }
 }
