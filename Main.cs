@@ -76,23 +76,23 @@ namespace Vlaaieboer
 
         private static void Employees()
         {
-            var employeeList = Person.PopulateList(filePeople);
+            var peopleList = Person.PopulateList(filePeople);
             int cursorLeft = Console.CursorLeft;                           // store current cursorposition, left and top
             int cursorTop = Console.CursorTop;
             int recordIndex = 0;
             int maxRecords = 0;
 
-            if (employeeList.Count > 0)
+            if (peopleList.Count > 0)
             {
-                maxRecords = employeeList.Count;
+                maxRecords = peopleList.Count;
                 recordIndex = 1;
-                Person.DisplayRecord(employeeList, recordIndex, false);
+                Person.DisplayRecord(peopleList, recordIndex, false);
             }
             else
             {
                 maxRecords = 0;
                 recordIndex = 1;
-                Person.DisplayRecord(employeeList, recordIndex, true);
+                Person.DisplayRecord(peopleList, recordIndex, true);
             }
             UpdateTotalRecordsOnScreen(maxRecords);
             string inputString = "abcdefghijklmnopqrstuvwxyz" + ConsoleKey.Backspace.ToString();
@@ -104,32 +104,32 @@ namespace Vlaaieboer
 
                 switch (inputKey.Key)
                 {
-                    case ConsoleKey.Enter:                  // edit current record in browsemode
+                    case ConsoleKey.Enter:                  // edit current existing record 
 
                         if (maxRecords > 0)                 // some record is being displayed
                         {
                             Console.SetCursorPosition(cursorLeft, cursorTop + 1);       // set cursor on first inputfield
-                            Person.EditRecord(employeeList, recordIndex);             // edit current record
-                            Person.WriteToFile(filePeople, employeeList);          // write to file
+                            Person.EditRecord(peopleList, recordIndex);             // edit current record
+                            Person.WriteToFile(filePeople, peopleList);          // write to file
                             Console.SetCursorPosition(cursorLeft, cursorTop);           // cursor back to top
-                            Person.DisplayRecord(employeeList, recordIndex, false);   // display record for updated employeeID and age
+                            Person.DisplayRecord(peopleList, recordIndex, false);   // display record for updated employeeID and age
                         }
 
                         break;
 
-                    case ConsoleKey.Insert:                 // add record
+                    case ConsoleKey.Insert:                 // add new record
 
                         //IO.DisplayMenu("Edit Customer master data", "Enter to validate field\nDel/Insert character\nArrow keys, Home, End to navigate\n");
                         Console.SetCursorPosition(cursorLeft, cursorTop);
-                        Person.DisplayRecord(employeeList, recordIndex, true);
+                        Person.DisplayRecord(peopleList, recordIndex, true);
                         Console.SetCursorPosition(cursorLeft, cursorTop + 1);
-                        employeeList.Add(new Person(true));
+                        peopleList.Add(new Person(true));
                         maxRecords = Person.totalRecords;
                         recordIndex++;
                         UpdateTotalRecordsOnScreen(maxRecords);
                         Console.SetCursorPosition(cursorLeft, cursorTop);
-                        Person.DisplayRecord(employeeList, recordIndex, false);
-                        Person.WriteToFile(filePeople, employeeList);
+                        Person.DisplayRecord(peopleList, recordIndex, false);
+                        Person.WriteToFile(filePeople, peopleList);
 
                         break;
 
@@ -144,7 +144,7 @@ namespace Vlaaieboer
                         {
                             recordIndex--;
                             Console.SetCursorPosition(cursorLeft, cursorTop);
-                            Person.DisplayRecord(employeeList, recordIndex, false);
+                            Person.DisplayRecord(peopleList, recordIndex, false);
                         }
                         break;
 
@@ -155,7 +155,7 @@ namespace Vlaaieboer
                         {
                             recordIndex++;
                             Console.SetCursorPosition(cursorLeft, cursorTop);
-                            Person.DisplayRecord(employeeList, recordIndex, false);
+                            Person.DisplayRecord(peopleList, recordIndex, false);
                         }
 
                         break;
@@ -168,16 +168,18 @@ namespace Vlaaieboer
                         if (zoekstring.ToString().Contains(inputKey.KeyChar.ToString()))
 
                         {
-                            Person employeeSearchResult = employeeList.Find(delegate (Person emp)
-                            {
-                                return emp.SurName.StartsWith(zoekstring.ToString());
-                            }
+                            Person employeeSearchResult = peopleList.Find
+                            (
+                                delegate (Person emp)
+                                {
+                                    return emp.SurName.StartsWith(zoekstring.ToString());
+                                }
                             );
                             if (employeeSearchResult != null)
                             {
                                 //var ix = empResult.RecordCounter;
                                 Console.SetCursorPosition(cursorLeft, cursorTop);
-                                Person.DisplayRecord(employeeList, employeeSearchResult.RecordCounter, false);
+                                Person.DisplayRecord(peopleList, employeeSearchResult.RecordCounter, false);
                                 recordIndex = employeeSearchResult.RecordCounter;
                             }
                             else
@@ -191,7 +193,7 @@ namespace Vlaaieboer
             } while (inputKey.Key != ConsoleKey.Home);
         }
 
-        private static void UpdateTotalRecordsOnScreen(int maxRecords)
+        private static void UpdateTotalRecordsOnScreen(int maxRecords)                  // TODO: check on .Relationtype = "Y"
         {
             IO.Color(2);
             IO.PrintOnConsole("[" + maxRecords.ToString() + "] employee records", 30, 5);

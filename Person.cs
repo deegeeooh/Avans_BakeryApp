@@ -8,21 +8,6 @@ namespace Vlaaieboer
 {
     internal class Person
     {
-        // intialize field parameters
-        //private static int surnameMaxLenght = 45; private static int surnameMinLenght = 1;
-
-        //private static int prefixMaxLength = 35; private static int prefixMinLenght = 0;
-        //private static int firstnameMaxLength = 30; private static int firstnameMinLength = 1;
-        //private static int genderMaxLength = 1; private static int genderMinLenght = 1;
-        //private static int relationMaxLength = 1; private static int relationMinLength = 1;
-        //private static int jobTitleMaxLenght = 3; private static int jobTitleMinLenght = 0;
-        //private static int doBMaxLength = 10; private static int doBMinLenght = 10;
-        //private static int addressMaxLenght = 45; private static int addressMinLenght = 0;
-        //private static int zipCodeMaxLenght = 6; private static int zipCodeMinLength = 0;
-        //private static int cityMaxLenght = 45; private static int cityMinLenght = 0;
-        //private static int countryMaxLength = 45; private static int countryMinLength = 0;
-        //private static int telMaxLenght = 14; private static int telMinLenght = 0;
-        //private static int emailMaxLenght = 45; private static int emailMinLength = 1;
         private static int lengthQuestionField = 30;
 
         // input validation strings
@@ -34,22 +19,23 @@ namespace Vlaaieboer
         public static int totalRecords = 0;
 
         //
-        // 2 dimensional array with 3 columns per row: fieldNames index, field max length, field min required length
+        // 2 dimensional array with 3 columns per row: fieldNames index (for readability, not necessary), field max length, field min required length
         //
-        private static int[,] fieldsArray = { { 0, 8, 1 },
-                                               { 1, 45, 1 },
-                                               { 2, 35, 0 },
-                                               { 3, 30, 1 },
-                                               { 4, 1, 1 },
-                                               { 5, 1, 1 },
-                                               { 6, 3, 0 },
-                                               { 7, 10, 10 },
-                                               { 8, 45, 0 },
-                                               { 9, 6, 0 },
-                                               { 10, 45, 0 },
-                                               { 11, 45, 1 },
-                                               { 12, 14, 0 },
-                                               { 13, 45, 1 } };
+
+        private static int[,] fieldProperties = { { 0, 8, 1 },
+                                              { 1, 45, 1 },
+                                              { 2, 35, 0 },
+                                              { 3, 30, 1 },
+                                              { 4, 1, 1 },
+                                              { 5, 1, 1 },
+                                              { 6, 3, 0 },
+                                              { 7, 10, 10 },
+                                              { 8, 45, 0 },
+                                              { 9, 6, 0 },
+                                              { 10, 45, 0 },
+                                              { 11, 45, 0 },
+                                              { 12, 14, 0 },
+                                              { 13, 45, 1 } };
 
         private static String[] fieldNames = { "PersonID: ",                                  //0
                                                "Surname: ",                                   //1
@@ -65,7 +51,7 @@ namespace Vlaaieboer
                                                "Country: ",                                   //11
                                                "Telephone: ",                                 //12
                                                "Email: " };                                   //13
-
+        
         /*
 
         {get; set;} is shorthand for:
@@ -87,7 +73,7 @@ namespace Vlaaieboer
         public int RecordCounter { get; set; }
         public string PersonID { get; set; }
         public bool Active { get; set; }
-        public Mutation[] Mutations { get; set; }
+        public List<Mutation> Mutations { get; set; }           //TODO: probably not a good idea :P
         public string Gender { get; set; }
         public string RelationType { get; set; }
         public string JobTitle { get; set; }                //TODO: jobtitle maintenance
@@ -107,24 +93,26 @@ namespace Vlaaieboer
             if (input)                      // bool input not used atm
             {
                 totalRecords++;
-
                 RecordCounter = totalRecords;
-                SurName = IO.GetInput(fieldNames[1], "", checkinputStringAlpha, lengthQuestionField, fieldsArray[1 ,1], false, true, true, true, true, fieldsArray[1 ,2]);
-                Prefix = IO.GetInput(fieldNames[2], "", checkinputStringAlpha, lengthQuestionField, fieldsArray[2, 1], false, true, true, true, true, fieldsArray[2, 2]);
-                FirstName = IO.GetInput(fieldNames[3], "", checkinputStringAlpha, lengthQuestionField, fieldsArray[3, 1], false, true, true, true, true, fieldsArray[3, 2]);
-                Gender = IO.GetInput(fieldNames[4], "", "MmFfXx", lengthQuestionField, fieldsArray[4, 1], true, true, true, true, true, fieldsArray[4, 2]);
-                RelationType = IO.GetInput(fieldNames[5], "", "YyNn", lengthQuestionField, fieldsArray[5, 1], true, true, true, true, true, fieldsArray[5, 2]);
-                JobTitle = IO.GetInput(fieldNames[6], "", checkinputStringAlpha, lengthQuestionField, fieldsArray[6, 1], true, true, true, true, true, fieldsArray[6, 2]);
-                DateOfBirth = ParseToDateTime(IO.GetInput(fieldNames[7], "", checkinputStringDate, lengthQuestionField, fieldsArray[7, 1], false, true, true, false, true, fieldsArray[7, 2]));
-                Address = IO.GetInput(fieldNames[8], "", checkinputStringAlpha, lengthQuestionField, fieldsArray[8, 1], false, true, true, true, true, fieldsArray[8, 2]);
-                Zipcode = IO.GetInput(fieldNames[9], "", checkinputStringAlpha, lengthQuestionField, fieldsArray[9, 1], false, true, true, true, true, fieldsArray[9, 2]);
-                City = IO.GetInput(fieldNames[10], "", checkinputStringAlpha, lengthQuestionField, fieldsArray[10, 1], false, true, true, true, true, fieldsArray[10, 2]);
-                Country = IO.GetInput(fieldNames[11], "", checkinputStringAlpha, lengthQuestionField, fieldsArray[11, 1], false, true, true, true, true, fieldsArray[11, 2]);
-                Telephone = IO.GetInput(fieldNames[12], "", "0123456789+-", lengthQuestionField, fieldsArray[12, 1], false, true, true, true, true, fieldsArray[12, 2]);
-                Email = IO.GetInput(fieldNames[13], "", checkinputStringAlpha, lengthQuestionField, fieldsArray[13, 1], false, true, true, true, true, fieldsArray[13, 2]);
+                SurName = IO.GetInput(fieldNames[1], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[1, 1], false, true, true, true, true, fieldProperties[1, 2]);
+                Prefix = IO.GetInput(fieldNames[2], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[2, 1], false, true, true, true, true, fieldProperties[2, 2]);
+                FirstName = IO.GetInput(fieldNames[3], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[3, 1], false, true, true, true, true, fieldProperties[3, 2]);
+                Gender = IO.GetInput(fieldNames[4], "", "MmFfXx", lengthQuestionField, fieldProperties[4, 1], true, true, true, true, true, fieldProperties[4, 2]);
+                RelationType = IO.GetInput(fieldNames[5], "", "YyNn", lengthQuestionField, fieldProperties[5, 1], true, true, true, true, true, fieldProperties[5, 2]);
+                JobTitle = IO.GetInput(fieldNames[6], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[6, 1], true, true, true, true, true, fieldProperties[6, 2]);
+                DateOfBirth = ParseToDateTime(IO.GetInput(fieldNames[7], "", checkinputStringDate, lengthQuestionField, fieldProperties[7, 1], false, true, true, false, true, fieldProperties[7, 2]));
+                Address = IO.GetInput(fieldNames[8], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[8, 1], false, true, true, true, true, fieldProperties[8, 2]);
+                Zipcode = IO.GetInput(fieldNames[9], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[9, 1], false, true, true, true, true, fieldProperties[9, 2]);
+                City = IO.GetInput(fieldNames[10], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[10, 1], false, true, true, true, true, fieldProperties[10, 2]);
+                Country = IO.GetInput(fieldNames[11], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[11, 1], false, true, true, true, true, fieldProperties[11, 2]);
+                Telephone = IO.GetInput(fieldNames[12], "", "0123456789+-", lengthQuestionField, fieldProperties[12, 1], false, true, true, true, true, fieldProperties[12, 2]);
+                Email = IO.GetInput(fieldNames[13], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[13, 1], false, true, true, true, true, fieldProperties[13, 2]);
+
+                CheckMutations (this," ","[Created:]", 1);          // create a single mutation to indicate creation datestamp
 
                 // construct unique employee ID
                 PersonID = ConstructID(this);
+                Active = true;
             }
         }
 
@@ -149,25 +137,64 @@ namespace Vlaaieboer
         public static void EditRecord(List<Person> aList, int aRecord)
         {
             // start editing the first field
-            aList[aRecord - 1].SurName = IO.GetInput(fieldNames[1], aList[aRecord - 1].SurName, checkinputStringAlpha, lengthQuestionField, fieldsArray[1, 1], false, true, true, true, true, fieldsArray[1, 2]);
-            aList[aRecord - 1].Prefix = IO.GetInput(fieldNames[2], aList[aRecord - 1].Prefix, checkinputStringAlpha, lengthQuestionField, fieldsArray[2, 1], false, true, true, true, true, fieldsArray[2, 2]);
-            aList[aRecord - 1].FirstName = IO.GetInput(fieldNames[3], aList[aRecord - 1].FirstName, checkinputStringAlpha, lengthQuestionField, fieldsArray[3, 1], false, true, true, true, true, fieldsArray[3, 2]);
-            aList[aRecord - 1].Gender = IO.GetInput(fieldNames[4], aList[aRecord - 1].Gender, "mMfFxX", lengthQuestionField, fieldsArray[4, 1], true, true, true, true, true, fieldsArray[4, 2]);
-            aList[aRecord - 1].RelationType = IO.GetInput(fieldNames[5], aList[aRecord - 1].RelationType, "YyNn", lengthQuestionField, fieldsArray[5, 1], true, true, true, true, true, fieldsArray[5, 2]);         //TODO: select from array from EmployeeRoles
-            aList[aRecord - 1].JobTitle = IO.GetInput(fieldNames[6], aList[aRecord - 1].JobTitle, checkinputStringAlpha, lengthQuestionField, fieldsArray[6, 1], true, true, true, true, true, fieldsArray[6, 2]);
-            aList[aRecord - 1].DateOfBirth = ParseToDateTime(IO.GetInput(fieldNames[7], aList[aRecord - 1].DateOfBirth.ToString("dd/MM/yyyy"), checkinputStringDate, lengthQuestionField, fieldsArray[7, 1], false, true, true, false, true, fieldsArray[7, 2]));
-            aList[aRecord - 1].Address = IO.GetInput(fieldNames[8], aList[aRecord - 1].Address, checkinputStringAlpha, lengthQuestionField, fieldsArray[8, 1], false, true, true, true, true, fieldsArray[8, 2]);
-            aList[aRecord - 1].Zipcode = IO.GetInput(fieldNames[9], aList[aRecord - 1].Zipcode, checkinputStringAlpha, lengthQuestionField, fieldsArray[9, 1], false, true, true, true, true, fieldsArray[9, 2]);
-            aList[aRecord - 1].City = IO.GetInput(fieldNames[10], aList[aRecord - 1].City, checkinputStringAlpha, lengthQuestionField, fieldsArray[10, 1], false, true, true, true, true, fieldsArray[10, 2]);
-            aList[aRecord - 1].Country = IO.GetInput(fieldNames[11], aList[aRecord - 1].Country, checkinputStringAlpha, lengthQuestionField, fieldsArray[11, 1], false, true, true, true, true, fieldsArray[11, 2]);
-            aList[aRecord - 1].Telephone = IO.GetInput(fieldNames[12], aList[aRecord - 1].Telephone, "0123456789+-", lengthQuestionField, fieldsArray[12, 1], false, true, true, true, true, fieldsArray[12, 2]);
-            aList[aRecord - 1].Email = IO.GetInput(fieldNames[13], aList[aRecord - 1].Email, checkinputStringAlpha, lengthQuestionField, fieldsArray[13, 1], false, true, true, true, true, fieldsArray[13, 2]);
+
+            var old = aList[aRecord - 1].SurName;
+            aList[aRecord - 1].SurName = IO.GetInput(
+                                         fieldNames[1],
+                                         aList[aRecord - 1].SurName,
+                                         checkinputStringAlpha,
+                                         lengthQuestionField,
+                                         fieldProperties[1, 1],
+                                         false,
+                                         true,
+                                         true,
+                                         true,
+                                         true,
+                                         fieldProperties[1, 2]);
+            var newVal = aList[aRecord - 1].SurName;
+            CheckMutations(aList[aRecord - 1], old, newVal, 1);
+
+            aList[aRecord - 1].Prefix = IO.GetInput(fieldNames[2], aList[aRecord - 1].Prefix, checkinputStringAlpha, lengthQuestionField, fieldProperties[2, 1], false, true, true, true, true, fieldProperties[2, 2]);
+            aList[aRecord - 1].FirstName = IO.GetInput(fieldNames[3], aList[aRecord - 1].FirstName, checkinputStringAlpha, lengthQuestionField, fieldProperties[3, 1], false, true, true, true, true, fieldProperties[3, 2]);
+            aList[aRecord - 1].Gender = IO.GetInput(fieldNames[4], aList[aRecord - 1].Gender, "mMfFxX", lengthQuestionField, fieldProperties[4, 1], true, true, true, true, true, fieldProperties[4, 2]);
+            aList[aRecord - 1].RelationType = IO.GetInput(fieldNames[5], aList[aRecord - 1].RelationType, "YyNn", lengthQuestionField, fieldProperties[5, 1], true, true, true, true, true, fieldProperties[5, 2]);         //TODO: select from array from EmployeeRoles
+            aList[aRecord - 1].JobTitle = IO.GetInput(fieldNames[6], aList[aRecord - 1].JobTitle, checkinputStringAlpha, lengthQuestionField, fieldProperties[6, 1], true, true, true, true, true, fieldProperties[6, 2]);
+            aList[aRecord - 1].DateOfBirth = ParseToDateTime(IO.GetInput(fieldNames[7], aList[aRecord - 1].DateOfBirth.ToString("dd/MM/yyyy"), checkinputStringDate, lengthQuestionField, fieldProperties[7, 1], false, true, true, false, true, fieldProperties[7, 2]));
+            aList[aRecord - 1].Address = IO.GetInput(fieldNames[8], aList[aRecord - 1].Address, checkinputStringAlpha, lengthQuestionField, fieldProperties[8, 1], false, true, true, true, true, fieldProperties[8, 2]);
+            aList[aRecord - 1].Zipcode = IO.GetInput(fieldNames[9], aList[aRecord - 1].Zipcode, checkinputStringAlpha, lengthQuestionField, fieldProperties[9, 1], false, true, true, true, true, fieldProperties[9, 2]);
+            aList[aRecord - 1].City = IO.GetInput(fieldNames[10], aList[aRecord - 1].City, checkinputStringAlpha, lengthQuestionField, fieldProperties[10, 1], false, true, true, true, true, fieldProperties[10, 2]);
+            aList[aRecord - 1].Country = IO.GetInput(fieldNames[11], aList[aRecord - 1].Country, checkinputStringAlpha, lengthQuestionField, fieldProperties[11, 1], false, true, true, true, true, fieldProperties[11, 2]);
+            aList[aRecord - 1].Telephone = IO.GetInput(fieldNames[12], aList[aRecord - 1].Telephone, "0123456789+-", lengthQuestionField, fieldProperties[12, 1], false, true, true, true, true, fieldProperties[12, 2]);
+            aList[aRecord - 1].Email = IO.GetInput(fieldNames[13], aList[aRecord - 1].Email, checkinputStringAlpha, lengthQuestionField, fieldProperties[13, 1], false, true, true, true, true, fieldProperties[13, 2]);
 
             aList[aRecord - 1].PersonID = ConstructID(aList[aRecord - 1]);
             aList[aRecord - 1].Active = true;
+        }
 
-            //IO.GetInput("Surname:", aList[aRecord].SurName, checkinputStringAlpha, lengthQuestionField, surnameMaxLenght, true, true, true, true, surnameMinLenght);
-            //Prefix = IO.GetInput("Prefix:", "", checkinputStringAlpha, lengthQuestionField, prefixMaxLength, true, true, true, true, prefixMinLenght);
+        private static void CheckMutations(Person aPerson, string old, string newVal, int aFieldnumber)
+        {
+            if (old != newVal)
+            {
+                int len;
+                if (aPerson.Mutations != null)
+                {
+                    len = aPerson.Mutations.Count;
+                }
+                else
+                {
+                    aPerson.Mutations = new List<Mutation>();            // set object reference so we can use Mutations.Add
+                    len = 0;
+                }
+
+                Mutation a = new Mutation(len + 1,
+                                          DateTime.Now,
+                                          fieldNames[aFieldnumber],
+                                          old,
+                                          newVal.Replace(old, ""),
+                                          newVal);
+
+                aPerson.Mutations.Add(a);                                // needs object reference when = null;
+            }
         }
 
         public static void DisplayRecord(List<Person> aList, int aRecord, bool clearform)             //TODO: Somehow make this compacter => probably via an interface?
@@ -175,44 +202,29 @@ namespace Vlaaieboer
             var cursor = Console.CursorTop;
             if (clearform)
             {
-                for (int i = 0; i < fieldsArray.GetLength(0); i++)
+                for (int i = 0; i < fieldProperties.GetLength(0); i++)
                 {
-                    IO.PrintBoundaries(fieldNames[i], "", lengthQuestionField, fieldsArray[i, 1], cursor); Console.WriteLine(); cursor++;
+                    IO.PrintBoundaries(fieldNames[i], "", lengthQuestionField, fieldProperties[i, 1], cursor); Console.WriteLine(); cursor++;
                 }
-
-                //IO.PrintBoundaries(fieldNames[0], "", lengthQuestionField, 8, cursor); Console.WriteLine(); cursor++;
-                //IO.PrintBoundaries(fieldNames[1], "", lengthQuestionField, surnameMaxLenght, cursor); Console.WriteLine(); cursor++;
-                //IO.PrintBoundaries(fieldNames[2], "", lengthQuestionField, prefixMaxLength, cursor); Console.WriteLine(); cursor++;
-                //IO.PrintBoundaries(fieldNames[3], "", lengthQuestionField, firstnameMaxLength, cursor); Console.WriteLine(); cursor++;
-                //IO.PrintBoundaries(fieldNames[4], "", lengthQuestionField, genderMaxLength, cursor); Console.WriteLine(); cursor++;
-                //IO.PrintBoundaries(fieldNames[5], "", lengthQuestionField, relationMaxLength, cursor); Console.WriteLine(); cursor++;
-                //IO.PrintBoundaries(fieldNames[6], "", lengthQuestionField, jobTitleMaxLenght, cursor); Console.WriteLine(); cursor++;
-                //IO.PrintBoundaries(fieldNames[7], "", lengthQuestionField, doBMaxLength, cursor); Console.WriteLine(); cursor++;
-                //IO.PrintBoundaries(fieldNames[8], "", lengthQuestionField, addressMaxLenght, cursor); Console.WriteLine(); cursor++;
-                //IO.PrintBoundaries(fieldNames[9], "", lengthQuestionField, zipCodeMaxLenght, cursor); Console.WriteLine(); cursor++;
-                //IO.PrintBoundaries(fieldNames[10], "", lengthQuestionField, cityMaxLenght, cursor); Console.WriteLine(); cursor++;
-                //IO.PrintBoundaries(fieldNames[11], "", lengthQuestionField, countryMaxLength, cursor); Console.WriteLine(); cursor++;
-                //IO.PrintBoundaries(fieldNames[12], "", lengthQuestionField, telMaxLenght, cursor); Console.WriteLine(); cursor++;
-                //IO.PrintBoundaries(fieldNames[13], "", lengthQuestionField, emailMaxLenght, cursor); Console.WriteLine(); cursor++;
             }
             else
             {
-                IO.PrintBoundaries(fieldNames[0], aList[aRecord - 1].PersonID, lengthQuestionField, fieldsArray[0, 1], cursor); Console.WriteLine(); cursor++;
-                IO.PrintBoundaries(fieldNames[1], aList[aRecord - 1].SurName, lengthQuestionField, fieldsArray[1, 1], cursor); Console.WriteLine(); cursor++;
-                IO.PrintBoundaries(fieldNames[2], aList[aRecord - 1].Prefix, lengthQuestionField, fieldsArray[2, 1], cursor); Console.WriteLine(); cursor++;
-                IO.PrintBoundaries(fieldNames[3], aList[aRecord - 1].FirstName, lengthQuestionField, fieldsArray[3, 1], cursor); Console.WriteLine(); cursor++;
-                IO.PrintBoundaries(fieldNames[4], aList[aRecord - 1].Gender, lengthQuestionField, fieldsArray[4, 1], cursor); Console.WriteLine(); cursor++;
-                IO.PrintBoundaries(fieldNames[5], aList[aRecord - 1].RelationType, lengthQuestionField, fieldsArray[5, 1], cursor); Console.WriteLine(); cursor++;
-                IO.PrintBoundaries(fieldNames[6], aList[aRecord - 1].JobTitle, lengthQuestionField, fieldsArray[6, 1], cursor); Console.WriteLine(); cursor++;
-                IO.PrintBoundaries(fieldNames[7], aList[aRecord - 1].DateOfBirth.ToString("dd/MM/yyyy"), lengthQuestionField, fieldsArray[7, 1], cursor); // Console.WriteLine(); // cursor++;
-                Console.SetCursorPosition(lengthQuestionField + fieldsArray[7, 1] + 5, cursor);
+                IO.PrintBoundaries(fieldNames[0], aList[aRecord - 1].PersonID, lengthQuestionField, fieldProperties[0, 1], cursor); Console.WriteLine(); cursor++;
+                IO.PrintBoundaries(fieldNames[1], aList[aRecord - 1].SurName, lengthQuestionField, fieldProperties[1, 1], cursor); Console.WriteLine(); cursor++;
+                IO.PrintBoundaries(fieldNames[2], aList[aRecord - 1].Prefix, lengthQuestionField, fieldProperties[2, 1], cursor); Console.WriteLine(); cursor++;
+                IO.PrintBoundaries(fieldNames[3], aList[aRecord - 1].FirstName, lengthQuestionField, fieldProperties[3, 1], cursor); Console.WriteLine(); cursor++;
+                IO.PrintBoundaries(fieldNames[4], aList[aRecord - 1].Gender, lengthQuestionField, fieldProperties[4, 1], cursor); Console.WriteLine(); cursor++;
+                IO.PrintBoundaries(fieldNames[5], aList[aRecord - 1].RelationType, lengthQuestionField, fieldProperties[5, 1], cursor); Console.WriteLine(); cursor++;
+                IO.PrintBoundaries(fieldNames[6], aList[aRecord - 1].JobTitle, lengthQuestionField, fieldProperties[6, 1], cursor); Console.WriteLine(); cursor++;
+                IO.PrintBoundaries(fieldNames[7], aList[aRecord - 1].DateOfBirth.ToString("dd/MM/yyyy"), lengthQuestionField, fieldProperties[7, 1], cursor); // Console.WriteLine(); // cursor++;
+                Console.SetCursorPosition(lengthQuestionField + fieldProperties[7, 1] + 5, cursor);
                 Console.WriteLine("(Age: " + (CalculateAge(aList[aRecord - 1].DateOfBirth).ToString()) + ")    "); cursor++;
-                IO.PrintBoundaries(fieldNames[8], aList[aRecord - 1].Address, lengthQuestionField, fieldsArray[8, 1], cursor); Console.WriteLine(); cursor++;
-                IO.PrintBoundaries(fieldNames[9], aList[aRecord - 1].Zipcode, lengthQuestionField, fieldsArray[9, 1], cursor); Console.WriteLine(); cursor++;
-                IO.PrintBoundaries(fieldNames[10], aList[aRecord - 1].City, lengthQuestionField, fieldsArray[10, 1], cursor); Console.WriteLine(); cursor++;
-                IO.PrintBoundaries(fieldNames[11], aList[aRecord - 1].Country, lengthQuestionField, fieldsArray[11, 1], cursor); Console.WriteLine(); cursor++;
-                IO.PrintBoundaries(fieldNames[12], aList[aRecord - 1].Telephone, lengthQuestionField, fieldsArray[12, 1], cursor); Console.WriteLine(); cursor++;
-                IO.PrintBoundaries(fieldNames[13], aList[aRecord - 1].Email, lengthQuestionField, fieldsArray[13, 1], cursor); Console.WriteLine(); cursor++;
+                IO.PrintBoundaries(fieldNames[8], aList[aRecord - 1].Address, lengthQuestionField, fieldProperties[8, 1], cursor); Console.WriteLine(); cursor++;
+                IO.PrintBoundaries(fieldNames[9], aList[aRecord - 1].Zipcode, lengthQuestionField, fieldProperties[9, 1], cursor); Console.WriteLine(); cursor++;
+                IO.PrintBoundaries(fieldNames[10], aList[aRecord - 1].City, lengthQuestionField, fieldProperties[10, 1], cursor); Console.WriteLine(); cursor++;
+                IO.PrintBoundaries(fieldNames[11], aList[aRecord - 1].Country, lengthQuestionField, fieldProperties[11, 1], cursor); Console.WriteLine(); cursor++;
+                IO.PrintBoundaries(fieldNames[12], aList[aRecord - 1].Telephone, lengthQuestionField, fieldProperties[12, 1], cursor); Console.WriteLine(); cursor++;
+                IO.PrintBoundaries(fieldNames[13], aList[aRecord - 1].Email, lengthQuestionField, fieldProperties[13, 1], cursor); Console.WriteLine(); cursor++;
             }
         }
 
@@ -246,8 +258,8 @@ namespace Vlaaieboer
         private static List<Person> DeserializeJSONfile(string aFilename)
         {
             var listFromJason = new List<Person>();                           // define here so method doesn't return NULL
-            if (File.Exists(aFilename))                                         // and causes object not defined error
-            {                                                                   // when calling employeeList.add from main()
+            if (File.Exists(aFilename))                                       // and causes object not defined error
+            {                                                                 // when calling employeeList.add from main()
                 try
                 {
                     listFromJason = JsonConvert.DeserializeObject<List<Person>>(File.ReadAllText(aFilename));

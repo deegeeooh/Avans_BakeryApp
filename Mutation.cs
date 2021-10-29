@@ -10,7 +10,22 @@ namespace Vlaaieboer
     {
         public int RecordCounter { get; set; }
         public DateTime MutationDate { get; set; }
-        public string oldValue { get; set;} 
-        public string newValue { get; set; }
+        public string FieldName { get; set; }
+        public string OldValue { get; set;} 
+        public string Changes { get; set; }
+        public string NewValue { get; set; }
+
+        public Mutation(int aCounter, DateTime aDate, string aFieldName, string anOldString, string aChange, string aNewString)
+        {
+            RecordCounter = aCounter;
+            MutationDate = aDate;
+            FieldName = aFieldName;
+            OldValue = anOldString;
+            Changes = aChange;
+            NewValue = aNewString;
+        }
     }
 }
+
+
+
