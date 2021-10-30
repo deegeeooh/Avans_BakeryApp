@@ -9,9 +9,10 @@ namespace Vlaaieboer
         // declare variables
         private static ConsoleKeyInfo inputKey = new ConsoleKeyInfo();
 
-        private static string filePeople = "employees.json";
+        private static string filePeople = "people.json";
         private static string fileCustomers = "customers.json";
         private static string fileEmployeeRoles = "employeeRoles.json";
+        private static string fileEmployees = "employees.json";
 
         private static void Main(string[] args)
         {
@@ -29,7 +30,7 @@ namespace Vlaaieboer
 
             do
             {
-                IO.DisplayMenu("Main Menu", "(L)ogin\n(P)eople\n(C)ustomers\nPro(D)ucts\n(M)asterdata\n\nEnter your choice, Escape to Exit program\n\n", 2);
+                IO.DisplayMenu("Main Menu", "(L)ogin\n(P)eople\n(E)mployees\n(C)ustomers\nPro(D)ucts\n(M)asterdata\n\nEnter your choice, Escape to Exit program\n\n", 2);
                 inputKey = Console.ReadKey(true);               // 'true' | dont'display the input on the console
                 CheckMenuInput();
             } while (inputKey.Key != ConsoleKey.Escape);
@@ -51,7 +52,12 @@ namespace Vlaaieboer
             else if (inputKey.Key == ConsoleKey.P & Login.validPassword)             // People
             {
                 IO.DisplayMenu("Browse/edit People", "(Ins)ert to Add\n(Enter)to Edit\n(Del)ete to remove Record\nUse arrow keys to browse\n(Home) Main menu\n\n", 2);
-                Employees();
+                People();
+            }
+            else if (inputKey.Key == ConsoleKey.E & Login.validPassword)             // Employees
+            {
+                IO.DisplayMenu("Browse/edit Employees", "(Ins)ert to Add\n(Enter)to Edit\n(Del)ete to remove Record\nUse arrow keys to browse\n(Home) Main menu\n\n", 2);
+                EditEmployees();
             }
             else if (inputKey.Key == ConsoleKey.C & Login.validPassword)             // Customers
             {
@@ -74,9 +80,17 @@ namespace Vlaaieboer
             }
         }
 
-        private static void Employees()
+        private static void EditEmployees()
         {
-            var peopleList = Person.PopulateList(filePeople);
+            var empl = new Employee();
+            
+
+
+        }
+
+        private static void People()
+        {
+            var peopleList = Person.PopulateList(filePeople);              // remark: reading entire file into list, probably want an indexfile IRL
             int cursorLeft = Console.CursorLeft;                           // store current cursorposition, left and top
             int cursorTop = Console.CursorTop;
             int recordIndex = 0;
@@ -123,7 +137,7 @@ namespace Vlaaieboer
                         Console.SetCursorPosition(cursorLeft, cursorTop);
                         Person.DisplayRecord(peopleList, recordIndex, true);
                         Console.SetCursorPosition(cursorLeft, cursorTop + 1);
-                        peopleList.Add(new Person(true));
+                        peopleList.Add(new Person());
                         maxRecords = Person.totalRecords;
                         recordIndex++;
                         UpdateTotalRecordsOnScreen(maxRecords);
@@ -161,7 +175,7 @@ namespace Vlaaieboer
                         break;
 
                     default:
-
+                        
                         zoekstring.Append(inputKey.KeyChar.ToString());
                         IO.PrintOnConsole("Searching: [ " + zoekstring.ToString() + " ]".PadRight(20, ' '), 1, cursorTop - 1);
 
@@ -172,7 +186,7 @@ namespace Vlaaieboer
                             (
                                 delegate (Person emp)
                                 {
-                                    return emp.SurName.StartsWith(zoekstring.ToString());
+                                    return emp.LastName.StartsWith(zoekstring.ToString());
                                 }
                             );
                             if (employeeSearchResult != null)

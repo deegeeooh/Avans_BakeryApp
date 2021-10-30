@@ -76,6 +76,7 @@
   <ItemGroup>
     <Compile Include="EmployeeRoles.cs" />
     <Compile Include="Mutation.cs" />
+    <Compile Include="Employee.cs" />
     <Compile Include="Products.cs" />
     <Compile Include="Login.cs" />
     <Compile Include="Customer.cs" />

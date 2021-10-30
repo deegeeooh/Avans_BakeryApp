@@ -18,7 +18,7 @@
 
         public int RecordCounter { get; set; }
         public string[] PersonID { get; set; }          // == EmployeeID
-        public string Name { get; set; }
+        public string CompanyName { get; set; }
         public string Address { get; set; }
         public string Zipcode { get; set; }
         public string City { get; set; }
