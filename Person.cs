@@ -12,6 +12,7 @@ namespace Vlaaieboer
 
         // input validation strings
         public static string checkinputStringAlpha = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789//-@| '.,_";
+
         public static string checkinputStringDate = "0123456789/-";
         public static string checkinputStringNum = "0123456789";
 
@@ -35,6 +36,8 @@ namespace Vlaaieboer
                                               { 10, 45, 0 },
                                               { 11, 14, 0 },
                                               { 12, 45, 1 } };
+
+        // user changeable input fields
 
         private static String[] fieldNames = { "PersonID: ",                                  //0
                                                "Surname: ",                                   //1
@@ -70,11 +73,13 @@ namespace Vlaaieboer
         public int RecordCounter { get; set; }              // generated
         public string PersonID { get; set; }                // idem
         public bool Active { get; set; }                    // flag for deletion
-        public List<Mutation> Mutations { get; set; }       // like this, every record stores all mutations which is probably not preferable with large files     
+        public List<Mutation> Mutations { get; set; }       // like this, every record stores all mutations which is probably not preferable with large files
         public string Gender { get; set; }
         public string RelationType { get; set; }
-        // public string JobTitle { get; set; }                //TODO: jobtitle maintenance
+
+        // public string JobTitle { get; set; }             //TODO: jobtitle maintenance
         public string FirstName { get; set; }
+
         public string LastName { get; set; }
         public string Prefix { get; set; }
         public DateTime DateOfBirth { get; set; }
@@ -87,26 +92,28 @@ namespace Vlaaieboer
 
         public Person()           // Constructor method; gets executed whenever we call '= new Employee()'
         {
-                totalRecords++;
-                RecordCounter = totalRecords;
-                LastName = IO.GetInput(fieldNames[1], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[1, 1], false, true, true, true, true, fieldProperties[1, 2]);
-                Prefix = IO.GetInput(fieldNames[2], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[2, 1], false, true, true, true, true, fieldProperties[2, 2]);
-                FirstName = IO.GetInput(fieldNames[3], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[3, 1], false, true, true, true, true, fieldProperties[3, 2]);
-                Gender = IO.GetInput(fieldNames[4], "", "MmFfXx", lengthQuestionField, fieldProperties[4, 1], true, true, true, true, true, fieldProperties[4, 2]);
-                RelationType = IO.GetInput(fieldNames[5], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[5, 1], true, true, true, true, true, fieldProperties[5, 2]);
-                DateOfBirth = ParseToDateTime(IO.GetInput(fieldNames[6], "", checkinputStringDate, lengthQuestionField, fieldProperties[6, 1], false, true, true, true, true, fieldProperties[6, 2]));
-                Address = IO.GetInput(fieldNames[7], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[7, 1], false, true, true, true, true, fieldProperties[7, 2]);
-                Zipcode = IO.GetInput(fieldNames[8], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[8, 1], false, true, true, true, true, fieldProperties[8, 2]);
-                City = IO.GetInput(fieldNames[9], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[9, 1], false, true, true, true, true, fieldProperties[9, 2]);
-                Country = IO.GetInput(fieldNames[10], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[10, 1], false, true, true, true, true, fieldProperties[10, 2]);
-                Telephone = IO.GetInput(fieldNames[11], "", "0123456789+-", lengthQuestionField, fieldProperties[11, 1], false, true, true, true, true, fieldProperties[11, 2]);
-                Email = IO.GetInput(fieldNames[12], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[12, 1], false, true, true, true, true, fieldProperties[12, 2]);
+            totalRecords++;
 
-                CheckMutations(this, " ", "[Created:]", 1);          // create a single mutation to indicate creation datestamp
+            RecordCounter = totalRecords;
+            LastName = IO.GetInput(fieldNames[1], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[1, 1], false, true, true, true, true, fieldProperties[1, 2]);
+            Prefix = IO.GetInput(fieldNames[2], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[2, 1], false, true, true, true, true, fieldProperties[2, 2]);
+            FirstName = IO.GetInput(fieldNames[3], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[3, 1], false, true, true, true, true, fieldProperties[3, 2]);
+            Gender = IO.GetInput(fieldNames[4], "", "MmFfXx", lengthQuestionField, fieldProperties[4, 1], true, true, true, true, true, fieldProperties[4, 2]);
+            RelationType = IO.GetInput(fieldNames[5], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[5, 1], false, true, true, true, true, fieldProperties[5, 2]);
+            DateOfBirth = ParseToDateTime(IO.GetInput(fieldNames[6], "", checkinputStringDate, lengthQuestionField, fieldProperties[6, 1], false, true, true, true, true, fieldProperties[6, 2]));
+            Address = IO.GetInput(fieldNames[7], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[7, 1], false, true, true, true, true, fieldProperties[7, 2]);
+            Zipcode = IO.GetInput(fieldNames[8], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[8, 1], false, true, true, true, true, fieldProperties[8, 2]);
+            City = IO.GetInput(fieldNames[9], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[9, 1], false, true, true, true, true, fieldProperties[9, 2]);
+            Country = IO.GetInput(fieldNames[10], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[10, 1], false, true, true, true, true, fieldProperties[10, 2]);
+            Telephone = IO.GetInput(fieldNames[11], "", "0123456789+-", lengthQuestionField, fieldProperties[11, 1], false, true, true, true, true, fieldProperties[11, 2]);
+            Email = IO.GetInput(fieldNames[12], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[12, 1], false, true, true, true, true, fieldProperties[12, 2]);
 
-                // construct unique employee ID
-                PersonID = ConstructID(this);
-                Active = true;
+            CheckMutations(this, " ", "[Created:]", 1);          // create a single mutation to indicate creation datestamp
+
+            // construct unique employee ID
+            PersonID = ConstructID(this);
+            // set deleteflag
+            Active = true;
         }
 
         [JsonConstructor]                       // for json constructor, otherwise it will use the default() constructor which we don't want here
@@ -114,7 +121,6 @@ namespace Vlaaieboer
         {
             //Console.WriteLine("Don't be a dick Jason dear"); Console.ReadKey();
         }
-
 
         public static string ConstructID(Person anEmployee)
         {
@@ -136,9 +142,10 @@ namespace Vlaaieboer
 
         public static void EditRecord<T>(List<T> aList, int aRecord) where T : Person
         {
-            // start editing the first field
+            // store passed values in array for comparison in Checkmutations()
 
-            var old = aList[aRecord - 1].LastName;
+            Person aPersonOldValues = (Person)aList[aRecord - 1].MemberwiseClone(); // create a shallow copy of this object https://docs.microsoft.com/en-us/dotnet/api/system.object.memberwiseclone?view=net-5.0
+
             aList[aRecord - 1].LastName = IO.GetInput(
                                          fieldNames[1],
                                          aList[aRecord - 1].LastName,
@@ -151,8 +158,8 @@ namespace Vlaaieboer
                                          true,
                                          true,
                                          fieldProperties[1, 2]);
-            var newVal = aList[aRecord - 1].LastName;
-            CheckMutations(aList[aRecord - 1], old, newVal, 1);
+            
+            // call GetInput() with the passed values of alist  //TODO: this can also be done as a separate constructor
 
             aList[aRecord - 1].Prefix = IO.GetInput(fieldNames[2], aList[aRecord - 1].Prefix, checkinputStringAlpha, lengthQuestionField, fieldProperties[2, 1], false, true, true, true, true, fieldProperties[2, 2]);
             aList[aRecord - 1].FirstName = IO.GetInput(fieldNames[3], aList[aRecord - 1].FirstName, checkinputStringAlpha, lengthQuestionField, fieldProperties[3, 1], false, true, true, true, true, fieldProperties[3, 2]);
@@ -165,9 +172,23 @@ namespace Vlaaieboer
             aList[aRecord - 1].Country = IO.GetInput(fieldNames[10], aList[aRecord - 1].Country, checkinputStringAlpha, lengthQuestionField, fieldProperties[10, 1], false, true, true, true, true, fieldProperties[10, 2]);
             aList[aRecord - 1].Telephone = IO.GetInput(fieldNames[11], aList[aRecord - 1].Telephone, "0123456789+-", lengthQuestionField, fieldProperties[11, 1], false, true, true, true, true, fieldProperties[11, 2]);
             aList[aRecord - 1].Email = IO.GetInput(fieldNames[12], aList[aRecord - 1].Email, checkinputStringAlpha, lengthQuestionField, fieldProperties[12, 1], false, true, true, true, true, fieldProperties[12, 2]);
-
             aList[aRecord - 1].PersonID = ConstructID(aList[aRecord - 1]);
             aList[aRecord - 1].Active = true;
+            
+            // check which values changed and store them in the Person.Mutations list
+            
+            CheckMutations(aList[aRecord - 1], aPersonOldValues.LastName, aList[aRecord - 1].LastName, 1);
+            CheckMutations(aList[aRecord - 1], aPersonOldValues.Prefix, aList[aRecord - 1].Prefix, 2);
+            CheckMutations(aList[aRecord - 1], aPersonOldValues.FirstName, aList[aRecord - 1].FirstName, 3);
+            CheckMutations(aList[aRecord - 1], aPersonOldValues.Gender, aList[aRecord - 1].Gender, 4);
+            CheckMutations(aList[aRecord - 1], aPersonOldValues.RelationType, aList[aRecord - 1].RelationType, 5);
+            CheckMutations(aList[aRecord - 1], aPersonOldValues.DateOfBirth.ToString(), aList[aRecord - 1].DateOfBirth.ToString(), 6);
+            CheckMutations(aList[aRecord - 1], aPersonOldValues.Address, aList[aRecord - 1].Address, 7);
+            CheckMutations(aList[aRecord - 1], aPersonOldValues.Zipcode, aList[aRecord - 1].Zipcode, 8);
+            CheckMutations(aList[aRecord - 1], aPersonOldValues.City, aList[aRecord - 1].City, 9);
+            CheckMutations(aList[aRecord - 1], aPersonOldValues.Country, aList[aRecord - 1].Country, 10);
+            CheckMutations(aList[aRecord - 1], aPersonOldValues.Telephone, aList[aRecord - 1].Telephone, 11);
+            CheckMutations(aList[aRecord - 1], aPersonOldValues.Email, aList[aRecord - 1].Email, 12);
         }
 
         public static void CheckMutations<T>(T aPerson, string old, string newVal, int aFieldnumber) where T : Person
@@ -189,9 +210,9 @@ namespace Vlaaieboer
                                           DateTime.Now,
                                           fieldNames[aFieldnumber],
                                           old,
-                                          newVal.Replace(old, ""),
+                                          "",
+                                          //newVal.Replace(old, ""),     // TODO: old cannot be empty
                                           newVal);
-
                 aPerson.Mutations.Add(a);                                // needs object reference when = null;
             }
         }
@@ -241,6 +262,7 @@ namespace Vlaaieboer
                 Thread.Sleep(500);
             }
         }
+
         public static List<Person> PopulateList(string aFilename)
         {
             var getemployeelist = DeserializeJSONfile(aFilename);
@@ -248,7 +270,6 @@ namespace Vlaaieboer
             {
                 Person.totalRecords = getemployeelist.Count;      // set total Record static field in Employee Class
             }
-
             return getemployeelist;
         }
 
