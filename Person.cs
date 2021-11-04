@@ -6,6 +6,11 @@ using System.Threading;
 
 namespace Vlaaieboer
 {
+    public class Field : Attribute
+    {
+
+    }
+
     internal class Person
     {
         private static int lengthQuestionField = 30;
@@ -17,7 +22,7 @@ namespace Vlaaieboer
         public static string checkinputStringNum = "0123456789";
 
         // public accessible total record counter
-        public static int totalRecords = 0;
+        private static int totalRecords = 0;             // static class attribute, belongs to the class not the object instances
 
         //
         // 2 dimensional array with 3 columns per row: fieldNames index (for readability, not necessary), field max length, field min required length
@@ -73,13 +78,10 @@ namespace Vlaaieboer
         public int RecordCounter { get; set; }              // generated
         public string PersonID { get; set; }                // idem
         public bool Active { get; set; }                    // flag for deletion
-        public List<Mutation> Mutations { get; set; }       // like this, every record stores all mutations which is probably not preferable with large files
+        public List<Mutation> Mutations { get; set; }       // just as PoC; every record stores all mutations which is probably not preferable
         public string Gender { get; set; }
         public string RelationType { get; set; }
-
-        // public string JobTitle { get; set; }             //TODO: jobtitle maintenance
         public string FirstName { get; set; }
-
         public string LastName { get; set; }
         public string Prefix { get; set; }
         public DateTime DateOfBirth { get; set; }
@@ -93,6 +95,8 @@ namespace Vlaaieboer
         public Person()           // Constructor method; gets executed whenever we call '= new Employee()'
         {
             totalRecords++;
+
+            Console.WriteLine(Person.fieldNames[1]);
 
             RecordCounter = totalRecords;
             LastName = IO.GetInput(fieldNames[1], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[1, 1], false, true, true, true, true, fieldProperties[1, 2]);
@@ -143,8 +147,11 @@ namespace Vlaaieboer
         public static void EditRecord<T>(List<T> aList, int aRecord) where T : Person
         {
             // store passed values in array for comparison in Checkmutations()
+            // create a shallow copy of this object https://docs.microsoft.com/en-us/dotnet/api/system.object.memberwiseclone?view=net-5.0
+            // by cloning the Person object with MemberwiseClone, an independent copy of the original, instead of a reference only, 
+            // except for reference types, like Mutations. But we don't need to clone that since we are creating that 
 
-            Person aPersonOldValues = (Person)aList[aRecord - 1].MemberwiseClone(); // create a shallow copy of this object https://docs.microsoft.com/en-us/dotnet/api/system.object.memberwiseclone?view=net-5.0
+            Person aPersonOldValues = (Person)aList[aRecord - 1].MemberwiseClone(); 
 
             aList[aRecord - 1].LastName = IO.GetInput(
                                          fieldNames[1],
@@ -247,57 +254,9 @@ namespace Vlaaieboer
             }
         }
 
-        public static void WriteToFile<T>(string aFilename, List<T> aEmployeeList) where T : Person
+        public static void SetTotalRecords(int aRecordnumber)
         {
-            try
-            {
-                string jsonString = JsonConvert.SerializeObject(aEmployeeList, Formatting.Indented);
-                File.WriteAllText(aFilename, jsonString);
-            }
-            catch (Exception e)
-            {
-                IO.Color(3);
-                IO.PrintOnConsole($"Error writing to file {aFilename} {e}", 1, 34);
-                IO.Color(5);
-                Thread.Sleep(500);
-            }
-        }
-
-        public static List<Person> PopulateList(string aFilename)
-        {
-            var getemployeelist = DeserializeJSONfile(aFilename);
-            if (getemployeelist != null)                            // file Exists
-            {
-                Person.totalRecords = getemployeelist.Count;      // set total Record static field in Employee Class
-            }
-            return getemployeelist;
-        }
-
-        private static List<Person> DeserializeJSONfile(string aFilename)
-        {
-            var listFromJason = new List<Person>();                           // define here so method doesn't return NULL
-            if (File.Exists(aFilename))                                       // and causes object not defined error
-            {                                                                 // when calling employeeList.add from main()
-                try
-                {
-                    listFromJason = JsonConvert.DeserializeObject<List<Person>>(File.ReadAllText(aFilename));           // JsonConvert will call the default() constructor here
-                    return listFromJason;                                                                               // circumvent with  [JsonConstructor] or by using arguments
-                }                                                                                                       // on the constructor
-                catch (Exception e)
-                {
-                    IO.Color(3);
-                    IO.PrintOnConsole($"Error parsing json file{aFilename} {e}", 1, 1);
-                    Thread.Sleep(500);
-                    IO.Color(5);
-                }
-            }
-            else
-            {
-                IO.PrintOnConsole($"File {aFilename} doesn't exist, creating new file ", 1, 34);
-                Thread.Sleep(750);
-                IO.PrintOnConsole($"".PadRight(80, ' '), 1, 34);
-            }
-            return listFromJason;
+            totalRecords = aRecordnumber;
         }
 
         public static int CalculateAge(DateTime aDateTime)

@@ -1,5 +1,9 @@
 ﻿using System;
 using System.Text;
+using System.Collections.Generic;
+using Newtonsoft.Json;
+using System.IO;
+using System.Threading;
 
 namespace Vlaaieboer
 {
@@ -320,5 +324,62 @@ namespace Vlaaieboer
                 Console.Write(" ");
             }
         }
+
+        public static List<T> PopulateList<T>(string aFilename) where T : class 
+        {
+            var getaListFromJSON = DeserializeJSONfile<T>(aFilename);
+            if (getaListFromJSON != null)                            // file Exists
+            {
+                var a = new List<T>();                                
+                //a[0].totalRecords = getemployeelist.Count;      // set total Record static field in Employee Class
+            }
+            return getaListFromJSON;
+
+        }
+
+        private static List<T> DeserializeJSONfile<T>(string aFilename) where T : class
+        {
+            var getaListFromJSON = new List<T>();                             // define here so method doesn't return NULL
+            if (File.Exists(aFilename))                                       // and causes object not defined error
+            {                                                                 // when calling employeeList.add from main()
+                try
+                {
+                    getaListFromJSON = JsonConvert.DeserializeObject<List<T>>(File.ReadAllText(aFilename));          // JsonConvert will call the default() constructor here
+                    return getaListFromJSON;                                                                         // circumvent with  [JsonConstructor] attribute or by using arguments
+                }                                                                                                    // on the constructor
+                catch (Exception e)
+                {
+                    IO.Color(3);
+                    IO.PrintOnConsole($"Error parsing json file{aFilename} {e}", 1, 1);
+                    Thread.Sleep(500);
+                    IO.Color(5);
+                }
+            }
+            else
+            {
+                IO.PrintOnConsole($"File {aFilename} doesn't exist, creating new file ", 1, 34);
+                Thread.Sleep(750);
+                IO.PrintOnConsole($"".PadRight(80, ' '), 1, 34);
+            }
+            return getaListFromJSON;
+        }
+        public static void WriteToFile<T>(string aFilename, List<T> aListOfObjects) where T : class
+        {
+            try
+            {
+                string jsonString = JsonConvert.SerializeObject(aListOfObjects, Formatting.Indented);
+                File.WriteAllText(aFilename, jsonString);
+            }
+            catch (Exception e)
+            {
+                IO.Color(3);
+                IO.PrintOnConsole($"Error writing to file {aFilename} {e}", 1, 34);
+                IO.Color(5);
+                Thread.Sleep(500);
+            }
+        }
+
+
+
     }
 }
