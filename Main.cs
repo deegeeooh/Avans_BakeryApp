@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Reflection;
 using System.Text;
 using System.Threading;
+
 
 namespace Vlaaieboer
 {
@@ -49,7 +51,7 @@ namespace Vlaaieboer
             {
                 _ = new Login();            // _ discard unnecessary var declaration
             }
-            else if (inputKey.Key == ConsoleKey.P & Login.validPassword)             // People
+            else if (inputKey.Key == ConsoleKey.P)             // People
             {
                 IO.DisplayMenu("Browse/edit People", "(Ins)ert to Add\n(Enter)to Edit\n(Del)ete to remove Record\nUse arrow keys to browse\n(Home) Main menu\n\n", 2);
                 People();
@@ -74,23 +76,60 @@ namespace Vlaaieboer
                 IO.DisplayMenu("Edit Master Data", "(A)dd\nArrows to browse\n(Del)ete\n", 2);
                 Console.WriteLine("  You Pressed D");
             }
-            else if (inputKey.Key == ConsoleKey.Escape)                                 // exit program
+            else if (inputKey.Key == ConsoleKey.A)                                  // Assembly info
+            {
+                //IO.DisplayMenu("Browse/edit product records", "(A)dd\nArrows to browse\n(Del)ete\n", 2);
+                ShowAssemblyInfo();
+            }
+
+            else if (inputKey.Key == ConsoleKey.Escape)                               // exit program
             {
                 return;
             }
+        }
+        private static void ShowAssemblyInfo()
+        {
+            Console.Clear();
+            
+            var assembly = Assembly.GetExecutingAssembly();
+            Console.WriteLine (assembly.FullName);
+
+            var types = assembly.GetTypes();
+            foreach (var type in types)
+            {
+                Console.WriteLine("Type: " + type.Name + " Base Type: "+ type.BaseType);
+                
+                var props = type.GetProperties();
+                foreach (var prop in props)
+                {
+                    Console.WriteLine("\tProperty name: " + prop.Name.PadRight(20, ' ') + "\t Property Type: "+ prop.PropertyType);
+                }
+
+                var fields = type.GetFields();
+                foreach (var field in fields)
+                {
+                    Console.WriteLine("\tField: " + field.Name);
+                }
+
+                var methods = type.GetMethods();
+                foreach (var method in methods)
+                {
+                    Console.WriteLine("\t\tMethod name: " + method.Name.PadRight(20, ' '));
+                }
+                Console.ReadKey();
+            }
+            Console.ReadKey();
+
         }
 
         private static void EditEmployees()
         {
             var empl = new Employee();
-            
-
-
         }
 
         private static void People()
         {
-            var peopleList = Person.PopulateList(filePeople);              // remark: reading entire file into list, probably want an indexfile IRL
+            var peopleList = IO.PopulateList<Person>(filePeople);              // remark: reading entire file into list, probably want an indexfile IRL
             int cursorLeft = Console.CursorLeft;                           // store current cursorposition, left and top
             int cursorTop = Console.CursorTop;
             int recordIndex = 0;
@@ -98,7 +137,8 @@ namespace Vlaaieboer
 
             if (peopleList.Count > 0)
             {
-                maxRecords = peopleList.Count;
+                maxRecords = peopleList.Count;  // not necessary, just use static class attribute totalRecords directly
+                
                 recordIndex = 1;
                 Person.DisplayRecord(peopleList, recordIndex, false);
             }
@@ -124,11 +164,10 @@ namespace Vlaaieboer
                         {
                             Console.SetCursorPosition(cursorLeft, cursorTop + 1);       // set cursor on first inputfield
                             Person.EditRecord(peopleList, recordIndex);             // edit current record
-                            Person.WriteToFile(filePeople, peopleList);          // write to file
+                            IO.WriteToFile(filePeople, peopleList);          // write to file
                             Console.SetCursorPosition(cursorLeft, cursorTop);           // cursor back to top
                             Person.DisplayRecord(peopleList, recordIndex, false);   // display record for updated employeeID and age
                         }
-
                         break;
 
                     case ConsoleKey.Insert:                 // add new record
@@ -138,12 +177,13 @@ namespace Vlaaieboer
                         Person.DisplayRecord(peopleList, recordIndex, true);
                         Console.SetCursorPosition(cursorLeft, cursorTop + 1);
                         peopleList.Add(new Person());
-                        maxRecords = Person.totalRecords;
+                        Person.SetTotalRecords(maxRecords);
+                        //maxRecords = Person.totalRecords;
                         recordIndex++;
                         UpdateTotalRecordsOnScreen(maxRecords);
                         Console.SetCursorPosition(cursorLeft, cursorTop);
                         Person.DisplayRecord(peopleList, recordIndex, false);
-                        Person.WriteToFile(filePeople, peopleList);
+                        IO.WriteToFile(filePeople, peopleList);
 
                         break;
 
@@ -182,19 +222,18 @@ namespace Vlaaieboer
                         if (zoekstring.ToString().Contains(inputKey.KeyChar.ToString()))
 
                         {
-                            Person employeeSearchResult = peopleList.Find
+                            Person personSearchResult = peopleList.Find
                             (
                                 delegate (Person emp)
                                 {
                                     return emp.LastName.StartsWith(zoekstring.ToString());
                                 }
                             );
-                            if (employeeSearchResult != null)
+                            if (personSearchResult != null)
                             {
-                                //var ix = empResult.RecordCounter;
                                 Console.SetCursorPosition(cursorLeft, cursorTop);
-                                Person.DisplayRecord(peopleList, employeeSearchResult.RecordCounter, false);
-                                recordIndex = employeeSearchResult.RecordCounter;
+                                Person.DisplayRecord(peopleList, personSearchResult.RecordCounter, false);
+                                recordIndex = personSearchResult.RecordCounter;
                             }
                             else
                             {
