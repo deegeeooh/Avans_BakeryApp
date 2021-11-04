@@ -1,8 +1,8 @@
-﻿using System;
-using System.Text;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 using System.IO;
+using System.Text;
 using System.Threading;
 
 namespace Vlaaieboer
@@ -28,11 +28,9 @@ namespace Vlaaieboer
             Console.Write("\n");
             Console.WriteLine("=============================================================================");
             IO.Color(2); Console.WriteLine(title + "\n"); IO.Color(4);
-            //Console.WriteLine(menuString);
 
             PrintMenuString(menuString, aColorMenuOption);
 
-            //Console.WriteLine("Enter your choice, press <Escape> to exit\n");
             Console.WriteLine("=============================================================================\n");
             IO.PrintOnConsole("___________________________________________________________________________", 1, 33);
         }
@@ -60,16 +58,16 @@ namespace Vlaaieboer
             }
         }
 
-        public static void PrintOnConsole(string consoleString, int left, int top)              //TODO: capture screenbuffer to display 'windows'
+        public static void PrintOnConsole(string consoleString, int left, int top)  //TODO: capture screenbuffer to display 'windows'
         {
-            int currentCursorPosTop = Console.CursorTop;                // store current cursor pos
+            int currentCursorPosTop = Console.CursorTop;                            // store current cursor pos
             int currentCursorPosLeft = Console.CursorLeft;
             Console.SetCursorPosition(left, top);
             Console.Write(consoleString);
             Console.SetCursorPosition(currentCursorPosLeft, currentCursorPosTop);   // reset cursorpos
         }
 
-        public static void Color(int color)                    // sets or resets console font color
+        public static void Color(int color)                     // sets or resets console font color
         {                                                       // TODO: call with colour name string instead of number
             Console.BackgroundColor = ConsoleColor.Black;
             switch (color)
@@ -294,6 +292,43 @@ namespace Vlaaieboer
             IO.Color(5);        //Grey
         }
 
+        public static DateTime ParseToDateTime(string aDateString)
+
+        {
+            DateTime parsedDateHelpstring;
+            if (DateTime.TryParse(aDateString, out parsedDateHelpstring))   // Tryparse method passing back two values: bool and out var
+            {
+                if (CalculateAge(parsedDateHelpstring) > 100 || CalculateAge(parsedDateHelpstring) < 18)      //TODO: move age check to set; of DoB?
+                {
+                    IO.PrintOnConsole($"Invalid Age: {CalculateAge(parsedDateHelpstring)} ".PadRight(30, ' '), 1, 34);
+                    parsedDateHelpstring = DateTime.Parse("01/01/0001");
+                }
+                else
+                {
+                    IO.PrintOnConsole($"Parsed date string succesfully to {parsedDateHelpstring:dd-MM-yyyy}", 1, 34);
+                }
+            }
+            else
+            {
+                // if invalid date, DateTime remains at initialised 01/01/01 value
+                IO.PrintOnConsole($"Could not parse date string, set to {parsedDateHelpstring:dd-MM-yy}", 1, 34);
+            }
+
+            return parsedDateHelpstring;
+        }
+
+        public static int CalculateAge(DateTime aDateTime)
+        {
+            var age = DateTime.Today.Year - aDateTime.Year;                   // not taking date into account eg. 2021-1997
+            int nowMonthandDay = int.Parse(DateTime.Now.ToString("MMdd"));      // convert month and day to int
+            int thenMonthandDay = int.Parse(aDateTime.ToString("MMdd"));
+            if (nowMonthandDay < thenMonthandDay)
+            {
+                age--;                                                          // if current date (in MMdd) < date of birth subtract 1 year
+            }
+            return age;
+        }
+
         public static void Checkfieldlength(int lengthInputField, int indexInStringbuilder)
         {
             if (indexInStringbuilder == lengthInputField)
@@ -325,16 +360,14 @@ namespace Vlaaieboer
             }
         }
 
-        public static List<T> PopulateList<T>(string aFilename) where T : class 
+        public static List<T> PopulateList<T>(string aFilename) where T : class
         {
             var getaListFromJSON = DeserializeJSONfile<T>(aFilename);
             if (getaListFromJSON != null)                            // file Exists
             {
-                var a = new List<T>();                                
-                //a[0].totalRecords = getemployeelist.Count;      // set total Record static field in Employee Class
+                var a = new List<T>();
             }
             return getaListFromJSON;
-
         }
 
         private static List<T> DeserializeJSONfile<T>(string aFilename) where T : class
@@ -363,6 +396,7 @@ namespace Vlaaieboer
             }
             return getaListFromJSON;
         }
+
         public static void WriteToFile<T>(string aFilename, List<T> aListOfObjects) where T : class
         {
             try
@@ -378,8 +412,5 @@ namespace Vlaaieboer
                 Thread.Sleep(500);
             }
         }
-
-
-
     }
 }

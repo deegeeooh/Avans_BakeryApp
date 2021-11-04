@@ -1,14 +1,11 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Threading;
 
 namespace Vlaaieboer
 {
     public class Field : Attribute
     {
-
     }
 
     internal class Person
@@ -28,35 +25,36 @@ namespace Vlaaieboer
         // 2 dimensional array with 3 columns per row: fieldNames index (for readability, not necessary), field max length, field min required length
         //
 
-        private static int[,] fieldProperties = { { 0, 8, 1 },
-                                              { 1, 45, 1 },
-                                              { 2, 35, 0 },
-                                              { 3, 30, 1 },
-                                              { 4, 1, 1 },
-                                              { 5, 1, 1 },
-                                              { 6, 10, 10 },
-                                              { 7, 45, 0 },
-                                              { 8, 6, 0 },
-                                              { 9, 45, 0 },
-                                              { 10, 45, 0 },
-                                              { 11, 14, 0 },
-                                              { 12, 45, 1 } };
+        private static int[,] fieldProperties = { { 0,   8,  1 },
+                                                  { 1,  45,  1 },
+                                                  { 2,  35,  0 },
+                                                  { 3,  30,  1 },
+                                                  { 4,   1,  1 },
+                                                  { 5,   1,  1 },
+                                                  { 6,  10, 10 },
+                                                  { 7,  45,  0 },
+                                                  { 8,   6,  0 },
+                                                  { 9,  45,  0 },
+                                                  { 10, 45,  0 },
+                                                  { 11, 14,  0 },
+                                                  { 12, 45,  1 } };
 
-        // user changeable input fields
+        // user interface fields
 
-        private static String[] fieldNames = { "PersonID: ",                                  //0
-                                               "Surname: ",                                   //1
-                                               "Prefix:",                                     //2
-                                               "First Name:",                                 //3
-                                               "Gender: (M/F/X)",                             //4
-                                               "Relation type: (Aa-Zz",                       //5
-                                               "Date of Birth: (dd/mm/yyyy)",                 //6
-                                               "Address: ",                                   //7
-                                               "Zipcode: (####ZZ)",                           //8
-                                               "City: ",                                      //9
-                                               "Country: ",                                   //10
-                                               "Telephone: ",                                 //11
-                                               "Email: " };                                   //12
+        private static String[] fieldNames = { "PersonID: "                 ,   // 0
+                                               "Surname: "                  ,   // 1
+                                               "Prefix:"                    ,   // 2
+                                               "First Name:"                ,   // 3
+                                               "Gender: (M/F/X)"            ,   // 4
+                                               "Relation type: (Aa-Zz"      ,   // 5
+                                               "Date of Birth: (dd/mm/yyyy)",   // 6
+                                               "Address: "                  ,   // 7
+                                               "Zipcode: (####ZZ)"          ,   // 8
+                                               "City: "                     ,   // 9
+                                               "Country: "                  ,   //10
+                                               "Telephone: "                ,   //11
+                                               "Email: "                     }; //12
+
         /*
 
         {get; set;} is shorthand for:
@@ -76,9 +74,9 @@ namespace Vlaaieboer
 
        */
         public int RecordCounter { get; set; }              // generated
-        public string PersonID { get; set; }                // idem
-        public bool Active { get; set; }                    // flag for deletion
-        public List<Mutation> Mutations { get; set; }       // just as PoC; every record stores all mutations which is probably not preferable
+        public string PersonID { get; set; }              // idem
+        public bool Active { get; set; }              // flag for deletion
+        public List<Mutation> Mutations { get; set; }              // just as PoC; every record stores all mutations which is probably not preferable
         public string Gender { get; set; }
         public string RelationType { get; set; }
         public string FirstName { get; set; }
@@ -92,7 +90,7 @@ namespace Vlaaieboer
         public string Telephone { get; set; }
         public string Email { get; set; }
 
-        public Person()           // Constructor method; gets executed whenever we call '= new Employee()'
+        public Person()                                 // Main Constructor method;
         {
             totalRecords++;
 
@@ -104,7 +102,7 @@ namespace Vlaaieboer
             FirstName = IO.GetInput(fieldNames[3], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[3, 1], false, true, true, true, true, fieldProperties[3, 2]);
             Gender = IO.GetInput(fieldNames[4], "", "MmFfXx", lengthQuestionField, fieldProperties[4, 1], true, true, true, true, true, fieldProperties[4, 2]);
             RelationType = IO.GetInput(fieldNames[5], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[5, 1], false, true, true, true, true, fieldProperties[5, 2]);
-            DateOfBirth = ParseToDateTime(IO.GetInput(fieldNames[6], "", checkinputStringDate, lengthQuestionField, fieldProperties[6, 1], false, true, true, true, true, fieldProperties[6, 2]));
+            DateOfBirth = IO.ParseToDateTime(IO.GetInput(fieldNames[6], "", checkinputStringDate, lengthQuestionField, fieldProperties[6, 1], false, true, true, true, true, fieldProperties[6, 2]));
             Address = IO.GetInput(fieldNames[7], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[7, 1], false, true, true, true, true, fieldProperties[7, 2]);
             Zipcode = IO.GetInput(fieldNames[8], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[8, 1], false, true, true, true, true, fieldProperties[8, 2]);
             City = IO.GetInput(fieldNames[9], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[9, 1], false, true, true, true, true, fieldProperties[9, 2]);
@@ -133,7 +131,7 @@ namespace Vlaaieboer
             if (anEmployee.LastName.Length >= 3)
             {
                 b = anEmployee.LastName.Substring(0, 3).ToUpper();      // take first 3 chars in uppercase
-            }                                               // TODO: remove whitespace if exists ("de Groot")
+            }                                                           // TODO: remove whitespace if exists ("de Groot")
             else
             {
                 b = anEmployee.LastName.Substring(0, anEmployee.LastName.Length)    // or build to 3 chars with added "A" chars
@@ -148,10 +146,10 @@ namespace Vlaaieboer
         {
             // store passed values in array for comparison in Checkmutations()
             // create a shallow copy of this object https://docs.microsoft.com/en-us/dotnet/api/system.object.memberwiseclone?view=net-5.0
-            // by cloning the Person object with MemberwiseClone, an independent copy of the original, instead of a reference only, 
-            // except for reference types, like Mutations. But we don't need to clone that since we are creating that 
+            // by cloning the Person object with MemberwiseClone, an independent copy of the original, instead of a reference only,
+            // except for reference types, like Mutations. But we don't need to clone that since we are creating that
 
-            Person aPersonOldValues = (Person)aList[aRecord - 1].MemberwiseClone(); 
+            Person aPersonOldValues = (Person)aList[aRecord - 1].MemberwiseClone();
 
             aList[aRecord - 1].LastName = IO.GetInput(
                                          fieldNames[1],
@@ -165,14 +163,14 @@ namespace Vlaaieboer
                                          true,
                                          true,
                                          fieldProperties[1, 2]);
-            
+
             // call GetInput() with the passed values of alist  //TODO: this can also be done as a separate constructor
 
             aList[aRecord - 1].Prefix = IO.GetInput(fieldNames[2], aList[aRecord - 1].Prefix, checkinputStringAlpha, lengthQuestionField, fieldProperties[2, 1], false, true, true, true, true, fieldProperties[2, 2]);
             aList[aRecord - 1].FirstName = IO.GetInput(fieldNames[3], aList[aRecord - 1].FirstName, checkinputStringAlpha, lengthQuestionField, fieldProperties[3, 1], false, true, true, true, true, fieldProperties[3, 2]);
             aList[aRecord - 1].Gender = IO.GetInput(fieldNames[4], aList[aRecord - 1].Gender, "mMfFxX", lengthQuestionField, fieldProperties[4, 1], true, true, true, true, true, fieldProperties[4, 2]);
             aList[aRecord - 1].RelationType = IO.GetInput(fieldNames[5], aList[aRecord - 1].RelationType, checkinputStringAlpha, lengthQuestionField, fieldProperties[5, 1], true, true, true, true, true, fieldProperties[5, 2]);         //TODO: select from array from EmployeeRoles
-            aList[aRecord - 1].DateOfBirth = ParseToDateTime(IO.GetInput(fieldNames[6], aList[aRecord - 1].DateOfBirth.ToString("dd/MM/yyyy"), checkinputStringDate, lengthQuestionField, fieldProperties[6, 1], false, true, true, false, true, fieldProperties[6, 2]));
+            aList[aRecord - 1].DateOfBirth = IO.ParseToDateTime(IO.GetInput(fieldNames[6], aList[aRecord - 1].DateOfBirth.ToString("dd/MM/yyyy"), checkinputStringDate, lengthQuestionField, fieldProperties[6, 1], false, true, true, false, true, fieldProperties[6, 2]));
             aList[aRecord - 1].Address = IO.GetInput(fieldNames[7], aList[aRecord - 1].Address, checkinputStringAlpha, lengthQuestionField, fieldProperties[7, 1], false, true, true, true, true, fieldProperties[7, 2]);
             aList[aRecord - 1].Zipcode = IO.GetInput(fieldNames[8], aList[aRecord - 1].Zipcode, checkinputStringAlpha, lengthQuestionField, fieldProperties[8, 1], false, true, true, true, true, fieldProperties[8, 2]);
             aList[aRecord - 1].City = IO.GetInput(fieldNames[9], aList[aRecord - 1].City, checkinputStringAlpha, lengthQuestionField, fieldProperties[9, 1], false, true, true, true, true, fieldProperties[9, 2]);
@@ -181,9 +179,9 @@ namespace Vlaaieboer
             aList[aRecord - 1].Email = IO.GetInput(fieldNames[12], aList[aRecord - 1].Email, checkinputStringAlpha, lengthQuestionField, fieldProperties[12, 1], false, true, true, true, true, fieldProperties[12, 2]);
             aList[aRecord - 1].PersonID = ConstructID(aList[aRecord - 1]);
             aList[aRecord - 1].Active = true;
-            
+
             // check which values changed and store them in the Person.Mutations list
-            
+
             CheckMutations(aList[aRecord - 1], aPersonOldValues.LastName, aList[aRecord - 1].LastName, 1);
             CheckMutations(aList[aRecord - 1], aPersonOldValues.Prefix, aList[aRecord - 1].Prefix, 2);
             CheckMutations(aList[aRecord - 1], aPersonOldValues.FirstName, aList[aRecord - 1].FirstName, 3);
@@ -198,7 +196,7 @@ namespace Vlaaieboer
             CheckMutations(aList[aRecord - 1], aPersonOldValues.Email, aList[aRecord - 1].Email, 12);
         }
 
-        public static void CheckMutations<T>(T aPerson, string old, string newVal, int aFieldnumber) where T : Person
+        public static void CheckMutations<T>(T aPerson, string old, string newVal, int aFieldnumber) where T : Person                   // TODO: make method generic and store mutations in separate file
         {
             if (old != newVal)
             {
@@ -244,7 +242,7 @@ namespace Vlaaieboer
                 IO.PrintBoundaries(fieldNames[5], aList[aRecord - 1].RelationType, lengthQuestionField, fieldProperties[5, 1], cursor); Console.WriteLine(); cursor++;
                 IO.PrintBoundaries(fieldNames[6], aList[aRecord - 1].DateOfBirth.ToString("dd/MM/yyyy"), lengthQuestionField, fieldProperties[6, 1], cursor); // Console.WriteLine(); // cursor++;
                 Console.SetCursorPosition(lengthQuestionField + fieldProperties[6, 1] + 5, cursor);
-                Console.WriteLine("(Age: " + (CalculateAge(aList[aRecord - 1].DateOfBirth).ToString()) + ")    "); cursor++;
+                Console.WriteLine("(Age: " + (IO.CalculateAge(aList[aRecord - 1].DateOfBirth).ToString()) + ")    "); cursor++;
                 IO.PrintBoundaries(fieldNames[7], aList[aRecord - 1].Address, lengthQuestionField, fieldProperties[7, 1], cursor); Console.WriteLine(); cursor++;
                 IO.PrintBoundaries(fieldNames[8], aList[aRecord - 1].Zipcode, lengthQuestionField, fieldProperties[8, 1], cursor); Console.WriteLine(); cursor++;
                 IO.PrintBoundaries(fieldNames[9], aList[aRecord - 1].City, lengthQuestionField, fieldProperties[9, 1], cursor); Console.WriteLine(); cursor++;
@@ -257,43 +255,6 @@ namespace Vlaaieboer
         public static void SetTotalRecords(int aRecordnumber)
         {
             totalRecords = aRecordnumber;
-        }
-
-        public static int CalculateAge(DateTime aDateTime)
-        {
-            var age = DateTime.Today.Year - aDateTime.Year;                   // not taking date into account eg. 2021-1997
-            int nowMonthandDay = int.Parse(DateTime.Now.ToString("MMdd"));      // convert month and day to int
-            int thenMonthandDay = int.Parse(aDateTime.ToString("MMdd"));
-            if (nowMonthandDay < thenMonthandDay)
-            {
-                age--;                                                          // if current date (in MMdd) < date of birth subtract 1 year
-            }
-            return age;
-        }
-
-        public static DateTime ParseToDateTime(string aDateString)
-
-        {
-            DateTime parsedDateHelpstring;
-            if (DateTime.TryParse(aDateString, out parsedDateHelpstring))   // Tryparse method passing back two values: bool and out var
-            {
-                if (CalculateAge(parsedDateHelpstring) > 100 || CalculateAge(parsedDateHelpstring) < 18)      //TODO: move age check to set; of DoB?
-                {
-                    IO.PrintOnConsole($"Invalid Age: {CalculateAge(parsedDateHelpstring)} ".PadRight(30, ' '), 1, 34);
-                    parsedDateHelpstring = DateTime.Parse("01/01/0001");
-                }
-                else
-                {
-                    IO.PrintOnConsole($"Parsed date string succesfully to {parsedDateHelpstring:dd-MM-yyyy}", 1, 34);
-                }
-            }
-            else
-            {
-                // if invalid date, DateTime remains at initialised 01/01/01 value
-                IO.PrintOnConsole($"Could not parse date string, set to {parsedDateHelpstring:dd-MM-yy}", 1, 34);
-            }
-
-            return parsedDateHelpstring;
         }
     }
 }
