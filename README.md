@@ -1,2 +1,3 @@
 # Avans Employee app (console)
- First console app assignment  - Employee maintenance app
+Console application assignment for a Bakery
+as part of the Avans c# post bachelor course.
