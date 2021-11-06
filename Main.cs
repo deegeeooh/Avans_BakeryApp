@@ -1,8 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using System.Threading;
-
 
 namespace Vlaaieboer
 {
@@ -81,28 +81,28 @@ namespace Vlaaieboer
                 //IO.DisplayMenu("Browse/edit product records", "(A)dd\nArrows to browse\n(Del)ete\n", 2);
                 ShowAssemblyInfo();
             }
-
             else if (inputKey.Key == ConsoleKey.Escape)                               // exit program
             {
                 return;
             }
         }
+
         private static void ShowAssemblyInfo()
         {
             Console.Clear();
-            
+
             var assembly = Assembly.GetExecutingAssembly();
-            Console.WriteLine (assembly.FullName);
+            Console.WriteLine(assembly.FullName);
 
             var types = assembly.GetTypes();
             foreach (var type in types)
             {
-                Console.WriteLine("Type: " + type.Name + " Base Type: "+ type.BaseType);
-                
+                Console.WriteLine("Type: " + type.Name + " Base Type: " + type.BaseType);
+
                 var props = type.GetProperties();
                 foreach (var prop in props)
                 {
-                    Console.WriteLine("\tProperty name: " + prop.Name.PadRight(20, ' ') + "\t Property Type: "+ prop.PropertyType);
+                    Console.WriteLine("\tProperty name: " + prop.Name.PadRight(20, ' ') + "\t Property Type: " + prop.PropertyType);
                 }
 
                 var fields = type.GetFields();
@@ -119,7 +119,6 @@ namespace Vlaaieboer
                 Console.ReadKey();
             }
             Console.ReadKey();
-
         }
 
         private static void EditEmployees()
@@ -129,22 +128,22 @@ namespace Vlaaieboer
 
         private static void People()
         {
-            var peopleList = IO.PopulateList<Person>(filePeople);              // remark: reading entire file into list, probably want an indexfile IRL
-            int cursorLeft = Console.CursorLeft;                           // store current cursorposition, left and top
-            int cursorTop = Console.CursorTop;
+            var peopleList  = IO.PopulateList<Person>(filePeople);          // remark: reading entire file into list, probably want an indexfile IRL
+            int cursorLeft  = Console.CursorLeft;                           // store current cursorposition, left and top
+            int cursorTop   = Console.CursorTop;
             int recordIndex = 0;
-            int maxRecords = 0;
+            int maxRecords  = 0;
 
             if (peopleList.Count > 0)
             {
-                maxRecords = peopleList.Count;  // not necessary, just use static class attribute totalRecords directly
-                
+                maxRecords = peopleList.Count;                              // not necessary, just use static class attribute totalRecords directly
+                Person.SetTotalRecords(maxRecords);             
                 recordIndex = 1;
                 Person.DisplayRecord(peopleList, recordIndex, false);
             }
             else
             {
-                maxRecords = 0;
+                maxRecords  = 0;
                 recordIndex = 1;
                 Person.DisplayRecord(peopleList, recordIndex, true);
             }
@@ -158,7 +157,7 @@ namespace Vlaaieboer
 
                 switch (inputKey.Key)
                 {
-                    case ConsoleKey.Enter:                  // edit current existing record 
+                    case ConsoleKey.Enter:                  // edit current existing record
 
                         if (maxRecords > 0)                 // some record is being displayed
                         {
@@ -172,14 +171,13 @@ namespace Vlaaieboer
 
                     case ConsoleKey.Insert:                 // add new record
 
-                        //IO.DisplayMenu("Edit Customer master data", "Enter to validate field\nDel/Insert character\nArrow keys, Home, End to navigate\n");
                         Console.SetCursorPosition(cursorLeft, cursorTop);
                         Person.DisplayRecord(peopleList, recordIndex, true);
                         Console.SetCursorPosition(cursorLeft, cursorTop + 1);
                         peopleList.Add(new Person());
-                        Person.SetTotalRecords(maxRecords);
-                        //maxRecords = Person.totalRecords;
+                        maxRecords++;
                         recordIndex++;
+                        Person.SetTotalRecords(maxRecords);
                         UpdateTotalRecordsOnScreen(maxRecords);
                         Console.SetCursorPosition(cursorLeft, cursorTop);
                         Person.DisplayRecord(peopleList, recordIndex, false);
@@ -215,35 +213,42 @@ namespace Vlaaieboer
                         break;
 
                     default:
-                        
-                        zoekstring.Append(inputKey.KeyChar.ToString());
-                        IO.PrintOnConsole("Searching: [ " + zoekstring.ToString() + " ]".PadRight(20, ' '), 1, cursorTop - 1);
 
-                        if (zoekstring.ToString().Contains(inputKey.KeyChar.ToString()))
-
-                        {
-                            Person personSearchResult = peopleList.Find
-                            (
-                                delegate (Person emp)
-                                {
-                                    return emp.LastName.StartsWith(zoekstring.ToString());
-                                }
-                            );
-                            if (personSearchResult != null)
-                            {
-                                Console.SetCursorPosition(cursorLeft, cursorTop);
-                                Person.DisplayRecord(peopleList, personSearchResult.RecordCounter, false);
-                                recordIndex = personSearchResult.RecordCounter;
-                            }
-                            else
-                            {
-                                zoekstring.Clear();
-                            }
-                        }
+                        recordIndex = SearchStringInList(peopleList, cursorLeft, cursorTop, recordIndex, zoekstring);
 
                         break;
                 }
             } while (inputKey.Key != ConsoleKey.Home);
+        }
+
+        private static int SearchStringInList(List<Person> peopleList, int cursorLeft, int cursorTop, int recordIndex, StringBuilder zoekstring)
+        {
+            zoekstring.Append(inputKey.KeyChar.ToString());
+            IO.PrintOnConsole("Searching: [ " + zoekstring.ToString() + " ]".PadRight(20, ' '), 1, cursorTop - 1);
+
+            if (zoekstring.ToString().Contains(inputKey.KeyChar.ToString()))
+
+            {
+                Person personSearchResult = peopleList.Find
+                (
+                    delegate (Person emp)
+                    {
+                        return emp.LastName.StartsWith(zoekstring.ToString());
+                    }
+                );
+                if (personSearchResult != null)
+                {
+                    Console.SetCursorPosition(cursorLeft, cursorTop);
+                    Person.DisplayRecord(peopleList, personSearchResult.RecordCounter, false);
+                    recordIndex = personSearchResult.RecordCounter;
+                }
+                else
+                {
+                    zoekstring.Clear();
+                }
+            }
+
+            return recordIndex;
         }
 
         private static void UpdateTotalRecordsOnScreen(int maxRecords)                  // TODO: check on .Relationtype = "Y"
