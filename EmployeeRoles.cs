@@ -3,10 +3,9 @@
 namespace Vlaaieboer
 {
     internal class EmployeeRoles
-    {
-        private static int[,] fieldProperties = { { 0, 3, 1 },
+    { 
+        private static int[,] fieldProperties = { { 0,  3, 1 },
                                                   { 1, 45, 1 } };
-
 
         private static String[] fieldNames = { "Code: ",                                      //0
                                                "Description: " };

@@ -22,35 +22,32 @@ namespace Vlaaieboer
         // 2 dimensional array with 3 columns per row: fieldNames index (for readability, not necessary), field max length, field min required length
         //
 
-        public static int[,] fieldProperties = { { 0, 3, 1 },
+        private static int[,] fieldProperties = { { 0, 3, 1 },
                                               { 1, 10, 10 },
                                               { 2, 10, 0 },
                                               { 3, 10, 0 },
                                               { 4, 1, 1 } };
 
-        public static String[] fieldNames = { "Job Title:",                                  //0
+        private static String[] fieldNames = { "Job Title:",                                  //0
                                                "Date joined:",                                //1
                                                "Date exit:",                                  //2
                                                "Salary per month:",                           //3
                                                "Total sick days" };                           //4
-
-
         public string JobTitle { get; set; }
         public DateTime DateJoined { get; set; }
         public DateTime DateExit { get; set; }
         public int Salary { get; set; }
         public int SickDays { get; set; }
         public string IsEmployee { get; set; }
-
-        bool a = true;
+        
 
         public Employee()           // Constructor method; gets executed whenever we call '= new Employee()'
         {
             //totalRecords++;
             //RecordCounter = totalRecords;
             JobTitle = IO.GetInput(fieldNames[0], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[0, 1], false, true, true, true, true, fieldProperties[0, 2]);
-            DateJoined = ParseToDateTime(IO.GetInput(fieldNames[1], "", checkinputStringDate, lengthQuestionField, fieldProperties[1, 1], false, true, true, false, true, fieldProperties[1, 2]));
-            DateExit = ParseToDateTime(IO.GetInput(fieldNames[2], "", checkinputStringDate, lengthQuestionField, fieldProperties[2, 1], false, true, true, false, true, fieldProperties[2, 2]));
+            DateJoined = IO.ParseToDateTime(IO.GetInput(fieldNames[1], "", checkinputStringDate, lengthQuestionField, fieldProperties[1, 1], false, true, true, false, true, fieldProperties[1, 2]));
+            DateExit = IO.ParseToDateTime(IO.GetInput(fieldNames[2], "", checkinputStringDate, lengthQuestionField, fieldProperties[2, 1], false, true, true, false, true, fieldProperties[2, 2]));
             Salary = Int32.Parse(IO.GetInput(fieldNames[3], "", checkinputStringNum, lengthQuestionField, fieldProperties[3, 1], true, true, true, true, true, fieldProperties[3, 2]));
             SickDays = Int32.Parse(IO.GetInput(fieldNames[4], "", checkinputStringNum, lengthQuestionField, fieldProperties[4, 1], true, true, true, true, true, fieldProperties[4, 2]));
             IsEmployee = "Y";
@@ -164,7 +161,7 @@ namespace Vlaaieboer
         //        //            {
         //        //                IO.Color(3);
         //        //                IO.PrintOnConsole($"Error writing to file {aFilename} {e}", 1, 34);
-        //        //                IO.Color(5);
+        //        //                IO.Color(TextColors.Default);
         //        //                Thread.Sleep(500);
         //        //            }
         //        //        }
@@ -195,7 +192,7 @@ namespace Vlaaieboer
         //        //                    IO.Color(3);
         //        //                    IO.PrintOnConsole($"Error parsing json file{aFilename} {e}", 1, 1);
         //        //                    Thread.Sleep(500);
-        //        //                    IO.Color(5);
+        //        //                    IO.Color(TextColors.Default);
         //        //                }
         //        //            }
         //        //            else

@@ -14,7 +14,6 @@ namespace Vlaaieboer
 
         // input validation strings
         public static string checkinputStringAlpha = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789//-@| '.,_";
-
         public static string checkinputStringDate = "0123456789/-";
         public static string checkinputStringNum = "0123456789";
 
@@ -54,7 +53,6 @@ namespace Vlaaieboer
                                                "Country: "                  ,   //10
                                                "Telephone: "                ,   //11
                                                "Email: "                     }; //12
-
         /*
 
         {get; set;} is shorthand for:
@@ -73,42 +71,42 @@ namespace Vlaaieboer
         }
 
        */
-        public int RecordCounter { get; set; }              // generated
-        public string PersonID { get; set; }              // idem
-        public bool Active { get; set; }              // flag for deletion
-        public List<Mutation> Mutations { get; set; }              // just as PoC; every record stores all mutations which is probably not preferable
-        public string Gender { get; set; }
-        public string RelationType { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string Prefix { get; set; }
-        public DateTime DateOfBirth { get; set; }
-        public string Address { get; set; }
-        public string Zipcode { get; set; }
-        public string City { get; set; }
-        public string Country { get; set; }
-        public string Telephone { get; set; }
-        public string Email { get; set; }
+        public int            RecordCounter { get; set; }              // generated
+        public string         PersonID      { get; set; }              // idem
+        public bool           Active        { get; set; }              // flag for deletion
+        public List<Mutation> Mutations     { get; set; }              // just as PoC; every record stores all mutations which is probably not preferable
+        public string         Gender        { get; set; }
+        public string         RelationType  { get; set; }
+        public string         FirstName     { get; set; }
+        public string         LastName      { get; set; }
+        public string         Prefix        { get; set; }
+        public DateTime       DateOfBirth   { get; set; }
+        public string         Address       { get; set; }
+        public string         Zipcode       { get; set; }
+        public string         City          { get; set; }
+        public string         Country       { get; set; }
+        public string         Telephone     { get; set; }
+        public string         Email         { get; set; }
 
         public Person()                                 // Main Constructor method;
         {
             totalRecords++;
 
-            Console.WriteLine(Person.fieldNames[1]);
+            //Console.WriteLine(Person.fieldNames[1]);
 
             RecordCounter = totalRecords;
-            LastName = IO.GetInput(fieldNames[1], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[1, 1], false, true, true, true, true, fieldProperties[1, 2]);
-            Prefix = IO.GetInput(fieldNames[2], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[2, 1], false, true, true, true, true, fieldProperties[2, 2]);
-            FirstName = IO.GetInput(fieldNames[3], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[3, 1], false, true, true, true, true, fieldProperties[3, 2]);
-            Gender = IO.GetInput(fieldNames[4], "", "MmFfXx", lengthQuestionField, fieldProperties[4, 1], true, true, true, true, true, fieldProperties[4, 2]);
-            RelationType = IO.GetInput(fieldNames[5], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[5, 1], false, true, true, true, true, fieldProperties[5, 2]);
-            DateOfBirth = IO.ParseToDateTime(IO.GetInput(fieldNames[6], "", checkinputStringDate, lengthQuestionField, fieldProperties[6, 1], false, true, true, true, true, fieldProperties[6, 2]));
-            Address = IO.GetInput(fieldNames[7], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[7, 1], false, true, true, true, true, fieldProperties[7, 2]);
-            Zipcode = IO.GetInput(fieldNames[8], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[8, 1], false, true, true, true, true, fieldProperties[8, 2]);
-            City = IO.GetInput(fieldNames[9], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[9, 1], false, true, true, true, true, fieldProperties[9, 2]);
-            Country = IO.GetInput(fieldNames[10], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[10, 1], false, true, true, true, true, fieldProperties[10, 2]);
-            Telephone = IO.GetInput(fieldNames[11], "", "0123456789+-", lengthQuestionField, fieldProperties[11, 1], false, true, true, true, true, fieldProperties[11, 2]);
-            Email = IO.GetInput(fieldNames[12], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[12, 1], false, true, true, true, true, fieldProperties[12, 2]);
+            LastName =      IO.GetInput(fieldNames[1], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[1, 1], false, true, true, true, true, fieldProperties[1, 2]);
+            Prefix =        IO.GetInput(fieldNames[2], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[2, 1], false, true, true, true, true, fieldProperties[2, 2]);
+            FirstName =     IO.GetInput(fieldNames[3], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[3, 1], false, true, true, true, true, fieldProperties[3, 2]);
+            Gender =        IO.GetInput(fieldNames[4], "", "MmFfXx", lengthQuestionField, fieldProperties[4, 1], true, true, true, true, true, fieldProperties[4, 2]);
+            RelationType =  IO.GetInput(fieldNames[5], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[5, 1], false, true, true, true, true, fieldProperties[5, 2]);
+            DateOfBirth =   IO.ParseToDateTime(IO.GetInput(fieldNames[6], "", checkinputStringDate, lengthQuestionField, fieldProperties[6, 1], false, true, true, true, true, fieldProperties[6, 2]));
+            Address =       IO.GetInput(fieldNames[7], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[7, 1], false, true, true, true, true, fieldProperties[7, 2]);
+            Zipcode =       IO.GetInput(fieldNames[8], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[8, 1], false, true, true, true, true, fieldProperties[8, 2]);
+            City =          IO.GetInput(fieldNames[9], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[9, 1], false, true, true, true, true, fieldProperties[9, 2]);
+            Country =       IO.GetInput(fieldNames[10], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[10, 1], false, true, true, true, true, fieldProperties[10, 2]);
+            Telephone =     IO.GetInput(fieldNames[11], "", "0123456789+-", lengthQuestionField, fieldProperties[11, 1], false, true, true, true, true, fieldProperties[11, 2]);
+            Email =         IO.GetInput(fieldNames[12], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[12, 1], false, true, true, true, true, fieldProperties[12, 2]);
 
             CheckMutations(this, " ", "[Created:]", 1);          // create a single mutation to indicate creation datestamp
 
@@ -147,9 +145,10 @@ namespace Vlaaieboer
             // store passed values in array for comparison in Checkmutations()
             // create a shallow copy of this object https://docs.microsoft.com/en-us/dotnet/api/system.object.memberwiseclone?view=net-5.0
             // by cloning the Person object with MemberwiseClone, an independent copy of the original, instead of a reference only,
-            // except for reference types, like Mutations. But we don't need to clone that since we are creating that
+            // except for reference types, like Mutations. But we don't need to clone that since we are creating that.
+            // We NEED to do this here, because 
 
-            Person aPersonOldValues = (Person)aList[aRecord - 1].MemberwiseClone();
+            Person aPersonOldValues = (Person) aList[aRecord - 1].MemberwiseClone();
 
             aList[aRecord - 1].LastName = IO.GetInput(
                                          fieldNames[1],
@@ -215,8 +214,8 @@ namespace Vlaaieboer
                                           DateTime.Now,
                                           fieldNames[aFieldnumber],
                                           old,
-                                          "",
-                                          //newVal.Replace(old, ""),     // TODO: old cannot be empty
+                                          "",                            // placeholder because:
+                                          //newVal.Replace(old, ""),     // TODO: old cannot be empty, throws exception
                                           newVal);
                 aPerson.Mutations.Add(a);                                // needs object reference when = null;
             }
