@@ -27,14 +27,16 @@ namespace Vlaaieboer
             Console.Title = "Avans C# Console Application prototype";
             Console.SetWindowSize(80, 35);
             //Console.SetWindowPosition(11, 9);                     //TODO: figure out SetWindowsPosition
-            IO.Color(5);
+            IO.Color(IO.TextColors.Default);
             Console.Clear();
 
             do
             {
-                IO.DisplayMenu("Main Menu", "(L)ogin\n(P)eople\n(E)mployees\n(C)ustomers\nPro(D)ucts\n(M)asterdata\n\nEnter your choice, Escape to Exit program\n\n", 2);
+                IO.DisplayMenu("Main Menu", "(L)ogin\n(P)eople\n(E)mployees\n(C)ustomers\nPro(D)ucts\n(M)asterdata\n\nEnter your choice, Escape to Exit program\n\n", IO.TextColors.MenuSelect);
+                
                 inputKey = Console.ReadKey(true);               // 'true' | dont'display the input on the console
                 CheckMenuInput();
+
             } while (inputKey.Key != ConsoleKey.Escape);
 
             Console.WriteLine("\n\nYou have been logged out.. Goodbye!");
@@ -53,27 +55,27 @@ namespace Vlaaieboer
             }
             else if (inputKey.Key == ConsoleKey.P)             // People
             {
-                IO.DisplayMenu("Browse/edit People", "(Ins)ert to Add\n(Enter)to Edit\n(Del)ete to remove Record\nUse arrow keys to browse\n(Home) Main menu\n\n", 2);
+                IO.DisplayMenu("Browse/edit People", "(Ins)ert to Add\n(Enter)to Edit\n(Del)ete to remove Record\nUse arrow keys to browse\n(Home) Main menu\n\n", IO.TextColors.MenuSelect);
                 People();
             }
             else if (inputKey.Key == ConsoleKey.E & Login.validPassword)             // Employees
             {
-                IO.DisplayMenu("Browse/edit Employees", "(Ins)ert to Add\n(Enter)to Edit\n(Del)ete to remove Record\nUse arrow keys to browse\n(Home) Main menu\n\n", 2);
+                IO.DisplayMenu("Browse/edit Employees", "(Ins)ert to Add\n(Enter)to Edit\n(Del)ete to remove Record\nUse arrow keys to browse\n(Home) Main menu\n\n", IO.TextColors.MenuSelect);
                 EditEmployees();
             }
             else if (inputKey.Key == ConsoleKey.C & Login.validPassword)             // Customers
             {
-                IO.DisplayMenu("Browse/edit customer records", "(A)dd\nArrows to browse\n(Del)ete\n", 2);
+                IO.DisplayMenu("Browse/edit customer records", "(A)dd\nArrows to browse\n(Del)ete\n", IO.TextColors.MenuSelect);
                 Customers();
             }
             else if (inputKey.Key == ConsoleKey.D & Login.validPassword)             // Products
             {
-                IO.DisplayMenu("Browse/edit product records", "(A)dd\nArrows to browse\n(Del)ete\n", 2);
+                IO.DisplayMenu("Browse/edit product records", "(A)dd\nArrows to browse\n(Del)ete\n", IO.TextColors.MenuSelect);
                 //Products();
             }
             else if (inputKey.Key == ConsoleKey.M & Login.validPassword)             // Master Data
             {
-                IO.DisplayMenu("Edit Master Data", "(A)dd\nArrows to browse\n(Del)ete\n", 2);
+                IO.DisplayMenu("Edit Master Data", "(A)dd\nArrows to browse\n(Del)ete\n", IO.TextColors.MenuSelect);
                 Console.WriteLine("  You Pressed D");
             }
             else if (inputKey.Key == ConsoleKey.A)                                  // Assembly info
@@ -176,13 +178,13 @@ namespace Vlaaieboer
                         Console.SetCursorPosition(cursorLeft, cursorTop + 1);
                         peopleList.Add(new Person());
                         maxRecords++;
-                        recordIndex++;
                         Person.SetTotalRecords(maxRecords);
                         UpdateTotalRecordsOnScreen(maxRecords);
                         Console.SetCursorPosition(cursorLeft, cursorTop);
                         Person.DisplayRecord(peopleList, recordIndex, false);
                         IO.WriteToFile(filePeople, peopleList);
-
+                        recordIndex++;
+                        
                         break;
 
                     case ConsoleKey.Delete:             // delete current record
@@ -253,9 +255,9 @@ namespace Vlaaieboer
 
         private static void UpdateTotalRecordsOnScreen(int maxRecords)                  // TODO: check on .Relationtype = "Y"
         {
-            IO.Color(2);
+            IO.Color(IO.TextColors.MenuSelect);
             IO.PrintOnConsole("[" + maxRecords.ToString() + "] employee records", 30, 5);
-            IO.Color(5);
+            IO.Color(IO.TextColors.Default);
         }
 
         private static void Customers()
