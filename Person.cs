@@ -19,7 +19,7 @@ namespace Vlaaieboer
 
         // public accessible total record counter
         private static int totalRecords = 0;             // static class attribute, belongs to the class not the object instances
-
+        private static int totalInActiveRecords = 0;
         //
         // 2 dimensional array with 3 columns per row: fieldNames index (for readability, not necessary), field max length, field min required length
         //
@@ -228,26 +228,46 @@ namespace Vlaaieboer
             {
                 for (int i = 0; i < fieldProperties.GetLength(0); i++)
                 {
-                    IO.PrintBoundaries(fieldNames[i], "", lengthQuestionField, fieldProperties[i, 1], cursor); Console.WriteLine(); cursor++;
+                    IO.PrintBoundaries(fieldNames[i], "", lengthQuestionField, fieldProperties[i, 1], cursor, false); Console.WriteLine(); cursor++;
                 }
             }
             else
             {
-                IO.PrintBoundaries(fieldNames[0], aList[aRecord - 1].PersonID, lengthQuestionField, fieldProperties[0, 1], cursor); Console.WriteLine(); cursor++;
-                IO.PrintBoundaries(fieldNames[1], aList[aRecord - 1].LastName, lengthQuestionField, fieldProperties[1, 1], cursor); Console.WriteLine(); cursor++;
-                IO.PrintBoundaries(fieldNames[2], aList[aRecord - 1].Prefix, lengthQuestionField, fieldProperties[2, 1], cursor); Console.WriteLine(); cursor++;
-                IO.PrintBoundaries(fieldNames[3], aList[aRecord - 1].FirstName, lengthQuestionField, fieldProperties[3, 1], cursor); Console.WriteLine(); cursor++;
-                IO.PrintBoundaries(fieldNames[4], aList[aRecord - 1].Gender, lengthQuestionField, fieldProperties[4, 1], cursor); Console.WriteLine(); cursor++;
-                IO.PrintBoundaries(fieldNames[5], aList[aRecord - 1].RelationType, lengthQuestionField, fieldProperties[5, 1], cursor); Console.WriteLine(); cursor++;
-                IO.PrintBoundaries(fieldNames[6], aList[aRecord - 1].DateOfBirth.ToString("dd/MM/yyyy"), lengthQuestionField, fieldProperties[6, 1], cursor); // Console.WriteLine(); // cursor++;
+
+                IO.PrintBoundaries(fieldNames[0], aList[aRecord - 1].PersonID, lengthQuestionField, fieldProperties[0, 1], cursor, aList[aRecord - 1].Active);
+                CheckIfActive();
+                cursor++; Console.WriteLine();
+
+                IO.PrintBoundaries(fieldNames[1], aList[aRecord - 1].LastName, lengthQuestionField, fieldProperties[1, 1], cursor, aList[aRecord - 1].Active); Console.WriteLine(); cursor++;
+                IO.PrintBoundaries(fieldNames[2], aList[aRecord - 1].Prefix, lengthQuestionField, fieldProperties[2, 1], cursor, aList[aRecord - 1].Active); Console.WriteLine(); cursor++;
+                IO.PrintBoundaries(fieldNames[3], aList[aRecord - 1].FirstName, lengthQuestionField, fieldProperties[3, 1], cursor, aList[aRecord - 1].Active); Console.WriteLine(); cursor++;
+                IO.PrintBoundaries(fieldNames[4], aList[aRecord - 1].Gender, lengthQuestionField, fieldProperties[4, 1], cursor, aList[aRecord - 1].Active); Console.WriteLine(); cursor++;
+                IO.PrintBoundaries(fieldNames[5], aList[aRecord - 1].RelationType, lengthQuestionField, fieldProperties[5, 1], cursor, aList[aRecord - 1].Active); Console.WriteLine(); cursor++;
+                IO.PrintBoundaries(fieldNames[6], aList[aRecord - 1].DateOfBirth.ToString("dd/MM/yyyy"), lengthQuestionField, fieldProperties[6, 1], cursor, aList[aRecord - 1].Active); // Console.WriteLine(); // cursor++;
                 Console.SetCursorPosition(lengthQuestionField + fieldProperties[6, 1] + 5, cursor);
                 Console.WriteLine("(Age: " + (IO.CalculateAge(aList[aRecord - 1].DateOfBirth).ToString()) + ")    "); cursor++;
-                IO.PrintBoundaries(fieldNames[7], aList[aRecord - 1].Address, lengthQuestionField, fieldProperties[7, 1], cursor); Console.WriteLine(); cursor++;
-                IO.PrintBoundaries(fieldNames[8], aList[aRecord - 1].Zipcode, lengthQuestionField, fieldProperties[8, 1], cursor); Console.WriteLine(); cursor++;
-                IO.PrintBoundaries(fieldNames[9], aList[aRecord - 1].City, lengthQuestionField, fieldProperties[9, 1], cursor); Console.WriteLine(); cursor++;
-                IO.PrintBoundaries(fieldNames[10], aList[aRecord - 1].Country, lengthQuestionField, fieldProperties[10, 1], cursor); Console.WriteLine(); cursor++;
-                IO.PrintBoundaries(fieldNames[11], aList[aRecord - 1].Telephone, lengthQuestionField, fieldProperties[11, 1], cursor); Console.WriteLine(); cursor++;
-                IO.PrintBoundaries(fieldNames[12], aList[aRecord - 1].Email, lengthQuestionField, fieldProperties[12, 1], cursor); Console.WriteLine(); cursor++;
+                IO.PrintBoundaries(fieldNames[7], aList[aRecord - 1].Address, lengthQuestionField, fieldProperties[7, 1], cursor, aList[aRecord - 1].Active); Console.WriteLine(); cursor++;
+                IO.PrintBoundaries(fieldNames[8], aList[aRecord - 1].Zipcode, lengthQuestionField, fieldProperties[8, 1], cursor, aList[aRecord - 1].Active); Console.WriteLine(); cursor++;
+                IO.PrintBoundaries(fieldNames[9], aList[aRecord - 1].City, lengthQuestionField, fieldProperties[9, 1], cursor, aList[aRecord - 1].Active); Console.WriteLine(); cursor++;
+                IO.PrintBoundaries(fieldNames[10], aList[aRecord - 1].Country, lengthQuestionField, fieldProperties[10, 1], cursor, aList[aRecord - 1].Active); Console.WriteLine(); cursor++;
+                IO.PrintBoundaries(fieldNames[11], aList[aRecord - 1].Telephone, lengthQuestionField, fieldProperties[11, 1], cursor, aList[aRecord - 1].Active); Console.WriteLine(); cursor++;
+                IO.PrintBoundaries(fieldNames[12], aList[aRecord - 1].Email, lengthQuestionField, fieldProperties[12, 1], cursor, aList[aRecord - 1].Active); Console.WriteLine(); cursor++;
+            }
+
+            void CheckIfActive()
+            {
+                if (!aList[aRecord - 1].Active)
+                {
+                    Console.SetCursorPosition(lengthQuestionField + fieldProperties[0, 1] + 5, cursor);
+                    IO.Color(IO.TextColors.Inverted);
+                    Console.Write(" *Inactive* ");
+                    IO.Color(IO.TextColors.DefaultForeground);
+                }
+                else
+                {
+                    Console.SetCursorPosition(lengthQuestionField + fieldProperties[0, 1] + 5, cursor);
+                    Console.Write("            ");
+                }
             }
         }
 
@@ -255,5 +275,24 @@ namespace Vlaaieboer
         {
             totalRecords = aRecordnumber;
         }
+
+        public static void ToggleDeletionFlag(List<Person> aList, int aRecordnumber)
+        {
+            bool flagToggle = (aList[aRecordnumber - 1].Active) ? false : true;
+            aList[aRecordnumber - 1].Active = flagToggle;
+            totalInActiveRecords++;
+            IO.WriteToFile<Person>(Program.filePeople, aList);
+        }
+
+        public static int GetTotalRecords()
+        {
+            return totalRecords;
+        }
+
+        public static int GetInactiveRecords()
+        {
+            return totalInActiveRecords;
+        }
+
     }
 }

@@ -11,10 +11,13 @@ namespace Vlaaieboer
         // declare variables
         private static ConsoleKeyInfo inputKey = new ConsoleKeyInfo();
 
-        private static string filePeople = "people.json";
+        public static string filePeople = "people.json";
         private static string fileCustomers = "customers.json";
         private static string fileEmployeeRoles = "employeeRoles.json";
         private static string fileEmployees = "employees.json";
+
+        public static int windowHeight = 35;
+        public static int windowWidth = 80;
 
         private static void Main(string[] args)
         {
@@ -25,9 +28,10 @@ namespace Vlaaieboer
             // init console window properties
 
             Console.Title = "Avans C# Console Application prototype";
-            Console.SetWindowSize(80, 35);
+            Console.SetWindowSize(windowWidth, windowHeight);
             //Console.SetWindowPosition(11, 9);                     //TODO: figure out SetWindowsPosition
-            IO.Color(IO.TextColors.Default);
+            // IO.Color(IO.TextColors.DefaultForeground);
+            IO.CycleColors(5, false);
             Console.Clear();
 
             do
@@ -36,13 +40,15 @@ namespace Vlaaieboer
                 
                 inputKey = Console.ReadKey(true);               // 'true' | dont'display the input on the console
                 CheckMenuInput();
-
+                Console.Clear();
             } while (inputKey.Key != ConsoleKey.Escape);
 
             Console.WriteLine("\n\nYou have been logged out.. Goodbye!");
-            IO.Color(0);
             Thread.Sleep(500);
+            Console.ResetColor();
         }
+
+        
 
         private static void CheckMenuInput()
         {
@@ -78,6 +84,14 @@ namespace Vlaaieboer
                 IO.DisplayMenu("Edit Master Data", "(A)dd\nArrows to browse\n(Del)ete\n", IO.TextColors.MenuSelect);
                 Console.WriteLine("  You Pressed D");
             }
+            else if (inputKey.Key == ConsoleKey.F4)  { IO.CycleColors(0, false); return; }
+            else if (inputKey.Key == ConsoleKey.F5)  { IO.CycleColors(1, false); return; }
+            else if (inputKey.Key == ConsoleKey.F6)  { IO.CycleColors(2, false); return; }
+            else if (inputKey.Key == ConsoleKey.F7)  { IO.CycleColors(3, false); return; }
+            else if (inputKey.Key == ConsoleKey.F8)  { IO.CycleColors(4, false); return; }
+            else if (inputKey.Key == ConsoleKey.F9)  { IO.CycleColors(5, true ); return; }
+            else if (inputKey.Key == ConsoleKey.F10) { IO.CycleColors(5, false); return; }
+
             else if (inputKey.Key == ConsoleKey.A)                                  // Assembly info
             {
                 //IO.DisplayMenu("Browse/edit product records", "(A)dd\nArrows to browse\n(Del)ete\n", 2);
@@ -139,16 +153,17 @@ namespace Vlaaieboer
             if (peopleList.Count > 0)
             {
                 maxRecords = peopleList.Count;                              // not necessary, just use static class attribute totalRecords directly
-                Person.SetTotalRecords(maxRecords);             
                 recordIndex = 1;
+                Person.SetTotalRecords(maxRecords);             
                 Person.DisplayRecord(peopleList, recordIndex, false);
             }
             else
             {
                 maxRecords  = 0;
                 recordIndex = 1;
-                Person.DisplayRecord(peopleList, recordIndex, true);
+                Person.DisplayRecord(peopleList, recordIndex, true);        // display a clear form 
             }
+
             UpdateTotalRecordsOnScreen(maxRecords);
             string inputString = "abcdefghijklmnopqrstuvwxyz" + ConsoleKey.Backspace.ToString();
             StringBuilder zoekstring = new StringBuilder();
@@ -187,10 +202,15 @@ namespace Vlaaieboer
                         
                         break;
 
-                    case ConsoleKey.Delete:             // delete current record
-
+                    case ConsoleKey.Delete:                   // mark record for deletion
+                        if (maxRecords > 0)                 
+                        {
+                            Person.ToggleDeletionFlag(peopleList, recordIndex);
+                            Console.SetCursorPosition(cursorLeft, cursorTop);
+                            Person.DisplayRecord(peopleList, recordIndex, false);       
+                            
+                        }
                         break;
-
                     case ConsoleKey.LeftArrow:
                     case ConsoleKey.UpArrow:
 
@@ -253,11 +273,11 @@ namespace Vlaaieboer
             return recordIndex;
         }
 
-        private static void UpdateTotalRecordsOnScreen(int maxRecords)                  // TODO: check on .Relationtype = "Y"
+        private static void UpdateTotalRecordsOnScreen(int maxRecords)                  // NICE: display inactive records as well
         {
             IO.Color(IO.TextColors.MenuSelect);
-            IO.PrintOnConsole("[" + maxRecords.ToString() + "] employee records", 30, 5);
-            IO.Color(IO.TextColors.Default);
+            IO.PrintOnConsole("[" + maxRecords.ToString() + "] active records\t", 30, 5);
+            IO.Color(IO.TextColors.DefaultForeground);
         }
 
         private static void Customers()
