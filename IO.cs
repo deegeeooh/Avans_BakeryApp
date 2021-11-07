@@ -9,25 +9,38 @@ namespace Vlaaieboer
 {
     internal class IO
     {
-        public static void DisplayMenu(string title, string menuString, int aColorMenuOption)
+        public enum TextColors
+            {
+                Input,
+                MenuSelect,
+                Error,
+                White,
+                Default,       
+                Blue,
+                Yellow
+            }
+
+        public static void DisplayMenu(string title, string menuString, TextColors aColorMenuOption)
         {
             Console.Clear();
-            IO.Color(5);
+            IO.Color(TextColors.Default);
             Console.WriteLine("\n\n=============================================================================");
-            IO.Color(7);
-            Console.Write("Bakker Vlaaieboer & Zn."); IO.Color(4); Console.Write("{0:dd/MM/yyyy hh:mm}".PadLeft(30, ' '), DateTime.Now);
-            IO.Color(5);
+            IO.Color(TextColors.Yellow);
+            Console.Write("Bakker Vlaaieboer & Zn."); IO.Color(TextColors.White); Console.Write("{0:dd/MM/yyyy HH:mm}".PadLeft(30, ' '), DateTime.Now);
+            IO.Color(TextColors.Default);
+
             if (Login.validPassword)
             {
-                IO.Color(1); Console.Write("* Logged in *".PadLeft(25, ' ')); IO.Color(4);
+                IO.Color(TextColors.Input); Console.Write("* Logged in *".PadLeft(25, ' ')); IO.Color(TextColors.White);
             }
             else
             {
                 Console.Write("* Not Logged in *".PadLeft(25, ' '));
             }
+
             Console.Write("\n");
             Console.WriteLine("=============================================================================");
-            IO.Color(2); Console.WriteLine(title + "\n"); IO.Color(4);
+            IO.Color(TextColors.White); Console.WriteLine(title + "\n"); IO.Color(TextColors.White);
 
             PrintMenuString(menuString, aColorMenuOption);
 
@@ -35,9 +48,9 @@ namespace Vlaaieboer
             IO.PrintOnConsole("___________________________________________________________________________", 1, 33);
         }
 
-        private static void PrintMenuString(string menuString, int aColorMenuOption)
+        private static void PrintMenuString(string menuString, TextColors aColorMenuOption)
         {
-            IO.Color(5);
+            IO.Color(TextColors.Default);
             var menustringCharArray = menuString.ToCharArray();
             for (int i = 0; i < menuString.Length; i++)
             {
@@ -52,7 +65,7 @@ namespace Vlaaieboer
                         i++;
                     } while (menustringCharArray[i].ToString() != ")");
 
-                    IO.Color(5);
+                    IO.Color(TextColors.Default);
                 }
                 Console.Write(menustringCharArray[i]);
             }
@@ -67,36 +80,37 @@ namespace Vlaaieboer
             Console.SetCursorPosition(currentCursorPosLeft, currentCursorPosTop);   // reset cursorpos
         }
 
-        public static void Color(int color)                     // sets or resets console font color
-        {                                                       // TODO: call with colour name string instead of number
+        public static void Color(TextColors textColor)                     // sets or resets console font color
+        {                           
+            // TODO: call with colour name string instead of number
             Console.BackgroundColor = ConsoleColor.Black;
-            switch (color)
+            switch (textColor)
             {
-                case 1:
+                case TextColors.Input:
                     Console.ForegroundColor = ConsoleColor.Green;
                     break;
 
-                case 2:
+                case TextColors.MenuSelect:
                     Console.ForegroundColor = ConsoleColor.Cyan;
                     break;
 
-                case 3:
+                case TextColors.Error:
                     Console.ForegroundColor = ConsoleColor.Red;
                     break;
 
-                case 4:
+                case TextColors.White:
                     Console.ForegroundColor = ConsoleColor.White;
                     break;
 
-                case 5:                                         // Standard foreground color
+                case TextColors.Default:                                        // Standard foreground color
                     Console.ForegroundColor = ConsoleColor.Gray;
                     break;
 
-                case 6:
+                case TextColors.Blue:
                     Console.ForegroundColor = ConsoleColor.Blue;
                     break;
 
-                case 7:
+                case TextColors.Yellow:
                     Console.ForegroundColor = ConsoleColor.Yellow;
                     break;
 
@@ -111,7 +125,7 @@ namespace Vlaaieboer
                                       string checkinputString,       // accepted input
                                       int lengthQuestionField,       // field width displays string
                                       int lengthInputField,          // field width input field
-                                      bool toUpper,                  // convert to uppercase
+                                      bool toUpper,                  // convert to uppercase?
                                       bool lineFeed,                 // linefeed after input?
                                       bool showInput,                // display the typed characters?
                                       bool trim,                     // return trimmed string ?
@@ -143,9 +157,9 @@ namespace Vlaaieboer
                 inputStringbuilder.Append(fieldValue);
                 indexInStringbuilder = inputStringbuilder.Length + 1;      // cursor 1 position after string
                 Checkfieldlength(lengthInputField, indexInStringbuilder - 1);
-                IO.Color(1);
+                IO.Color(TextColors.Input);
                 PrintInputString(showInput, false, inputStringbuilder);
-                IO.Color(5);
+                IO.Color(TextColors.Default);
             }
             do
             {
@@ -178,7 +192,7 @@ namespace Vlaaieboer
                         }
 
                         Console.SetCursorPosition(lengthQuestionField + 1, cursorTop);      // position cursor at start inputfield
-                        IO.Color(1);
+                        IO.Color(TextColors.Input);
                         PrintInputString(showInput, false, inputStringbuilder);
                         Console.SetCursorPosition(lengthQuestionField + indexInStringbuilder, cursorTop);
                     }
@@ -239,9 +253,9 @@ namespace Vlaaieboer
                 }
                 else
                 {
-                    IO.Color(3);
+                    IO.Color(IO.TextColors.Error);
                     IO.PrintOnConsole("Field cannot be empty", 1, 1);
-                    IO.Color(5);
+                    IO.Color(TextColors.Default);
                 }
             } while (!checkedValidLength);
 
@@ -259,7 +273,7 @@ namespace Vlaaieboer
             Console.SetCursorPosition(lengthQuestionField + 1, cursorTop);
             if (showInput)                                                  // not with password
             {
-                IO.Color(4);
+                IO.Color(TextColors.White);
                 Console.Write(returnString.PadRight(lengthInputField, ' ')); // pad with spaces to length field
             }
 
@@ -267,7 +281,7 @@ namespace Vlaaieboer
 
             Checkfieldlength(lengthInputField, 1);                          // reset warning incase cursor was at last position before 'Enter'
 
-            IO.Color(5);
+            IO.Color(TextColors.Default);
             return returnString;
         }
 
@@ -277,9 +291,9 @@ namespace Vlaaieboer
                                            int lengthInputField,            // idem input field
                                            int cursorTop)                   // reset cursor to row
         {
-            IO.Color(5);        //White
+            IO.Color(TextColors.Default);        //White
             Console.Write(displayString.PadRight(lengthQuestionField, ' '));
-            IO.Color(4);
+            IO.Color(TextColors.White);
             if (fieldValue == "")
             {
                 Console.Write("|".PadRight(lengthInputField + 1, ' ') + "|");            // print input field boundaries
@@ -289,7 +303,7 @@ namespace Vlaaieboer
                 Console.Write("|" + fieldValue.PadRight(lengthInputField, ' ') + "|");
             }
             Console.SetCursorPosition(lengthQuestionField + 1, cursorTop);                // reset cursorposition to beginning of the input field
-            IO.Color(5);        //Grey
+            IO.Color(TextColors.Default);        //Grey
         }
 
         public static DateTime ParseToDateTime(string aDateString)
@@ -333,9 +347,9 @@ namespace Vlaaieboer
         {
             if (indexInStringbuilder == lengthInputField)
             {
-                IO.Color(3);
+                IO.Color(IO.TextColors.Error);
                 IO.PrintOnConsole("Max field length", 1, 1);
-                IO.Color(5);
+                IO.Color(TextColors.Default);
             }
             else
             {
@@ -352,7 +366,6 @@ namespace Vlaaieboer
             else
             {
                 Console.Write("".PadRight(inputStringbuilder.Length, '*'));
-                //Console.Write(inputStringbuilderNoShow);                        // show the dummy inputstring
             }
             if (deltrailspace)
             {
@@ -382,10 +395,10 @@ namespace Vlaaieboer
                 }                                                                                                    // on the constructor
                 catch (Exception e)
                 {
-                    IO.Color(3);
+                    IO.Color(IO.TextColors.Error);
                     IO.PrintOnConsole($"Error parsing json file{aFilename} {e}", 1, 1);
                     Thread.Sleep(500);
-                    IO.Color(5);
+                    IO.Color(TextColors.Default);
                 }
             }
             else
@@ -406,9 +419,9 @@ namespace Vlaaieboer
             }
             catch (Exception e)
             {
-                IO.Color(3);
+                IO.Color(IO.TextColors.Error);
                 IO.PrintOnConsole($"Error writing to file {aFilename} {e}", 1, 34);
-                IO.Color(5);
+                IO.Color(TextColors.Default);
                 Thread.Sleep(500);
             }
         }
