@@ -283,6 +283,10 @@ namespace Vlaaieboer
             totalInActiveRecords++;
             IO.WriteToFile<Person>(Program.filePeople, aList);
         }
+        public static bool CheckIfActive(Person aPerson)
+        {
+            return aPerson.Active;
+        }
 
         public static int GetTotalRecords()
         {

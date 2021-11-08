@@ -31,7 +31,9 @@ namespace Vlaaieboer
             Console.SetWindowSize(windowWidth, windowHeight);
             //Console.SetWindowPosition(11, 9);                     //TODO: figure out SetWindowsPosition
             // IO.Color(IO.TextColors.DefaultForeground);
-            IO.CycleColors(5, false);
+            //IO.CycleColors(5, false);
+            IO.SetStandardColor();
+            
             Console.Clear();
 
             do
@@ -40,7 +42,7 @@ namespace Vlaaieboer
                 
                 inputKey = Console.ReadKey(true);               // 'true' | dont'display the input on the console
                 CheckMenuInput();
-                Console.Clear();
+                //
             } while (inputKey.Key != ConsoleKey.Escape);
 
             Console.WriteLine("\n\nYou have been logged out.. Goodbye!");
@@ -84,13 +86,15 @@ namespace Vlaaieboer
                 IO.DisplayMenu("Edit Master Data", "(A)dd\nArrows to browse\n(Del)ete\n", IO.TextColors.MenuSelect);
                 Console.WriteLine("  You Pressed D");
             }
-            else if (inputKey.Key == ConsoleKey.F4)  { IO.CycleColors(0, false); return; }
-            else if (inputKey.Key == ConsoleKey.F5)  { IO.CycleColors(1, false); return; }
-            else if (inputKey.Key == ConsoleKey.F6)  { IO.CycleColors(2, false); return; }
-            else if (inputKey.Key == ConsoleKey.F7)  { IO.CycleColors(3, false); return; }
-            else if (inputKey.Key == ConsoleKey.F8)  { IO.CycleColors(4, false); return; }
-            else if (inputKey.Key == ConsoleKey.F9)  { IO.CycleColors(5, true ); return; }
-            else if (inputKey.Key == ConsoleKey.F10) { IO.CycleColors(5, false); return; }
+            else if (inputKey.Key == ConsoleKey.F3)  { IO.CycleColors(6, false); return; }      // input text color
+            else if (inputKey.Key == ConsoleKey.F4)  { IO.CycleColors(0, false); return; }      // highlighted text color
+            else if (inputKey.Key == ConsoleKey.F5)  { IO.CycleColors(1, false); return; }      // normal text 
+            else if (inputKey.Key == ConsoleKey.F6)  { IO.CycleColors(2, false); return; }      // background
+            else if (inputKey.Key == ConsoleKey.F7)  { IO.CycleColors(3, false); return; }      // Menu select color
+            else if (inputKey.Key == ConsoleKey.F8)  { IO.CycleColors(4, false); return; }      // Software license nameholder Color
+            else if (inputKey.Key == ConsoleKey.F9)  { IO.CycleColors(5, true ); return; }      // Random colors including background
+            else if (inputKey.Key == ConsoleKey.F10) { IO.CycleColors(5, false); return; }      // Random colors excluding background
+            
 
             else if (inputKey.Key == ConsoleKey.A)                                  // Assembly info
             {
@@ -176,7 +180,7 @@ namespace Vlaaieboer
                 {
                     case ConsoleKey.Enter:                  // edit current existing record
 
-                        if (maxRecords > 0)                 // some record is being displayed
+                        if (maxRecords > 0 & Person.CheckIfActive(peopleList[recordIndex - 1]))                 // some record is being displayed
                         {
                             Console.SetCursorPosition(cursorLeft, cursorTop + 1);       // set cursor on first inputfield
                             Person.EditRecord(peopleList, recordIndex);             // edit current record
@@ -193,12 +197,13 @@ namespace Vlaaieboer
                         Console.SetCursorPosition(cursorLeft, cursorTop + 1);
                         peopleList.Add(new Person());
                         maxRecords++;
+                        recordIndex++;
                         Person.SetTotalRecords(maxRecords);
                         UpdateTotalRecordsOnScreen(maxRecords);
                         Console.SetCursorPosition(cursorLeft, cursorTop);
                         Person.DisplayRecord(peopleList, recordIndex, false);
                         IO.WriteToFile(filePeople, peopleList);
-                        recordIndex++;
+                        
                         
                         break;
 
