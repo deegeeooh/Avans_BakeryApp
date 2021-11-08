@@ -45,7 +45,7 @@ namespace Vlaaieboer
                                                "Prefix:"                    ,   // 2
                                                "First Name:"                ,   // 3
                                                "Gender: (M/F/X)"            ,   // 4
-                                               "Relation type: (Aa-Zz"      ,   // 5
+                                               "Relation type: (Aa-Zz)"     ,   // 5
                                                "Date of Birth: (dd/mm/yyyy)",   // 6
                                                "Address: "                  ,   // 7
                                                "Zipcode: (####ZZ)"          ,   // 8

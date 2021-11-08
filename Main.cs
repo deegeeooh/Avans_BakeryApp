@@ -11,20 +11,19 @@ namespace Vlaaieboer
         // declare variables
         private static ConsoleKeyInfo inputKey = new ConsoleKeyInfo();
 
-        public static string filePeople = "people.json";
-        private static string fileCustomers = "customers.json";
+        public static string  filePeople        = "people.json";
+        private static string fileCustomers     = "customers.json";
         private static string fileEmployeeRoles = "employeeRoles.json";
-        private static string fileEmployees = "employees.json";
+        private static string fileEmployees     = "employees.json";
 
-        public static int windowHeight = 35;
-        public static int windowWidth = 80;
+        public static int windowHeight  = 35;
+        public static int windowWidth   = 80;
 
         private static void Main(string[] args)
         {
             //initialize variables
             // Prevent example from ending if CTL+C is pressed.
             // Console.TreatControlCAsInput = true;                                         // doesn't seem to work correctly ?
-
             // init console window properties
 
             Console.Title = "Avans C# Console Application prototype";
@@ -193,11 +192,11 @@ namespace Vlaaieboer
                     case ConsoleKey.Insert:                 // add new record
 
                         Console.SetCursorPosition(cursorLeft, cursorTop);
-                        Person.DisplayRecord(peopleList, recordIndex, true);
+                        Person.DisplayRecord(peopleList, recordIndex, true);        // clear inputform
                         Console.SetCursorPosition(cursorLeft, cursorTop + 1);
                         peopleList.Add(new Person());
                         maxRecords++;
-                        recordIndex++;
+                        recordIndex = maxRecords;
                         Person.SetTotalRecords(maxRecords);
                         UpdateTotalRecordsOnScreen(maxRecords);
                         Console.SetCursorPosition(cursorLeft, cursorTop);
@@ -213,7 +212,6 @@ namespace Vlaaieboer
                             Person.ToggleDeletionFlag(peopleList, recordIndex);
                             Console.SetCursorPosition(cursorLeft, cursorTop);
                             Person.DisplayRecord(peopleList, recordIndex, false);       
-                            
                         }
                         break;
                     case ConsoleKey.LeftArrow:

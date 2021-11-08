@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Testcode", "Projects\Test\T
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReferenceTypesWeekVier", "Projects\LesVierReferenceTypes\ReferenceTypesWeekVier\ReferenceTypesWeekVier.csproj", "{A93F871B-48E8-49DB-A986-DB644B642A79}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ForNextVoorbeeld", "..\ForNext\ForNextVoorbeeld\ForNextVoorbeeld.csproj", "{D40D9F91-4084-4E51-A713-73247B0295E3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,10 @@ Global
 		{A93F871B-48E8-49DB-A986-DB644B642A79}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A93F871B-48E8-49DB-A986-DB644B642A79}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A93F871B-48E8-49DB-A986-DB644B642A79}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D40D9F91-4084-4E51-A713-73247B0295E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D40D9F91-4084-4E51-A713-73247B0295E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D40D9F91-4084-4E51-A713-73247B0295E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D40D9F91-4084-4E51-A713-73247B0295E3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
