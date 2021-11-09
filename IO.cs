@@ -9,6 +9,9 @@ namespace Vlaaieboer
 {
     internal class IO
     {
+        private static string settingsFile = "settings.json";
+
+
         public enum TextColors
         {
             Input,
@@ -27,53 +30,76 @@ namespace Vlaaieboer
         //
 
         private static List<UserColor> userColor = new List<UserColor>();
+        public static void InitializeColors()
+        { 
+            if (!File.Exists(settingsFile))             // set standard colors and create file
+            {
+                userColor.Add(new UserColor(true));
+                SetStandardColor();
+                SaveColors();
+            }
+            else                                       // read and set userColor
+            {
+                userColor = PopulateList<UserColor>(settingsFile);
+            }
+
+        Console.BackgroundColor = userColor[0].BackGroundDefault;
+
+        }
 
         public static void SetStandardColor()
         {
-            userColor.Add(new UserColor());
+            userColor[0] = new UserColor(true);
+            Console.BackgroundColor = userColor[0].BackGroundDefault;
+        }
+        
+        public static void SaveColors()
+        {
+            WriteToFile<UserColor>(settingsFile, userColor);
         }
 
         public static void CycleColors(int aChoice, bool aRndBackground)
         {
             //userColor.Add(new UserColor());
-
+            int newColor = 0;
             switch (aChoice)
             {
                 case 0:     //Text High
-                    var e = (int)userColor[0].TextHigh;
-                    e++; if (e == 16) { e = 0; }
-                    userColor[0].TextHigh = (ConsoleColor)e;
+                    newColor = (int)userColor[0].TextHigh;                 // get the int value of enum ConsoleColor Usercolor[0].TextHigh;
+                    newColor++; if (newColor == 16) { newColor = 0; }                        // increase with 1 until 16, then reset to 0 (Usercolor has 0-15 value)
+                    userColor[0].TextHigh = (ConsoleColor)newColor;            // set userColor[0] to new value;
                     break;
 
                 case 1:     //foreground
-                    var a = (int)userColor[0].ForeGroundDefault;
-                    a++; if (a == 16) { a = 0; }
-                    userColor[0].ForeGroundDefault = (ConsoleColor)a;
+                    newColor = (int)userColor[0].ForeGroundDefault;
+                    newColor++; if (newColor == 16) { newColor = 0; }
+                    userColor[0].ForeGroundDefault = (ConsoleColor)newColor;
                     break;
 
                 case 2:     //background
 
-                    var b = (int)userColor[0].BackGroundDefault;
-                    b++; if (b == 16) { b = 0; }
-                    userColor[0].BackGroundDefault = (ConsoleColor)b;
+                    newColor = (int)userColor[0].BackGroundDefault;
+                    newColor++; if (newColor == 16) { newColor = 0; }
+                    userColor[0].BackGroundDefault = (ConsoleColor)newColor;
                     Console.BackgroundColor = userColor[0].BackGroundDefault;    // set backgroundcolor here before Console.Clear() in main loop
                     break;
 
                 case 3:     //title
 
-                    var c = (int)userColor[0].MenuSelectDefault;
-                    c++; if (c == 16) { c = 0; }
-                    userColor[0].MenuSelectDefault = (ConsoleColor)c;
+                    newColor = (int)userColor[0].MenuSelectDefault;
+                    newColor++; if (newColor == 16) { newColor = 0; }
+                    userColor[0].MenuSelectDefault = (ConsoleColor)newColor;
                     break;
 
                 case 4:     //menucolor
 
-                    var d = (int)userColor[0].Title;
-                    d++; if (d == 16) { d = 0; }
-                    userColor[0].Title = (ConsoleColor)d;
+                    newColor = (int)userColor[0].Title;
+                    newColor++; if (newColor == 16) { newColor = 0; }
+                    userColor[0].Title = (ConsoleColor)newColor;
                     break;
 
-                case 5:     //menucolor
+                case 5:     //randomize
+                    
                     var rand = new Random();
                     if (aRndBackground) { userColor[0].BackGroundDefault = (ConsoleColor)rand.Next(16); }
 
@@ -92,9 +118,9 @@ namespace Vlaaieboer
                     break;
 
                 case 6:     // input text color
-                    var f = (int)userColor[0].InputText;
-                    f++; if (f == 16) { f = 0; }
-                    userColor[0].InputText = (ConsoleColor)f;
+                    newColor = (int)userColor[0].InputText;
+                    newColor++; if (newColor == 16) { newColor = 0; }
+                    userColor[0].InputText = (ConsoleColor)newColor;
                     break;
 
                 default:
@@ -106,9 +132,9 @@ namespace Vlaaieboer
             //}
         }
 
-        public static void Color(TextColors textColor)                     // sets or resets console font color
+        public static void Color(TextColors textColor)                     // sets font and background color
         {
-            // TODO: call with colour name string instead of number
+            // PrintOnConsole(((int)userColor[0].BackGroundDefault).ToString(), 1, 1);
             Console.BackgroundColor = userColor[0].BackGroundDefault;
             //Console.ForegroundColor = foreGroundText;
             switch (textColor)
@@ -142,13 +168,12 @@ namespace Vlaaieboer
                     break;
 
                 case TextColors.Inactive:
-                    if (Console.BackgroundColor != ConsoleColor.DarkGray)
+                    if (userColor[0].BackGroundDefault != ConsoleColor.DarkGray)
                     {
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                    }
-                    else
-                    {
-                        Console.ForegroundColor = ConsoleColor.Gray;
+                    }else
+                    {   
+                            Console.ForegroundColor = ConsoleColor.Black;
                     }
                     break;
 

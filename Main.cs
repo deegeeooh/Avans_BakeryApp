@@ -23,7 +23,7 @@ namespace Vlaaieboer
         {
             //initialize variables
             // Prevent example from ending if CTL+C is pressed.
-            // Console.TreatControlCAsInput = true;                                         // doesn't seem to work correctly ?
+            Console.TreatControlCAsInput = true;                                         // doesn't seem to work correctly ?
             // init console window properties
 
             Console.Title = "Avans C# Console Application prototype";
@@ -31,13 +31,12 @@ namespace Vlaaieboer
             //Console.SetWindowPosition(11, 9);                     //TODO: figure out SetWindowsPosition
             // IO.Color(IO.TextColors.DefaultForeground);
             //IO.CycleColors(5, false);
-            IO.SetStandardColor();
-            
+            IO.InitializeColors();
             Console.Clear();
 
             do
             {
-                IO.DisplayMenu("Main Menu", "(L)ogin\n(P)eople\n(E)mployees\n(C)ustomers\nPro(D)ucts\n(M)asterdata\n\nEnter your choice, Escape to Exit program\n\n", IO.TextColors.MenuSelect);
+                IO.DisplayMenu("Main Menu", "(L)ogin\n(P)eople\n(E)mployees\n(C)ustomers\nPro(D)ucts\n(M)asterdata\n\n(F3-F10) change colors, (F11) reset (F12) save\n\nEnter your choice, Escape to Exit program\n\n", IO.TextColors.MenuSelect);
                 
                 inputKey = Console.ReadKey(true);               // 'true' | dont'display the input on the console
                 CheckMenuInput();
@@ -93,7 +92,15 @@ namespace Vlaaieboer
             else if (inputKey.Key == ConsoleKey.F8)  { IO.CycleColors(4, false); return; }      // Software license nameholder Color
             else if (inputKey.Key == ConsoleKey.F9)  { IO.CycleColors(5, true ); return; }      // Random colors including background
             else if (inputKey.Key == ConsoleKey.F10) { IO.CycleColors(5, false); return; }      // Random colors excluding background
-            
+            else if (inputKey.Key == ConsoleKey.F11)
+            {
+                IO.SetStandardColor();
+                IO.SaveColors();
+            }
+            else if (inputKey.Key == ConsoleKey.F12) 
+            {
+                IO.SaveColors();
+            }
 
             else if (inputKey.Key == ConsoleKey.A)                                  // Assembly info
             {
