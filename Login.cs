@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 
+
 namespace Vlaaieboer
 {
-    class Login
+    class Login             // NICE: add login ID's and store users ID's in mutations
     {
         readonly string checkInputString = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789//-@| .,_!#$%^&*";
         private string passWord = "bakker";
@@ -16,19 +17,20 @@ namespace Vlaaieboer
         {
             string passWordInput = IO.GetInput("Enter password: ", "", checkInputString, 18, 56,false, true, false, false, true, 0);
 
-            if (passWordInput == this.passWord)
+            if (passWordInput == passWord)
             {
+                Color.SetWarningColor(false);
+                IO.SystemMessage("Welcome, you have been logged in succesfully");
                 validPassword = true;
-                IO.PrintOnConsole("You have been logged in succesfully", 1, 34);
-                Thread.Sleep(500);
                 return;                             // exit if statement
             }
             else
             {
-                Console.WriteLine("Invalid password");
+                Color.SetWarningColor(true);
+                IO.SystemMessage("Invalid password");
                 validPassword = false;
                 //Log.validPassword = false;
-                Thread.Sleep(500);
+                //Thread.Sleep(1500);
             }
 
         }

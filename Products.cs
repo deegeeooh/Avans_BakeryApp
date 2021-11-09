@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Vlaaieboer
 {
-    class Products
+    class Products      //TODO: finish products
+                        //NICE: create product orders class
     {
         private static int lenghtQuestionField = 30;
         private static string checkinputStringAlpha = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789//-@| '.,_";

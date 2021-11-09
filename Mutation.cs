@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Vlaaieboer
 {
-    class Mutation
+    class Mutation              //NICE create separate mutations file
     {
         public int      RecordCounter { get; set; }
         public DateTime MutationDate  { get; set; }

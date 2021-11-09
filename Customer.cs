@@ -27,7 +27,7 @@
 
         public Customer()
         {
-            // TODO: Getinput customer
+            // TODO: finish customer
             RecordCounter++;         
             //Name = IO.GetInput("Name: ", "", checkinputStringAlpha, lengthQuestionField, nameMaxLenght, true, true, true, true, nameMinLenght);
             //Address = IO.GetInput("Adress: ", "", checkinputStringAlpha, lengthQuestionField, addressMaxLenght, true, true, true, true, addressMinLenght);
@@ -37,7 +37,7 @@
             //Email = IO.GetInput("Email: ", "", checkinputStringAlpha, lengthQuestionField, emailMaxLenght, true, true, true, true, emailMinLenght);
 
             // TODO: build customer ID
-            // TODO; store record
+            // TODO: store record
             totalRecords++;
         }
     }

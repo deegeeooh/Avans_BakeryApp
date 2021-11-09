@@ -22,23 +22,23 @@ namespace Vlaaieboer
         // 2 dimensional array with 3 columns per row: fieldNames index (for readability, not necessary), field max length, field min required length
         //
 
-        private static int[,] fieldProperties = { { 0, 3, 1 },
-                                              { 1, 10, 10 },
-                                              { 2, 10, 0 },
-                                              { 3, 10, 0 },
-                                              { 4, 1, 1 } };
+        private static int[,] fieldProperties = { { 0,  3,  1 },
+                                                  { 1, 10, 10 },
+                                                  { 2, 10,  0 },
+                                                  { 3, 10,  0 },
+                                                  { 4,  1,  1 } };
 
         private static String[] fieldNames = { "Job Title:",                                  //0
                                                "Date joined:",                                //1
                                                "Date exit:",                                  //2
                                                "Salary per month:",                           //3
                                                "Total sick days" };                           //4
-        public string JobTitle { get; set; }
-        public DateTime DateJoined { get; set; }
-        public DateTime DateExit { get; set; }
-        public int Salary { get; set; }
-        public int SickDays { get; set; }
-        public string IsEmployee { get; set; }
+        public string JobTitle      { get; set; }
+        public DateTime DateJoined  { get; set; }
+        public DateTime DateExit    { get; set; }
+        public int Salary           { get; set; }
+        public int SickDays         { get; set; }
+        public string IsEmployee    { get; set; }
         
 
         public Employee()           // Constructor method; gets executed whenever we call '= new Employee()'

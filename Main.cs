@@ -29,14 +29,14 @@ namespace Vlaaieboer
             Console.Title = "Avans C# Console Application prototype";
             Console.SetWindowSize(windowWidth, windowHeight);
             //Console.SetWindowPosition(11, 9);                     //TODO: figure out SetWindowsPosition
-            // IO.Color(IO.TextColors.DefaultForeground);
-            //IO.CycleColors(5, false);
-            IO.InitializeColors();
+            // UserColor.Color(UserColor.TextColors.DefaultForeground);
+            //UserColor.CycleColors(5, false);
+            IO.SetWarningLength(2500);
+            Color.InitializeColors();
             Console.Clear();
-
             do
             {
-                IO.DisplayMenu("Main Menu", "(L)ogin\n(P)eople\n(E)mployees\n(C)ustomers\nPro(D)ucts\n(M)asterdata\n\n(F3-F10) change colors, (F11) reset (F12) save\n\nEnter your choice, Escape to Exit program\n\n", IO.TextColors.MenuSelect);
+                IO.DisplayMenu("Main Menu", "(L)ogin\n(P)eople\n(E)mployees\n(C)ustomers\nPro(D)ucts\n(M)asterdata\n\n(F3-F10) change colors, (F11) reset (F12) save\n\nEnter your choice, Escape to Exit program\n\n", Color.TextColors.MenuSelect);
                 
                 inputKey = Console.ReadKey(true);               // 'true' | dont'display the input on the console
                 CheckMenuInput();
@@ -47,8 +47,6 @@ namespace Vlaaieboer
             Thread.Sleep(500);
             Console.ResetColor();
         }
-
-        
 
         private static void CheckMenuInput()
         {
@@ -61,45 +59,45 @@ namespace Vlaaieboer
             }
             else if (inputKey.Key == ConsoleKey.P)             // People
             {
-                IO.DisplayMenu("Browse/edit People", "(Ins)ert to Add\n(Enter)to Edit\n(Del)ete to remove Record\nUse arrow keys to browse\n(Home) Main menu\n\n", IO.TextColors.MenuSelect);
+                IO.DisplayMenu("Browse/edit People", "(Ins)ert to Add\n(Enter)to Edit\n(Del)ete to remove Record\nUse arrow keys to browse\n(Home) Main menu\n\n", Color.TextColors.MenuSelect);
                 People();
             }
             else if (inputKey.Key == ConsoleKey.E & Login.validPassword)             // Employees
             {
-                IO.DisplayMenu("Browse/edit Employees", "(Ins)ert to Add\n(Enter)to Edit\n(Del)ete to remove Record\nUse arrow keys to browse\n(Home) Main menu\n\n", IO.TextColors.MenuSelect);
+                IO.DisplayMenu("Browse/edit Employees", "(Ins)ert to Add\n(Enter)to Edit\n(Del)ete to remove Record\nUse arrow keys to browse\n(Home) Main menu\n\n", Color.TextColors.MenuSelect);
                 EditEmployees();
             }
             else if (inputKey.Key == ConsoleKey.C & Login.validPassword)             // Customers
             {
-                IO.DisplayMenu("Browse/edit customer records", "(A)dd\nArrows to browse\n(Del)ete\n", IO.TextColors.MenuSelect);
+                IO.DisplayMenu("Browse/edit customer records", "(A)dd\nArrows to browse\n(Del)ete\n", Color.TextColors.MenuSelect);
                 Customers();
             }
             else if (inputKey.Key == ConsoleKey.D & Login.validPassword)             // Products
             {
-                IO.DisplayMenu("Browse/edit product records", "(A)dd\nArrows to browse\n(Del)ete\n", IO.TextColors.MenuSelect);
+                IO.DisplayMenu("Browse/edit product records", "(A)dd\nArrows to browse\n(Del)ete\n", Color.TextColors.MenuSelect);
                 //Products();
             }
             else if (inputKey.Key == ConsoleKey.M & Login.validPassword)             // Master Data
             {
-                IO.DisplayMenu("Edit Master Data", "(A)dd\nArrows to browse\n(Del)ete\n", IO.TextColors.MenuSelect);
+                IO.DisplayMenu("Edit Master Data", "(A)dd\nArrows to browse\n(Del)ete\n", Color.TextColors.MenuSelect);
                 Console.WriteLine("  You Pressed D");
             }
-            else if (inputKey.Key == ConsoleKey.F3)  { IO.CycleColors(6, false); return; }      // input text color
-            else if (inputKey.Key == ConsoleKey.F4)  { IO.CycleColors(0, false); return; }      // highlighted text color
-            else if (inputKey.Key == ConsoleKey.F5)  { IO.CycleColors(1, false); return; }      // normal text 
-            else if (inputKey.Key == ConsoleKey.F6)  { IO.CycleColors(2, false); return; }      // background
-            else if (inputKey.Key == ConsoleKey.F7)  { IO.CycleColors(3, false); return; }      // Menu select color
-            else if (inputKey.Key == ConsoleKey.F8)  { IO.CycleColors(4, false); return; }      // Software license nameholder Color
-            else if (inputKey.Key == ConsoleKey.F9)  { IO.CycleColors(5, true ); return; }      // Random colors including background
-            else if (inputKey.Key == ConsoleKey.F10) { IO.CycleColors(5, false); return; }      // Random colors excluding background
+            else if (inputKey.Key == ConsoleKey.F3)  { Color.CycleColors(6, false); return; }      // input text color
+            else if (inputKey.Key == ConsoleKey.F4)  { Color.CycleColors(0, false); return; }      // highlighted text color
+            else if (inputKey.Key == ConsoleKey.F5)  { Color.CycleColors(1, false); return; }      // normal text 
+            else if (inputKey.Key == ConsoleKey.F6)  { Color.CycleColors(2, false); return; }      // background
+            else if (inputKey.Key == ConsoleKey.F7)  { Color.CycleColors(3, false); return; }      // Menu select color
+            else if (inputKey.Key == ConsoleKey.F8)  { Color.CycleColors(4, false); return; }      // Software license nameholder Color
+            else if (inputKey.Key == ConsoleKey.F9)  { Color.CycleColors(5, true ); return; }      // Random colors including background
+            else if (inputKey.Key == ConsoleKey.F10) { Color.CycleColors(5, false); return; }      // Random colors excluding background
             else if (inputKey.Key == ConsoleKey.F11)
             {
-                IO.SetStandardColor();
-                IO.SaveColors();
+                Color.SetStandardColor();
+                Color.SaveColors();
             }
             else if (inputKey.Key == ConsoleKey.F12) 
             {
-                IO.SaveColors();
+                Color.SaveColors();
             }
 
             else if (inputKey.Key == ConsoleKey.A)                                  // Assembly info
@@ -178,7 +176,7 @@ namespace Vlaaieboer
             string inputString = "abcdefghijklmnopqrstuvwxyz" + ConsoleKey.Backspace.ToString();
             StringBuilder zoekstring = new StringBuilder();
 
-            do
+            do                                             // TODO: cleanup and generalize
             {
                 inputKey = Console.ReadKey(true);
 
@@ -186,13 +184,15 @@ namespace Vlaaieboer
                 {
                     case ConsoleKey.Enter:                  // edit current existing record
 
-                        if (maxRecords > 0 & Person.CheckIfActive(peopleList[recordIndex - 1]))                 // some record is being displayed
+                        if (maxRecords > 0 & Person.CheckIfActive(peopleList, recordIndex))                 // some record is being displayed
                         {
                             Console.SetCursorPosition(cursorLeft, cursorTop + 1);       // set cursor on first inputfield
-                            Person.EditRecord(peopleList, recordIndex);             // edit current record
-                            IO.WriteToFile(filePeople, peopleList);          // write to file
+                            Person.EditRecord(peopleList, recordIndex);                 // edit current record
+                            IO.WriteToFile(filePeople, peopleList);                     // write to file
                             Console.SetCursorPosition(cursorLeft, cursorTop);           // cursor back to top
-                            Person.DisplayRecord(peopleList, recordIndex, false);   // display record for updated employeeID and age
+                            Person.DisplayRecord(peopleList, recordIndex, false);       // display record for updated employeeID and age
+                            Color.SetWarningColor(false);
+                            IO.SystemMessage("Record has been updated in file");
                         }
                         break;
 
@@ -209,7 +209,9 @@ namespace Vlaaieboer
                         Console.SetCursorPosition(cursorLeft, cursorTop);
                         Person.DisplayRecord(peopleList, recordIndex, false);
                         IO.WriteToFile(filePeople, peopleList);
-                        
+                        //
+                        Color.SetWarningColor(false);
+                        IO.SystemMessage("Record has been written to file");
                         
                         break;
 
@@ -218,7 +220,17 @@ namespace Vlaaieboer
                         {
                             Person.ToggleDeletionFlag(peopleList, recordIndex);
                             Console.SetCursorPosition(cursorLeft, cursorTop);
-                            Person.DisplayRecord(peopleList, recordIndex, false);       
+                            Person.DisplayRecord(peopleList, recordIndex, false);
+                            Color.SetWarningColor(false);
+                            if (Person.CheckIfActive(peopleList, recordIndex))
+                            {
+                                IO.SystemMessage("Record has been set to Active");
+                            }
+                            else
+                            {
+                                IO.SystemMessage("Record has been marked for Deletion");
+                            }
+
                         }
                         break;
                     case ConsoleKey.LeftArrow:
@@ -285,9 +297,9 @@ namespace Vlaaieboer
 
         private static void UpdateTotalRecordsOnScreen(int maxRecords)                  // NICE: display inactive records as well
         {
-            IO.Color(IO.TextColors.MenuSelect);
+            Color.SetColor(Color.TextColors.MenuSelect);
             IO.PrintOnConsole("[" + maxRecords.ToString() + "] active records\t", 30, 5);
-            IO.Color(IO.TextColors.DefaultForeground);
+            Color.SetColor(Color.TextColors.DefaultForeGround);
         }
 
         private static void Customers()

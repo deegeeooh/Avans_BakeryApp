@@ -24,7 +24,7 @@ namespace Vlaaieboer
         // 2 dimensional array with 3 columns per row: fieldNames index (for readability, not necessary), field max length, field min required length
         //
 
-        private static int[,] fieldProperties = { { 0,   8,  1 },
+        private static int[,] fieldProperties = { { 0,   8,  1 },               //NICE : Use attributes instead
                                                   { 1,  45,  1 },
                                                   { 2,  35,  0 },
                                                   { 3,  30,  1 },
@@ -140,7 +140,7 @@ namespace Vlaaieboer
             return b + a;
         }
 
-        public static void EditRecord<T>(List<T> aList, int aRecord) where T : Person
+        public static void EditRecord<T>(List<T> aList, int aRecord) where T : Person               // TODO: refactor to secondary constructor
         {
             // store passed values in array for comparison in Checkmutations()
             // create a shallow copy of this object https://docs.microsoft.com/en-us/dotnet/api/system.object.memberwiseclone?view=net-5.0
@@ -195,7 +195,7 @@ namespace Vlaaieboer
             CheckMutations(aList[aRecord - 1], aPersonOldValues.Email, aList[aRecord - 1].Email, 12);
         }
 
-        public static void CheckMutations<T>(T aPerson, string old, string newVal, int aFieldnumber) where T : Person                   // TODO: make method generic and store mutations in separate file
+        public static void CheckMutations<T>(T aPerson, string old, string newVal, int aFieldnumber) where T : Person                   // NICE: make method generic and store mutations in separate file
         {
             if (old != newVal)
             {
@@ -259,9 +259,9 @@ namespace Vlaaieboer
                 if (!aList[aRecord - 1].Active)
                 {
                     Console.SetCursorPosition(lengthQuestionField + fieldProperties[0, 1] + 5, cursor);
-                    IO.Color(IO.TextColors.Inverted);
+                    Color.SetColor(Color.TextColors.Inverted);
                     Console.Write(" *Inactive* ");
-                    IO.Color(IO.TextColors.DefaultForeground);
+                    Color.SetColor(Color.TextColors.DefaultForeGround);
                 }
                 else
                 {
@@ -283,9 +283,9 @@ namespace Vlaaieboer
             totalInActiveRecords++;
             IO.WriteToFile<Person>(Program.filePeople, aList);
         }
-        public static bool CheckIfActive(Person aPerson)
+        public static bool CheckIfActive(List<Person> aList, int aRecordsnumber)
         {
-            return aPerson.Active;
+            return aList[aRecordsnumber - 1].Active;
         }
 
         public static int GetTotalRecords()
