@@ -6,6 +6,10 @@ using System.Threading;
 
 namespace BakeryConsole
 {
+    //
+    // 
+    //
+
     internal class Program
     {
         // declare variables
@@ -103,12 +107,13 @@ namespace BakeryConsole
             else if (inputKey.Key == ConsoleKey.A)                                  // Assembly info
             {
                 //IO.DisplayMenu("Browse/edit product records", "(A)dd\nArrows to browse\n(Del)ete\n", 2);
-                // ShowAssemblyInfo();
+                 ShowAssemblyInfo();
             }
             else if (inputKey.Key == ConsoleKey.Escape)                               // exit program
             {
                 return;
             }
+            
         }
 
         private static void ShowAssemblyInfo()
@@ -150,11 +155,144 @@ namespace BakeryConsole
             var empl = new Employee();
         }
 
+
+
+
+
+
+
+        //private static void RecordBrowser<T>(string aFilename, object anObject) where T : class
+        //{
+
+
+
+
+        //    var browseList = new List<T>();
+        //    browseList = IO.PopulateList<T>(aFilename);          // remark: reading entire file into list, probably want an indexfile IRL
+        //    int cursorLeft = Console.CursorLeft;                     // store current cursorposition, left and top
+        //    int cursorTop = Console.CursorTop;
+        //    int recordIndex;
+        //    int maxRecords;
+
+        //    if (browseList.Count > 0)
+        //    {
+        //        maxRecords = browseList.Count;                              // not necessary, just use static class attribute totalRecords directly
+        //        recordIndex = 1;
+        //        //class.SetTotalRecords(recordIndex);
+        //        Person.DisplayRecord(browseList, recordIndex, false);
+        //    }
+        //    else
+
+        //    {
+        //        maxRecords = 0;
+        //        recordIndex = 1;
+        //        Person.DisplayRecord(browseList, recordIndex, true);        // display a clear form 
+        //    }
+
+        //    UpdateTotalRecordsOnScreen(maxRecords);
+        //    string inputString = "abcdefghijklmnopqrstuvwxyz" + ConsoleKey.Backspace.ToString();
+        //    StringBuilder zoekstring = new StringBuilder();
+
+        //    do                                             // TODO: cleanup and generalize
+        //    {
+        //        inputKey = Console.ReadKey(true);
+
+        //        switch (inputKey.Key)
+        //        {
+        //            case ConsoleKey.Enter:                  // edit current existing record
+
+        //                if (maxRecords > 0 & Person.CheckIfActive(browseList, recordIndex))                 // some record is being displayed
+        //                {
+        //                    Console.SetCursorPosition(cursorLeft, cursorTop + 1);       // set cursor on first inputfield after ID
+
+        //                    Person.EditRecord(browseList, recordIndex);                 // edit current record
+        //                    IO.WriteToFile(filePeople, browseList);                     // write to file
+
+        //                    Console.SetCursorPosition(cursorLeft, cursorTop);           // cursor back to top
+        //                    Person.DisplayRecord(browseList, recordIndex, false);       // refresh record for updated employeeID and age
+
+        //                    Color.SetWarningColor(false);
+        //                    IO.SystemMessage("Record has been updated in file");
+        //                }
+        //                break;
+
+        //            case ConsoleKey.Insert:                 // add new record
+
+        //                Console.SetCursorPosition(cursorLeft, cursorTop);
+        //                Person.DisplayRecord(browseList, recordIndex, true);        // clear inputform
+
+        //                Console.SetCursorPosition(cursorLeft, cursorTop + 1);
+        //                browseList.Add(new Person());
+        //                maxRecords++;
+        //                recordIndex = maxRecords;
+        //                Person.SetTotalRecords(maxRecords);
+        //                UpdateTotalRecordsOnScreen(maxRecords);
+        //                Console.SetCursorPosition(cursorLeft, cursorTop);
+        //                Person.DisplayRecord(browseList, recordIndex, false);
+        //                IO.WriteToFile(filePeople, browseList);
+        //                //
+        //                Color.SetWarningColor(false);
+        //                IO.SystemMessage("Record has been written to file");
+
+        //                break;
+
+        //            case ConsoleKey.Delete:                   // mark record for deletion
+        //                if (maxRecords > 0)
+        //                {
+        //                    Person.ToggleDeletionFlag(browseList, recordIndex);
+        //                    Console.SetCursorPosition(cursorLeft, cursorTop);
+        //                    Person.DisplayRecord(browseList, recordIndex, false);
+        //                    Color.SetWarningColor(false);
+        //                    if (Person.CheckIfActive(browseList, recordIndex))
+        //                    {
+        //                        IO.SystemMessage("Record has been set to Active");
+        //                    }
+        //                    else
+        //                    {
+        //                        IO.SystemMessage("Record has been marked for Deletion");
+        //                    }
+
+        //                }
+        //                break;
+        //            case ConsoleKey.LeftArrow:
+        //            case ConsoleKey.UpArrow:
+
+        //                if (recordIndex > 1)
+        //                {
+        //                    recordIndex--;
+        //                    Console.SetCursorPosition(cursorLeft, cursorTop);
+        //                    Person.DisplayRecord(browseList, recordIndex, false);
+        //                }
+        //                break;
+
+        //            case ConsoleKey.RightArrow:
+        //            case ConsoleKey.DownArrow:
+
+        //                if (recordIndex < maxRecords)
+        //                {
+        //                    recordIndex++;
+        //                    Console.SetCursorPosition(cursorLeft, cursorTop);
+        //                    Person.DisplayRecord(browseList, recordIndex, false);
+        //                }
+
+        //                break;
+
+        //            default:
+
+        //                recordIndex = SearchStringInList(browseList, cursorLeft, cursorTop, recordIndex, zoekstring);
+
+        //                break;
+        //        }
+        //    } while (inputKey.Key != ConsoleKey.Home);
+        //}
+
+
         private static void People()
         {
-            var peopleList  = IO.PopulateList<Person>(filePeople);          // remark: reading entire file into list, probably want an indexfile IRL
-            int cursorLeft  = Console.CursorLeft;                           // store current cursorposition, left and top
-            int cursorTop   = Console.CursorTop;
+
+            var peopleList = IO.PopulateList<Person>(filePeople);          // remark: reading entire file into list, probably want an indexfile IRL
+            int cursorLeft = Console.CursorLeft;                           // store current cursorposition, left and top
+            int cursorTop = Console.CursorTop;
             int recordIndex;
             int maxRecords;
 
@@ -162,12 +300,12 @@ namespace BakeryConsole
             {
                 maxRecords = peopleList.Count;                              // not necessary, just use static class attribute totalRecords directly
                 recordIndex = 1;
-                Person.SetTotalRecords(maxRecords);             
+                Person.SetTotalRecords(maxRecords);
                 Person.DisplayRecord(peopleList, recordIndex, false);
             }
             else
             {
-                maxRecords  = 0;
+                maxRecords = 0;
                 recordIndex = 1;
                 Person.DisplayRecord(peopleList, recordIndex, true);        // display a clear form 
             }
@@ -182,45 +320,57 @@ namespace BakeryConsole
 
                 switch (inputKey.Key)
                 {
-                    case ConsoleKey.Enter:                  // edit current existing record
+                    case ConsoleKey.Enter:                                                  // edit current record being displayed
 
-                        if (maxRecords > 0 & Person.CheckIfActive(peopleList, recordIndex))                 // some record is being displayed
+                        if (maxRecords > 0 & Person.CheckIfActive(peopleList, recordIndex)) // some record is being displayed
                         {
-                            Console.SetCursorPosition(cursorLeft, cursorTop + 1);       // set cursor on first inputfield after ID
-                            Person.EditRecord(peopleList, recordIndex);                 // edit current record
-                            IO.WriteToFile(filePeople, peopleList);                     // write to file
-                            Console.SetCursorPosition(cursorLeft, cursorTop);           // cursor back to top
-                            Person.DisplayRecord(peopleList, recordIndex, false);       // display record for updated employeeID and age
+                            Console.SetCursorPosition(cursorLeft, cursorTop + 1);           // set cursor on first inputfield after ID
+                            //Person newP = new Person(peopleList, recordIndex);
+                            peopleList.Insert(recordIndex -  1, new Person(peopleList[recordIndex - 1]));
+                            
+                            peopleList.RemoveAt(recordIndex);
+                            // Person.EditRecord(peopleList, recordIndex);                     // edit current record
+                            IO.WriteToFile(filePeople, peopleList);                         // write to file
+
+                            Console.SetCursorPosition(cursorLeft, cursorTop);               // cursor back to top
+                            Person.DisplayRecord(peopleList, recordIndex, false);           // refresh record for updated employeeID and age
+
                             Color.SetWarningColor(false);
                             IO.SystemMessage("Record has been updated in file");
                         }
                         break;
 
-                    case ConsoleKey.Insert:                 // add new record
+                    case ConsoleKey.Insert:                                                 // add new record
 
                         Console.SetCursorPosition(cursorLeft, cursorTop);
-                        Person.DisplayRecord(peopleList, recordIndex, true);        // clear inputform
+                        Person.DisplayRecord(peopleList, recordIndex, true);                // clear inputform
+
                         Console.SetCursorPosition(cursorLeft, cursorTop + 1);
-                        peopleList.Add(new Person());
-                        maxRecords++;
-                        recordIndex = maxRecords;
-                        Person.SetTotalRecords(maxRecords);
+
+
+                        peopleList.Add(new Person());                                       // call standard constructor
+                        maxRecords++;                                                       // increase number of records 
+                        recordIndex = maxRecords;                                           // set recordindex to last record;
+                        Person.SetTotalRecords(maxRecords);                                 // update records in class
+
                         UpdateTotalRecordsOnScreen(maxRecords);
+
                         Console.SetCursorPosition(cursorLeft, cursorTop);
-                        Person.DisplayRecord(peopleList, recordIndex, false);
-                        IO.WriteToFile(filePeople, peopleList);
+                        Person.DisplayRecord(peopleList, recordIndex, false);               // refresh record on for updated employeeID and age
+                        IO.WriteToFile(filePeople, peopleList);                             // write to JSON file
                         //
                         Color.SetWarningColor(false);
                         IO.SystemMessage("Record has been written to file");
-                        
+
                         break;
 
-                    case ConsoleKey.Delete:                   // mark record for deletion
-                        if (maxRecords > 0)                 
+                    case ConsoleKey.Delete:                                                 // mark record for deletion
+                        if (maxRecords > 0)
                         {
-                            Person.ToggleDeletionFlag(peopleList, recordIndex);
+                            Person.ToggleDeletionFlag(peopleList, recordIndex);             // toggle .Active property
                             Console.SetCursorPosition(cursorLeft, cursorTop);
-                            Person.DisplayRecord(peopleList, recordIndex, false);
+                            Person.DisplayRecord(peopleList, recordIndex, false);           // refresh record
+
                             Color.SetWarningColor(false);
                             if (Person.CheckIfActive(peopleList, recordIndex))
                             {
@@ -233,21 +383,21 @@ namespace BakeryConsole
 
                         }
                         break;
-                    case ConsoleKey.LeftArrow:
+                    case ConsoleKey.LeftArrow:                                              // browse to previous
                     case ConsoleKey.UpArrow:
 
                         if (recordIndex > 1)
                         {
                             recordIndex--;
                             Console.SetCursorPosition(cursorLeft, cursorTop);
-                            Person.DisplayRecord(peopleList, recordIndex, false);
+                            Person.DisplayRecord(peopleList, recordIndex, false);           // display
                         }
                         break;
 
-                    case ConsoleKey.RightArrow:
+                    case ConsoleKey.RightArrow:                                             //browse
                     case ConsoleKey.DownArrow:
 
-                        if (recordIndex < maxRecords)
+                        if (recordIndex < maxRecords)                                       // while not EoF
                         {
                             recordIndex++;
                             Console.SetCursorPosition(cursorLeft, cursorTop);
@@ -256,7 +406,7 @@ namespace BakeryConsole
 
                         break;
 
-                    default:
+                    default:                                                                // search
 
                         recordIndex = SearchStringInList(peopleList, cursorLeft, cursorTop, recordIndex, zoekstring);
 

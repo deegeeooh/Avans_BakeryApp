@@ -8,7 +8,7 @@ namespace BakeryConsole
     {
     }
 
-    internal class Person
+    internal class Person : Interface
     {
         private static int lengthQuestionField = 30;
 
@@ -76,7 +76,7 @@ namespace BakeryConsole
         public bool           Active        { get; set; }              // flag for deletion
         public List<Mutation> Mutations     { get; set; }              // just as PoC; every record stores all mutations which is probably not preferable
         public string         Gender        { get; set; }
-        public string         RelationType  { get; set; }
+        public string         RelationType  { get; set; }              
         public string         FirstName     { get; set; }
         public string         LastName      { get; set; }
         public string         Prefix        { get; set; }
@@ -116,15 +116,70 @@ namespace BakeryConsole
             Active = true;
         }
 
-        [JsonConstructor]                       // for json constructor, otherwise it will use the default() constructor which we don't want here
-        public Person(bool JUST4JSON_DontCall)
+        public Person(Person aPerson)
+        {
+            // store passed values in array for comparison in Checkmutations()
+            // create a shallow copy of this object https://docs.microsoft.com/en-us/dotnet/api/system.object.memberwiseclone?view=net-5.0
+            // by cloning the Person object with MemberwiseClone, an independent copy of the original, instead of a reference only,
+            // except for reference types, like Mutations. But we don't need to clone that since we are creating that.
+            // We NEED to do this here, because 
+
+            //Person aPersonOldValues = (Person)aPerson.MemberwiseClone();      not necessary as we create a new instance when constructor is called
+
+            LastName = IO.GetInput(      fieldNames[1],
+                                         aPerson.LastName,
+                                         checkinputStringAlpha,
+                                         lengthQuestionField,
+                                         fieldProperties[1, 1],
+                                         false,
+                                         true,
+                                         true,
+                                         true,
+                                         true,
+                                         fieldProperties[1, 2]);
+
+            // call GetInput() with the passed values of alist  //TODO: this can also be done as a separate constructor
+            RecordCounter = aPerson.RecordCounter;
+            Prefix        = IO.GetInput(fieldNames[2], aPerson.Prefix, checkinputStringAlpha, lengthQuestionField, fieldProperties[2, 1], false, true, true, true, true, fieldProperties[2, 2]);
+            FirstName     = IO.GetInput(fieldNames[3], aPerson.FirstName, checkinputStringAlpha, lengthQuestionField, fieldProperties[3, 1], false, true, true, true, true, fieldProperties[3, 2]);
+            Gender        = IO.GetInput(fieldNames[4], aPerson.Gender, "mMfFxX", lengthQuestionField, fieldProperties[4, 1], true, true, true, true, true, fieldProperties[4, 2]);
+            RelationType  = IO.GetInput(fieldNames[5], aPerson.RelationType, checkinputStringAlpha, lengthQuestionField, fieldProperties[5, 1], true, true, true, true, true, fieldProperties[5, 2]);         //TODO: select from array from EmployeeRoles
+            DateOfBirth   = IO.ParseToDateTime(IO.GetInput(fieldNames[6], aPerson.DateOfBirth.ToString("dd/MM/yyyy"), checkinputStringDate, lengthQuestionField, fieldProperties[6, 1], false, true, true, false, true, fieldProperties[6, 2]));
+            Address       = IO.GetInput(fieldNames[7], aPerson.Address, checkinputStringAlpha, lengthQuestionField, fieldProperties[7, 1], false, true, true, true, true, fieldProperties[7, 2]);
+            Zipcode       = IO.GetInput(fieldNames[8], aPerson.Zipcode, checkinputStringAlpha, lengthQuestionField, fieldProperties[8, 1], false, true, true, true, true, fieldProperties[8, 2]);
+            City          = IO.GetInput(fieldNames[9], aPerson.City, checkinputStringAlpha, lengthQuestionField, fieldProperties[9, 1], false, true, true, true, true, fieldProperties[9, 2]);
+            Country       = IO.GetInput(fieldNames[10], aPerson.Country, checkinputStringAlpha, lengthQuestionField, fieldProperties[10, 1], false, true, true, true, true, fieldProperties[10, 2]);
+            Telephone     = IO.GetInput(fieldNames[11], aPerson.Telephone, "0123456789+-", lengthQuestionField, fieldProperties[11, 1], false, true, true, true, true, fieldProperties[11, 2]);
+            Email         = IO.GetInput(fieldNames[12], aPerson.Email, checkinputStringAlpha, lengthQuestionField, fieldProperties[12, 1], false, true, true, true, true, fieldProperties[12, 2]);
+            PersonID      = ConstructID(aPerson);
+            Active        = true;
+
+            // check which values changed and store them in the Person.Mutations list
+
+            CheckMutations(this, aPerson.LastName,               this.LastName, 1);                // we are using this with the new instanced value:
+            CheckMutations(this, aPerson.Prefix,                 this.Prefix, 2);
+            CheckMutations(this, aPerson.FirstName,              this.FirstName, 3);
+            CheckMutations(this, aPerson.Gender,                 this.Gender, 4);
+            CheckMutations(this, aPerson.RelationType,           this.RelationType, 5);
+            CheckMutations(this, aPerson.DateOfBirth.ToString(), this.DateOfBirth.ToString(), 6);
+            CheckMutations(this, aPerson.Address,                this.Address, 7);
+            CheckMutations(this, aPerson.Zipcode,                this.Zipcode, 8);
+            CheckMutations(this, aPerson.City,                   this.City, 9);
+            CheckMutations(this, aPerson.Country,                this.Country, 10);
+            CheckMutations(this, aPerson.Telephone,              this.Telephone, 11);
+            CheckMutations(this, aPerson.Email,                  this.Email, 12);
+        }
+
+
+        [JsonConstructor]                                               // for json, otherwise it will use the default() constructor when deserializing which we don't want here
+        public Person(string JUST4JSON_DontCall)
         {
             //Console.WriteLine("Don't be a dick Jason dear"); Console.ReadKey();
         }
 
         public static string ConstructID(Person anEmployee)
         {
-            string a = anEmployee.RecordCounter.ToString("D5");        // make a string consisting of 5 decimals
+            string a = anEmployee.RecordCounter.ToString("D5");         // make a string consisting of 5 decimals
             string b;
             if (anEmployee.LastName.Length >= 3)
             {
@@ -140,60 +195,60 @@ namespace BakeryConsole
             return b + a;
         }
 
-        public static void EditRecord<T>(List<T> aList, int aRecord) where T : Person               // TODO: refactor to secondary constructor
-        {
-            // store passed values in array for comparison in Checkmutations()
-            // create a shallow copy of this object https://docs.microsoft.com/en-us/dotnet/api/system.object.memberwiseclone?view=net-5.0
-            // by cloning the Person object with MemberwiseClone, an independent copy of the original, instead of a reference only,
-            // except for reference types, like Mutations. But we don't need to clone that since we are creating that.
-            // We NEED to do this here, because 
+        //public static void EditRecord<T>(List<T> aList, int aRecord) where T : Person               
+        //{
+        //    // store passed values in array for comparison in Checkmutations()
+        //    // create a shallow copy of this object https://docs.microsoft.com/en-us/dotnet/api/system.object.memberwiseclone?view=net-5.0
+        //    // by cloning the Person object with MemberwiseClone, an independent copy of the original, instead of a reference only,
+        //    // except for reference types, like Mutations. But we don't need to clone that since we are creating that.
+        //    // We NEED to do this here, because 
 
-            Person aPersonOldValues = (Person) aList[aRecord - 1].MemberwiseClone();
+        //    Person aPersonOldValues = (Person) aList[aRecord - 1].MemberwiseClone();
 
-            aList[aRecord - 1].LastName = IO.GetInput(
-                                         fieldNames[1],
-                                         aList[aRecord - 1].LastName,
-                                         checkinputStringAlpha,
-                                         lengthQuestionField,
-                                         fieldProperties[1, 1],
-                                         false,
-                                         true,
-                                         true,
-                                         true,
-                                         true,
-                                         fieldProperties[1, 2]);
+        //    aList[aRecord - 1].LastName = IO.GetInput(
+        //                                 fieldNames[1],
+        //                                 aList[aRecord - 1].LastName,
+        //                                 checkinputStringAlpha,
+        //                                 lengthQuestionField,
+        //                                 fieldProperties[1, 1],
+        //                                 false,
+        //                                 true,
+        //                                 true,
+        //                                 true,
+        //                                 true,
+        //                                 fieldProperties[1, 2]);
 
-            // call GetInput() with the passed values of alist  //TODO: this can also be done as a separate constructor
+        //    // call GetInput() with the passed values of alist  //TODO: this can also be done as a separate constructor
 
-            aList[aRecord - 1].Prefix = IO.GetInput(fieldNames[2], aList[aRecord - 1].Prefix, checkinputStringAlpha, lengthQuestionField, fieldProperties[2, 1], false, true, true, true, true, fieldProperties[2, 2]);
-            aList[aRecord - 1].FirstName = IO.GetInput(fieldNames[3], aList[aRecord - 1].FirstName, checkinputStringAlpha, lengthQuestionField, fieldProperties[3, 1], false, true, true, true, true, fieldProperties[3, 2]);
-            aList[aRecord - 1].Gender = IO.GetInput(fieldNames[4], aList[aRecord - 1].Gender, "mMfFxX", lengthQuestionField, fieldProperties[4, 1], true, true, true, true, true, fieldProperties[4, 2]);
-            aList[aRecord - 1].RelationType = IO.GetInput(fieldNames[5], aList[aRecord - 1].RelationType, checkinputStringAlpha, lengthQuestionField, fieldProperties[5, 1], true, true, true, true, true, fieldProperties[5, 2]);         //TODO: select from array from EmployeeRoles
-            aList[aRecord - 1].DateOfBirth = IO.ParseToDateTime(IO.GetInput(fieldNames[6], aList[aRecord - 1].DateOfBirth.ToString("dd/MM/yyyy"), checkinputStringDate, lengthQuestionField, fieldProperties[6, 1], false, true, true, false, true, fieldProperties[6, 2]));
-            aList[aRecord - 1].Address = IO.GetInput(fieldNames[7], aList[aRecord - 1].Address, checkinputStringAlpha, lengthQuestionField, fieldProperties[7, 1], false, true, true, true, true, fieldProperties[7, 2]);
-            aList[aRecord - 1].Zipcode = IO.GetInput(fieldNames[8], aList[aRecord - 1].Zipcode, checkinputStringAlpha, lengthQuestionField, fieldProperties[8, 1], false, true, true, true, true, fieldProperties[8, 2]);
-            aList[aRecord - 1].City = IO.GetInput(fieldNames[9], aList[aRecord - 1].City, checkinputStringAlpha, lengthQuestionField, fieldProperties[9, 1], false, true, true, true, true, fieldProperties[9, 2]);
-            aList[aRecord - 1].Country = IO.GetInput(fieldNames[10], aList[aRecord - 1].Country, checkinputStringAlpha, lengthQuestionField, fieldProperties[10, 1], false, true, true, true, true, fieldProperties[10, 2]);
-            aList[aRecord - 1].Telephone = IO.GetInput(fieldNames[11], aList[aRecord - 1].Telephone, "0123456789+-", lengthQuestionField, fieldProperties[11, 1], false, true, true, true, true, fieldProperties[11, 2]);
-            aList[aRecord - 1].Email = IO.GetInput(fieldNames[12], aList[aRecord - 1].Email, checkinputStringAlpha, lengthQuestionField, fieldProperties[12, 1], false, true, true, true, true, fieldProperties[12, 2]);
-            aList[aRecord - 1].PersonID = ConstructID(aList[aRecord - 1]);
-            aList[aRecord - 1].Active = true;
+        //    aList[aRecord - 1].Prefix = IO.GetInput(fieldNames[2], aList[aRecord - 1].Prefix, checkinputStringAlpha, lengthQuestionField, fieldProperties[2, 1], false, true, true, true, true, fieldProperties[2, 2]);
+        //    aList[aRecord - 1].FirstName = IO.GetInput(fieldNames[3], aList[aRecord - 1].FirstName, checkinputStringAlpha, lengthQuestionField, fieldProperties[3, 1], false, true, true, true, true, fieldProperties[3, 2]);
+        //    aList[aRecord - 1].Gender = IO.GetInput(fieldNames[4], aList[aRecord - 1].Gender, "mMfFxX", lengthQuestionField, fieldProperties[4, 1], true, true, true, true, true, fieldProperties[4, 2]);
+        //    aList[aRecord - 1].RelationType = IO.GetInput(fieldNames[5], aList[aRecord - 1].RelationType, checkinputStringAlpha, lengthQuestionField, fieldProperties[5, 1], true, true, true, true, true, fieldProperties[5, 2]);         //TODO: select from array from EmployeeRoles
+        //    aList[aRecord - 1].DateOfBirth = IO.ParseToDateTime(IO.GetInput(fieldNames[6], aList[aRecord - 1].DateOfBirth.ToString("dd/MM/yyyy"), checkinputStringDate, lengthQuestionField, fieldProperties[6, 1], false, true, true, false, true, fieldProperties[6, 2]));
+        //    aList[aRecord - 1].Address = IO.GetInput(fieldNames[7], aList[aRecord - 1].Address, checkinputStringAlpha, lengthQuestionField, fieldProperties[7, 1], false, true, true, true, true, fieldProperties[7, 2]);
+        //    aList[aRecord - 1].Zipcode = IO.GetInput(fieldNames[8], aList[aRecord - 1].Zipcode, checkinputStringAlpha, lengthQuestionField, fieldProperties[8, 1], false, true, true, true, true, fieldProperties[8, 2]);
+        //    aList[aRecord - 1].City = IO.GetInput(fieldNames[9], aList[aRecord - 1].City, checkinputStringAlpha, lengthQuestionField, fieldProperties[9, 1], false, true, true, true, true, fieldProperties[9, 2]);
+        //    aList[aRecord - 1].Country = IO.GetInput(fieldNames[10], aList[aRecord - 1].Country, checkinputStringAlpha, lengthQuestionField, fieldProperties[10, 1], false, true, true, true, true, fieldProperties[10, 2]);
+        //    aList[aRecord - 1].Telephone = IO.GetInput(fieldNames[11], aList[aRecord - 1].Telephone, "0123456789+-", lengthQuestionField, fieldProperties[11, 1], false, true, true, true, true, fieldProperties[11, 2]);
+        //    aList[aRecord - 1].Email = IO.GetInput(fieldNames[12], aList[aRecord - 1].Email, checkinputStringAlpha, lengthQuestionField, fieldProperties[12, 1], false, true, true, true, true, fieldProperties[12, 2]);
+        //    aList[aRecord - 1].PersonID = ConstructID(aList[aRecord - 1]);
+        //    aList[aRecord - 1].Active = true;
 
-            // check which values changed and store them in the Person.Mutations list
+        //    // check which values changed and store them in the Person.Mutations list
 
-            CheckMutations(aList[aRecord - 1], aPersonOldValues.LastName, aList[aRecord - 1].LastName, 1);
-            CheckMutations(aList[aRecord - 1], aPersonOldValues.Prefix, aList[aRecord - 1].Prefix, 2);
-            CheckMutations(aList[aRecord - 1], aPersonOldValues.FirstName, aList[aRecord - 1].FirstName, 3);
-            CheckMutations(aList[aRecord - 1], aPersonOldValues.Gender, aList[aRecord - 1].Gender, 4);
-            CheckMutations(aList[aRecord - 1], aPersonOldValues.RelationType, aList[aRecord - 1].RelationType, 5);
-            CheckMutations(aList[aRecord - 1], aPersonOldValues.DateOfBirth.ToString(), aList[aRecord - 1].DateOfBirth.ToString(), 6);
-            CheckMutations(aList[aRecord - 1], aPersonOldValues.Address, aList[aRecord - 1].Address, 7);
-            CheckMutations(aList[aRecord - 1], aPersonOldValues.Zipcode, aList[aRecord - 1].Zipcode, 8);
-            CheckMutations(aList[aRecord - 1], aPersonOldValues.City, aList[aRecord - 1].City, 9);
-            CheckMutations(aList[aRecord - 1], aPersonOldValues.Country, aList[aRecord - 1].Country, 10);
-            CheckMutations(aList[aRecord - 1], aPersonOldValues.Telephone, aList[aRecord - 1].Telephone, 11);
-            CheckMutations(aList[aRecord - 1], aPersonOldValues.Email, aList[aRecord - 1].Email, 12);
-        }
+        //    CheckMutations(aList[aRecord - 1], aPersonOldValues.LastName, aList[aRecord - 1].LastName, 1);
+        //    CheckMutations(aList[aRecord - 1], aPersonOldValues.Prefix, aList[aRecord - 1].Prefix, 2);
+        //    CheckMutations(aList[aRecord - 1], aPersonOldValues.FirstName, aList[aRecord - 1].FirstName, 3);
+        //    CheckMutations(aList[aRecord - 1], aPersonOldValues.Gender, aList[aRecord - 1].Gender, 4);
+        //    CheckMutations(aList[aRecord - 1], aPersonOldValues.RelationType, aList[aRecord - 1].RelationType, 5);
+        //    CheckMutations(aList[aRecord - 1], aPersonOldValues.DateOfBirth.ToString(), aList[aRecord - 1].DateOfBirth.ToString(), 6);
+        //    CheckMutations(aList[aRecord - 1], aPersonOldValues.Address, aList[aRecord - 1].Address, 7);
+        //    CheckMutations(aList[aRecord - 1], aPersonOldValues.Zipcode, aList[aRecord - 1].Zipcode, 8);
+        //    CheckMutations(aList[aRecord - 1], aPersonOldValues.City, aList[aRecord - 1].City, 9);
+        //    CheckMutations(aList[aRecord - 1], aPersonOldValues.Country, aList[aRecord - 1].Country, 10);
+        //    CheckMutations(aList[aRecord - 1], aPersonOldValues.Telephone, aList[aRecord - 1].Telephone, 11);
+        //    CheckMutations(aList[aRecord - 1], aPersonOldValues.Email, aList[aRecord - 1].Email, 12);
+        //}
 
         public static void CheckMutations<T>(T aPerson, string old, string newVal, int aFieldnumber) where T : Person                   // NICE: make method generic and store mutations in separate file
         {
@@ -290,9 +345,9 @@ namespace BakeryConsole
             }
         }
 
-        public static void SetTotalRecords(int aRecordnumber)
+        public static void SetTotalRecords(int aRecord)
         {
-            totalRecords = aRecordnumber;
+            totalRecords = aRecord;
         }
 
         public static void ToggleDeletionFlag(List<Person> aList, int aRecordnumber)
