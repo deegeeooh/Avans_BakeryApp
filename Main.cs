@@ -4,7 +4,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 
-namespace Vlaaieboer
+namespace BakeryConsole
 {
     internal class Program
     {
@@ -16,8 +16,9 @@ namespace Vlaaieboer
         private static string fileEmployeeRoles = "employeeRoles.json";
         private static string fileEmployees     = "employees.json";
 
-        public static int windowHeight  = 35;
-        public static int windowWidth   = 80;
+        public static int windowHeight          =  35;
+        public static int windowWidth           =  80;
+        public static int warningLenghtDefault  = 750;
 
         private static void Main(string[] args)
         {
@@ -26,21 +27,21 @@ namespace Vlaaieboer
             Console.TreatControlCAsInput = true;                                         // doesn't seem to work correctly ?
             // init console window properties
 
-            Console.Title = "Avans C# Console Application prototype";
+            Console.Title = "Bakery for Console";
             Console.SetWindowSize(windowWidth, windowHeight);
             //Console.SetWindowPosition(11, 9);                     //TODO: figure out SetWindowsPosition
-            // UserColor.Color(UserColor.TextColors.DefaultForeground);
-            //UserColor.CycleColors(5, false);
-            IO.SetWarningLength(2500);
+            
+            Console.SetBufferSize(windowWidth, windowHeight);
+            Console.CursorSize = 60;
+            IO.SetWarningLength(warningLenghtDefault);
             Color.InitializeColors();
             Console.Clear();
             do
             {
                 IO.DisplayMenu("Main Menu", "(L)ogin\n(P)eople\n(E)mployees\n(C)ustomers\nPro(D)ucts\n(M)asterdata\n\n(F3-F10) change colors, (F11) reset (F12) save\n\nEnter your choice, Escape to Exit program\n\n", Color.TextColors.MenuSelect);
-                
                 inputKey = Console.ReadKey(true);               // 'true' | dont'display the input on the console
                 CheckMenuInput();
-                //
+
             } while (inputKey.Key != ConsoleKey.Escape);
 
             Console.WriteLine("\n\nYou have been logged out.. Goodbye!");
@@ -93,7 +94,6 @@ namespace Vlaaieboer
             else if (inputKey.Key == ConsoleKey.F11)
             {
                 Color.SetStandardColor();
-                Color.SaveColors();
             }
             else if (inputKey.Key == ConsoleKey.F12) 
             {
@@ -103,7 +103,7 @@ namespace Vlaaieboer
             else if (inputKey.Key == ConsoleKey.A)                                  // Assembly info
             {
                 //IO.DisplayMenu("Browse/edit product records", "(A)dd\nArrows to browse\n(Del)ete\n", 2);
-                ShowAssemblyInfo();
+                // ShowAssemblyInfo();
             }
             else if (inputKey.Key == ConsoleKey.Escape)                               // exit program
             {
@@ -155,8 +155,8 @@ namespace Vlaaieboer
             var peopleList  = IO.PopulateList<Person>(filePeople);          // remark: reading entire file into list, probably want an indexfile IRL
             int cursorLeft  = Console.CursorLeft;                           // store current cursorposition, left and top
             int cursorTop   = Console.CursorTop;
-            int recordIndex = 0;
-            int maxRecords  = 0;
+            int recordIndex;
+            int maxRecords;
 
             if (peopleList.Count > 0)
             {
@@ -186,7 +186,7 @@ namespace Vlaaieboer
 
                         if (maxRecords > 0 & Person.CheckIfActive(peopleList, recordIndex))                 // some record is being displayed
                         {
-                            Console.SetCursorPosition(cursorLeft, cursorTop + 1);       // set cursor on first inputfield
+                            Console.SetCursorPosition(cursorLeft, cursorTop + 1);       // set cursor on first inputfield after ID
                             Person.EditRecord(peopleList, recordIndex);                 // edit current record
                             IO.WriteToFile(filePeople, peopleList);                     // write to file
                             Console.SetCursorPosition(cursorLeft, cursorTop);           // cursor back to top
@@ -268,7 +268,7 @@ namespace Vlaaieboer
         private static int SearchStringInList(List<Person> peopleList, int cursorLeft, int cursorTop, int recordIndex, StringBuilder zoekstring)
         {
             zoekstring.Append(inputKey.KeyChar.ToString());
-            IO.PrintOnConsole("Searching: [ " + zoekstring.ToString() + " ]".PadRight(20, ' '), 1, cursorTop - 1);
+            IO.PrintOnConsole("Searching: [ " + zoekstring.ToString() + " ]".PadRight(20, ' '), 1, cursorTop - 1, Color.TextColors.Defaults);
 
             if (zoekstring.ToString().Contains(inputKey.KeyChar.ToString()))
 
@@ -297,9 +297,7 @@ namespace Vlaaieboer
 
         private static void UpdateTotalRecordsOnScreen(int maxRecords)                  // NICE: display inactive records as well
         {
-            Color.SetColor(Color.TextColors.MenuSelect);
-            IO.PrintOnConsole("[" + maxRecords.ToString() + "] active records\t", 30, 5);
-            Color.SetColor(Color.TextColors.DefaultForeGround);
+            IO.PrintOnConsole("[" + maxRecords.ToString() + "] active records\t", 30, 5,Color.TextColors.MenuSelect);
         }
 
         private static void Customers()
