@@ -6,44 +6,46 @@ using System.Text;
 using System.Threading;
 
 
-namespace Vlaaieboer
+namespace BakeryConsole
 {
     internal class IO
     {
 
-        public static int warningLenght { get; set; }       // length in ms of system message events
-        public static string systemPrefix = "(System): ";
-        public static void SetWarningLength (int aValueInMs)
+        public static int WarningLength { get; set; }                   // length in ms of system message events
+        public static void SetWarningLength (int aValueInMs)            
         {
-            warningLenght = aValueInMs;
+            WarningLength = aValueInMs;
         }
 
         public static void DisplayMenu(string title, string menuString, Color.TextColors aColorMenuOption)
         {
+            Console.SetWindowSize(Program.windowWidth, Program.windowHeight);
             Console.Clear();
             Color.SetColor(Color.TextColors.Text);
-            Console.WriteLine("\n\n=============================================================================");
+            Console.Write("\n"+ "=".PadRight(80, '=')); 
             Color.SetColor(Color.TextColors.Title);
-            Console.Write("Bakker Vlaaieboer & Zn."); Color.SetColor(Color.TextColors.Text); Console.Write("{0:dd/MM/yyyy HH:mm}".PadLeft(30, ' '), DateTime.Now);
-            Color.SetColor(Color.TextColors.DefaultForeGround);
+            //Console.Write("Bakker Vlaaieboer & Zn.\n"); Color.SetColor(Color.TextColors.Text); Console.Write("{0:dd/MM/yyyy HH:mm}".PadRight(30, ' '), DateTime.Now);
+            Console.Write("Bakker Vlaaieboer & Zn."); 
+            Color.SetColor(Color.TextColors.Text); Console.Write("{0:f}".PadLeft(30, ' '), DateTime.Now); Console.Write("\n");
+            //Color.SetColor(Color.TextColors.DefaultForeGround);
 
             if (Login.validPassword)
             {
-                Color.SetColor(Color.TextColors.Input); Console.Write("* Logged in *".PadLeft(25, ' ')); Color.SetColor(Color.TextColors.Text);
+                PrintOnConsole("* Logged in *", 65, Console.CursorTop, Color.TextColors.Input);
             }
             else
             {
-                Console.Write("* Not Logged in *".PadLeft(25, ' '));
+                PrintOnConsole("* Logged out *", 65, Console.CursorTop,Color.TextColors.DefaultForeGround);
             }
             Color.SetColor(Color.TextColors.Text);
             Console.Write("\n");
-            Console.WriteLine("=============================================================================");
+            Console.Write("=".PadRight(80, '=') + "\n");
             Color.SetColor(Color.TextColors.MenuSelect); Console.WriteLine(title + "\n");    // menu name
 
             PrintMenuString(menuString, Color.TextColors.MenuSelect);
             Color.SetColor(Color.TextColors.Text);
-            Console.WriteLine("=============================================================================\n");
-            IO.PrintOnConsole("___________________________________________________________________________", 1, 33);
+            Console.Write    ("=".PadRight(80,'=') + "\n");
+            PrintOnConsole   ("_".PadRight(80,'_'), 0, 33,Color.TextColors.Text);
 
         }
 
@@ -66,12 +68,14 @@ namespace Vlaaieboer
 
                     Color.SetColor(Color.TextColors.DefaultForeGround);
                 }
+                Color.SetColor(Color.TextColors.DefaultForeGround);
                 Console.Write(menustringCharArray[i]);
             }
         }
 
-        public static void PrintOnConsole(string aString, int left, int top)  //TODO: capture screenbuffer to display 'windows'
+        public static void PrintOnConsole(string aString, int left, int top, Color.TextColors aColor)  //TODO: capture screenbuffer to display 'windows'
         {
+            Color.SetColor(aColor);
             int currentCursorPosTop = Console.CursorTop;                            // store current cursor pos
             int currentCursorPosLeft = Console.CursorLeft;
             Console.SetCursorPosition(left, top);
@@ -86,17 +90,29 @@ namespace Vlaaieboer
 
         public static void EventPrint(Object state)
         {
-            int currentCursorPosTop = Console.CursorTop;                            // store current cursor pos
-            int currentCursorPosLeft = Console.CursorLeft;
-            Console.SetCursorPosition(1 ,34);
-            Color.SetColor(Color.TextColors.SystemMessage);
-            Console.Write("(System): "+ state);
-            Console.SetCursorPosition(currentCursorPosLeft, currentCursorPosTop);
-            Thread.Sleep(warningLenght);
-            Console.SetCursorPosition(1, 34);
-            Color.SetColor(Color.TextColors.Defaults);
-            Console.Write("".PadRight(80, ' '));
-            Console.SetCursorPosition(currentCursorPosLeft, currentCursorPosTop);   // restore cursor
+            //int currentCursorPosTop, currentCursorPosLeft;
+            //StoreCursorPos(out currentCursorPosTop, out currentCursorPosLeft);
+            //Color.SetColor(Color.TextColors.SystemMessage);
+            string a = "(System): " + state;
+            //Console.SetCursorPosition(0, 34);
+            PrintOnConsole(a.PadRight(79, ' '), 0, 34, Color.TextColors.SystemMessage);
+            //Console.Write(a.PadRight(79, ' '));
+            //Console.SetCursorPosition(currentCursorPosLeft, currentCursorPosTop);
+            //Color.SetColor(Color.TextColors.Defaults);
+            Thread.Sleep(WarningLength);
+            PrintOnConsole("".PadRight(79, ' '), 0, 34, Color.TextColors.Defaults);
+
+            //StoreCursorPos(out currentCursorPosTop, out currentCursorPosLeft);
+            //Color.SetColor(Color.TextColors.Defaults);
+            //Console.SetCursorPosition(0, 34);
+            //Console.Write("".PadRight(79, ' '));
+            //Console.SetCursorPosition(currentCursorPosLeft, currentCursorPosTop);   // restore cursor
+        }
+
+        private static void StoreCursorPos(out int currentCursorPosTop, out int currentCursorPosLeft)
+        {
+            currentCursorPosTop = Console.CursorTop;
+            currentCursorPosLeft = Console.CursorLeft;
         }
 
         public static string GetInput(string fieldName,              // string to display
@@ -136,8 +152,8 @@ namespace Vlaaieboer
                 inputStringbuilder.Append(fieldValue);
                 indexInStringbuilder = inputStringbuilder.Length + 1;      // cursor 1 position after string
                 Checkfieldlength(lengthInputField, indexInStringbuilder - 1);
-                Color.SetColor(Color.TextColors.Input);
-                PrintInputString(showInput, false, inputStringbuilder);
+                //Color.SetColor(Color.TextColors.Input);
+                PrintInputString(showInput, false, inputStringbuilder, Color.TextColors.Input);
                 //Color.SetColor(Color.TextColors.DefaultForeGround);
             }
             do
@@ -171,8 +187,8 @@ namespace Vlaaieboer
                         }
 
                         Console.SetCursorPosition(lengthQuestionField + 1, cursorTop);      // position cursor at start inputfield
-                        Color.SetColor(Color.TextColors.Input);
-                        PrintInputString(showInput, false, inputStringbuilder);
+                        //Color.SetColor(Color.TextColors.Input);
+                        PrintInputString(showInput, false, inputStringbuilder,Color.TextColors.Input);
                         Console.SetCursorPosition(lengthQuestionField + indexInStringbuilder, cursorTop);
                     }
                     else if (inp.Key == ConsoleKey.Backspace & indexInStringbuilder > 1)
@@ -181,7 +197,8 @@ namespace Vlaaieboer
                         Checkfieldlength(lengthInputField, indexInStringbuilder - 1);
                         inputStringbuilder.Remove(indexInStringbuilder - 1, 1);
                         Console.SetCursorPosition(lengthQuestionField + 1, cursorTop);
-                        PrintInputString(showInput, true, inputStringbuilder);
+                        //Color.SetColor(Color.TextColors.Input);
+                        PrintInputString(showInput, true, inputStringbuilder,Color.TextColors.Input);
                         Console.SetCursorPosition(lengthQuestionField + indexInStringbuilder, cursorTop);
                     }
                     else if (inp.Key == ConsoleKey.Delete)
@@ -190,8 +207,8 @@ namespace Vlaaieboer
                         {
                             inputStringbuilder.Remove(indexInStringbuilder - 1, 1);
                             Console.SetCursorPosition(lengthQuestionField + 1, cursorTop);
-                            PrintInputString(showInput, true, inputStringbuilder);
-                            IO.PrintOnConsole(indexInStringbuilder.ToString() + " " + inputStringbuilder + "       ", 1, 1);
+                            PrintInputString(showInput, true, inputStringbuilder,Color.TextColors.Input);
+                            IO.PrintOnConsole(indexInStringbuilder.ToString() + " " + inputStringbuilder + "       ", 0, 0,Color.TextColors.Defaults);
                             Console.SetCursorPosition(lengthQuestionField + indexInStringbuilder, cursorTop);
                         }
                     }
@@ -221,14 +238,14 @@ namespace Vlaaieboer
                             Console.SetCursorPosition(lengthQuestionField + indexInStringbuilder, cursorTop);
                         }
 
-                        IO.PrintOnConsole(indexInStringbuilder.ToString() + " " + inputStringbuilder + "       ", 1, 1);
+                        IO.PrintOnConsole(indexInStringbuilder.ToString() + " " + inputStringbuilder + "       ", 0, 0,Color.TextColors.Defaults);
                     }
                 } while (inp.Key != ConsoleKey.Enter & inp.Key != ConsoleKey.Escape);
 
                 if (inputStringbuilder.Length >= minInputLength)
                 {
                     checkedValidLength = true;
-                    IO.PrintOnConsole("                             ", 1, 1);
+                    IO.PrintOnConsole("                             ", 0, 0,Color.TextColors.Defaults);
                 }
                 else
                 {
@@ -299,10 +316,10 @@ namespace Vlaaieboer
             DateTime parsedDateHelpstring;
             if (DateTime.TryParse(aDateString, out parsedDateHelpstring))   // Tryparse method passing back two values: bool and out var
             {
-                if (CalculateAge(parsedDateHelpstring) > 100 || CalculateAge(parsedDateHelpstring) < 18)      //TODO: move age check to set; of DoB?
+                if (CalculateAge(parsedDateHelpstring) > 100 || CalculateAge(parsedDateHelpstring) < 1)      //TODO: move age check to set; of DoB?
                 {
                     Color.SetWarningColor(true);
-                    IO.SystemMessage($"Invalid Age: {CalculateAge(parsedDateHelpstring)}");
+                    IO.SystemMessage($"Impossible age: {CalculateAge(parsedDateHelpstring)}");
                     //IO.PrintOnConsole($"Invalid Age: {CalculateAge(parsedDateHelpstring)} ".PadRight(30, ' '), 1, 34);
                     parsedDateHelpstring = DateTime.Parse("01/01/0001");
                 }
@@ -326,7 +343,7 @@ namespace Vlaaieboer
 
         public static int CalculateAge(DateTime aDateTime)
         {
-            var age = DateTime.Today.Year - aDateTime.Year;                   // not taking date into account eg. 2021-1997
+            var age = DateTime.Today.Year - aDateTime.Year;                     // not taking date into account eg. 2021-1997
             int nowMonthandDay = int.Parse(DateTime.Now.ToString("MMdd"));      // convert month and day to int
             int thenMonthandDay = int.Parse(aDateTime.ToString("MMdd"));
             if (nowMonthandDay < thenMonthandDay)
@@ -353,29 +370,24 @@ namespace Vlaaieboer
             //}
         }
 
-        private static void PrintInputString(bool showInput, bool deltrailspace, StringBuilder inputStringbuilder)
+        private static void PrintInputString(bool showInput, bool deltrailspace, StringBuilder inputStringbuilder, Color.TextColors aColor)
         {
-            if (showInput)
-            {
-                Console.Write(inputStringbuilder);
-            }
-            else
-            {
-                Console.Write("".PadRight(inputStringbuilder.Length, '*'));
-            }
-            if (deltrailspace)
-            {
-                Console.Write(" ");
-            }
+            Color.SetColor(aColor);
+
+            if   (showInput) 
+                 { Console.Write(inputStringbuilder); } 
+            else { Console.Write("".PadRight(inputStringbuilder.Length, '*')); }
+
+            if   (deltrailspace) { Console.Write(" "); }
         }
 
         public static List<T> PopulateList<T>(string aFilename) where T : class
         {
             var getaListFromJSON = DeserializeJSONfile<T>(aFilename);
-            if (getaListFromJSON != null)                            // file Exists
-            {
-                var a = new List<T>();
-            }
+            //if (getaListFromJSON != null)                            // file Exists
+            //{
+            //    var a = new List<T>();
+            //}
             return getaListFromJSON;
         }
 
@@ -391,17 +403,21 @@ namespace Vlaaieboer
                 }                                                                                                    // on the constructor
                 catch (Exception e)
                 {
-                    Color.SetColor(Color.TextColors.SystemMessage);
-                    IO.PrintOnConsole($"Error parsing json file{aFilename} {e}", 1, 1);
-                    Thread.Sleep(500);
-                    Color.SetColor(Color.TextColors.DefaultForeGround);
+                    Color.SetWarningColor(true);
+                    IO.SystemMessage($"Error parsing json file{aFilename} {e}");
+
+                    //IO.PrintOnConsole($"Error parsing json file{aFilename} {e}", 1, 1,Color.TextColors.SystemMessage);
+                    //Thread.Sleep(500);
+                    //Color.SetColor(Color.TextColors.DefaultForeGround);
                 }
             }
             else
             {
-                IO.PrintOnConsole($"File {aFilename} doesn't exist, creating new file ", 1, 34);
-                Thread.Sleep(750);
-                IO.PrintOnConsole($"".PadRight(80, ' '), 1, 34);
+                Color.SetWarningColor(false);
+                IO.SystemMessage($"File {aFilename} doesn't exist, creating new file ");
+                //IO.PrintOnConsole($"File {aFilename} doesn't exist, creating new file ", 1, 34);
+                //Thread.Sleep(750);
+                //IO.PrintOnConsole($"".PadRight(80, ' '), 1, 34);
             }
             return getaListFromJSON;
         }
@@ -415,10 +431,13 @@ namespace Vlaaieboer
             }
             catch (Exception e)
             {
-                Color.SetColor(Color.TextColors.SystemMessage);
-                IO.PrintOnConsole($"Error writing to file {aFilename} {e}", 1, 34);
-                Color.SetColor(Color.TextColors.DefaultForeGround);
-                Thread.Sleep(500);
+                Color.SetWarningColor(true);
+                IO.SystemMessage($"Error writing to file {aFilename} {e}");
+
+                //Color.SetColor(Color.TextColors.SystemMessage);
+                //IO.PrintOnConsole($"Error writing to file {aFilename} {e}", 1, 34);
+                //Color.SetColor(Color.TextColors.DefaultForeGround);
+                //Thread.Sleep(500);
             }
         }
     }
