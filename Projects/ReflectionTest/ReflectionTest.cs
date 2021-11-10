@@ -18,7 +18,7 @@ namespace ReflectionTest
             {
                 new Employees() {EmployeeNumber=1,
                                  Salary=2000,
-                                 JobTitle = "Head Nerds",
+                                 JobTitle = "Head Nerd",
                                  ID="DEG01",
                                  Name="De Groot"},
 
@@ -38,6 +38,10 @@ namespace ReflectionTest
         {
             var assembly = Assembly.GetExecutingAssembly();
             var type = aList[0].GetType();
+
+            object instance = Activator.CreateInstance(type);
+
+            
 
             Console.WriteLine("Type: " + type.Name + " Base Type: " + type.BaseType);
 
@@ -70,6 +74,12 @@ namespace ReflectionTest
     {
         public string ID { get; set; }
         public string Name { get; set; }
+
+        public static void DoSomething()
+        {
+            Console.WriteLine("Dit is People");
+        }
+
     }
 
     internal class Employees : People
@@ -79,5 +89,12 @@ namespace ReflectionTest
         public int EmployeeNumber { get; set; }
         public int Salary { get; set; }
         public string JobTitle { get; set; }
+
+        public new static void  DoSomething()
+        {
+            Console.WriteLine("Dit is Employee");
+        }
     }
+
+    
 }
