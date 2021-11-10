@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Vlaaieboer
+namespace BakeryConsole
 {
     public class Field : Attribute
     {
@@ -233,19 +233,17 @@ namespace Vlaaieboer
             }
             else
             {
-
                 IO.PrintBoundaries(fieldNames[0], aList[aRecord - 1].PersonID, lengthQuestionField, fieldProperties[0, 1], cursor, aList[aRecord - 1].Active);
                 CheckIfActive();
-                cursor++; Console.WriteLine();
+                Console.WriteLine(); cursor++;
 
                 IO.PrintBoundaries(fieldNames[1], aList[aRecord - 1].LastName, lengthQuestionField, fieldProperties[1, 1], cursor, aList[aRecord - 1].Active); Console.WriteLine(); cursor++;
                 IO.PrintBoundaries(fieldNames[2], aList[aRecord - 1].Prefix, lengthQuestionField, fieldProperties[2, 1], cursor, aList[aRecord - 1].Active); Console.WriteLine(); cursor++;
                 IO.PrintBoundaries(fieldNames[3], aList[aRecord - 1].FirstName, lengthQuestionField, fieldProperties[3, 1], cursor, aList[aRecord - 1].Active); Console.WriteLine(); cursor++;
                 IO.PrintBoundaries(fieldNames[4], aList[aRecord - 1].Gender, lengthQuestionField, fieldProperties[4, 1], cursor, aList[aRecord - 1].Active); Console.WriteLine(); cursor++;
                 IO.PrintBoundaries(fieldNames[5], aList[aRecord - 1].RelationType, lengthQuestionField, fieldProperties[5, 1], cursor, aList[aRecord - 1].Active); Console.WriteLine(); cursor++;
-                IO.PrintBoundaries(fieldNames[6], aList[aRecord - 1].DateOfBirth.ToString("dd/MM/yyyy"), lengthQuestionField, fieldProperties[6, 1], cursor, aList[aRecord - 1].Active); // Console.WriteLine(); // cursor++;
-                Console.SetCursorPosition(lengthQuestionField + fieldProperties[6, 1] + 5, cursor);
-                Console.WriteLine("(Age: " + (IO.CalculateAge(aList[aRecord - 1].DateOfBirth).ToString()) + ")    "); cursor++;
+                IO.PrintBoundaries(fieldNames[6], aList[aRecord - 1].DateOfBirth.ToString("dd/MM/yyyy"), lengthQuestionField, fieldProperties[6, 1], cursor, aList[aRecord - 1].Active); 
+                CheckAge(); Console.WriteLine(); cursor++;
                 IO.PrintBoundaries(fieldNames[7], aList[aRecord - 1].Address, lengthQuestionField, fieldProperties[7, 1], cursor, aList[aRecord - 1].Active); Console.WriteLine(); cursor++;
                 IO.PrintBoundaries(fieldNames[8], aList[aRecord - 1].Zipcode, lengthQuestionField, fieldProperties[8, 1], cursor, aList[aRecord - 1].Active); Console.WriteLine(); cursor++;
                 IO.PrintBoundaries(fieldNames[9], aList[aRecord - 1].City, lengthQuestionField, fieldProperties[9, 1], cursor, aList[aRecord - 1].Active); Console.WriteLine(); cursor++;
@@ -258,16 +256,37 @@ namespace Vlaaieboer
             {
                 if (!aList[aRecord - 1].Active)
                 {
-                    Console.SetCursorPosition(lengthQuestionField + fieldProperties[0, 1] + 5, cursor);
-                    Color.SetColor(Color.TextColors.Inverted);
-                    Console.Write(" *Inactive* ");
-                    Color.SetColor(Color.TextColors.DefaultForeGround);
+                    //Console.SetCursorPosition(lengthQuestionField + fieldProperties[0, 1] + 5, cursor);
+                    IO.PrintOnConsole(" *Inactive* ", lengthQuestionField + fieldProperties[0, 1] + 5, cursor, Color.TextColors.Inverted);
+                    
+                    //Color.SetColor(Color.TextColors.Inverted);
+                    //Console.Write(" *Inactive* ");
+                    //Color.SetColor(Color.TextColors.DefaultForeGround);
                 }
                 else
                 {
-                    Console.SetCursorPosition(lengthQuestionField + fieldProperties[0, 1] + 5, cursor);
-                    Console.Write("            ");
+                    IO.PrintOnConsole("".PadRight(12,' '), lengthQuestionField + fieldProperties[0, 1] + 5, cursor, Color.TextColors.Defaults);
+                    //Console.SetCursorPosition(lengthQuestionField + fieldProperties[0, 1] + 5, cursor);
+                    //Console.Write("            ");
                 }
+            }
+
+            void CheckAge()
+            {
+                if (aList[aRecord - 1].DateOfBirth.ToString("ddMMyyyy") != "01010001")
+                {
+                    IO.PrintOnConsole("(Age: " + (IO.CalculateAge(aList[aRecord - 1].DateOfBirth).ToString()) + ")   "
+                        ,lengthQuestionField + fieldProperties[6, 1] + 5, cursor, Color.TextColors.Defaults);
+                }
+                else
+                {
+                    IO.PrintOnConsole("            " 
+                        , lengthQuestionField + fieldProperties[6, 1] + 5, cursor, Color.TextColors.Defaults);
+                }
+
+                //Console.SetCursorPosition(lengthQuestionField + fieldProperties[6, 1] + 5, cursor);
+                //Console.WriteLine("(Age: " + (IO.CalculateAge(aList[aRecord - 1].DateOfBirth).ToString()) + ")    "); cursor++;
+             
             }
         }
 

@@ -1,4 +1,4 @@
-﻿namespace Vlaaieboer
+﻿namespace BakeryConsole
 {
     internal class Customer
     {

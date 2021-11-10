@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 
 
-namespace Vlaaieboer
+namespace BakeryConsole
 {
     class Login             // NICE: add login ID's and store users ID's in mutations
     {
@@ -29,8 +29,7 @@ namespace Vlaaieboer
                 Color.SetWarningColor(true);
                 IO.SystemMessage("Invalid password");
                 validPassword = false;
-                //Log.validPassword = false;
-                //Thread.Sleep(1500);
+                
             }
 
         }

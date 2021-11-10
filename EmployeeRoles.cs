@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Vlaaieboer
+namespace BakeryConsole
 {
     internal class EmployeeRoles
     { 
