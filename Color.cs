@@ -66,8 +66,7 @@ namespace BakeryConsole
                 userColor.Add(new Color(true));
                 SetStandardColor();
                 SaveColors();
-                SetWarningColor(false);
-                IO.SystemMessage("Setting standard colors and creating settings file");
+                IO.SystemMessage("Setting standard colors and creating settings file", false);
             }
             else
             {
@@ -80,8 +79,7 @@ namespace BakeryConsole
         {
             userColor[0] = new Color(true);
             Console.BackgroundColor = userColor[0].BackGroundDefault;   // set backgroudcolor for Console.Clear();
-            SetWarningColor(false);
-            IO.SystemMessage("Reset text colors to default settings");
+            IO.SystemMessage("Reset text colors to default settings", false);
         }
 
         public static void SaveColors()
@@ -91,8 +89,7 @@ namespace BakeryConsole
             //userColor[0].ErrorBackGround   = userColor[0].BackGroundDefault;
             //userColor[0].SystemForeGround  = userColor[0].TextHigh;           
             IO.WriteToFile<Color>(settingsFile, userColor);
-            SetWarningColor(false);
-            IO.SystemMessage("Saved color settings to settings.json");
+            IO.SystemMessage("Saved color settings to settings.json", false);
         }
 
         public static void SetWarningColor (bool aWarning)          // swap between warning and error colors for Color.SystemMessage
@@ -112,7 +109,6 @@ namespace BakeryConsole
         public static void CycleColors(int aChoice, bool aRndBackground)
         {
             IO.SetWarningLength(300);
-            Color.SetWarningColor(false);
             int newColor;
             switch (aChoice)
             {
@@ -124,7 +120,7 @@ namespace BakeryConsole
                     IO.SystemMessage("Set Text_High color to "+ 
                        ( userColor[0].TextHigh.GetType()
                         .GetEnumName(userColor[0].TextHigh)
-                        .ToString()) );
+                        .ToString()), false);
                     break;
 
 
@@ -136,7 +132,7 @@ namespace BakeryConsole
                     IO.SystemMessage("Set Foreground color to " + 
                       ( userColor[0].ForeGroundDefault.GetType()
                        .GetEnumName(userColor[0].ForeGroundDefault)
-                       .ToString()) );
+                       .ToString()), false);
                     break;
 
                 case 2:     //background
@@ -151,7 +147,7 @@ namespace BakeryConsole
                     IO.SystemMessage("Set Background color to " + 
                       ( userColor[0].BackGroundDefault.GetType()
                        .GetEnumName(userColor[0].BackGroundDefault)
-                       .ToString()) );
+                       .ToString()), false );
                     break;
 
                 case 3:     //menu select 
@@ -162,7 +158,7 @@ namespace BakeryConsole
                     IO.SystemMessage("Set Menu Select color to " + 
                        ( userColor[0].MenuSelectDefault.GetType()
                         .GetEnumName(userColor[0].MenuSelectDefault)
-                        .ToString()) );
+                        .ToString()), false );
                     break;
 
                 case 4:     // title / license 
@@ -173,7 +169,7 @@ namespace BakeryConsole
                     IO.SystemMessage("Set License text color to " + 
                        ( userColor[0].Title.GetType()
                         .GetEnumName(userColor[0].Title)
-                        .ToString()) );
+                        .ToString()), false );
 
                     break;
 
@@ -203,7 +199,7 @@ namespace BakeryConsole
                          userColor[0].InputText == userColor[0].MenuSelectDefault);
 
                     //Console.BackgroundColor = userColor[0].BackGroundDefault;
-                    IO.SystemMessage("Randomized text colors");
+                    IO.SystemMessage("Randomized text colors", false);
                     break;
 
                 case 6:     // input text color
@@ -213,7 +209,7 @@ namespace BakeryConsole
                     IO.SystemMessage("Set Input text color to " +
                        (userColor[0].InputText.GetType()
                         .GetEnumName(userColor[0].InputText)
-                        .ToString()));
+                        .ToString()), false);
                     break;
 
                 default:
