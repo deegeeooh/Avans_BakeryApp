@@ -26,7 +26,7 @@ namespace BakeryConsole
             Color.SetColor(Color.TextColors.Title);
             //Console.Write("Bakker Vlaaieboer & Zn.\n"); Color.SetColor(Color.TextColors.Text); Console.Write("{0:dd/MM/yyyy HH:mm}".PadRight(30, ' '), DateTime.Now);
             Console.Write("Bakker Vlaaieboer & Zn."); 
-            Color.SetColor(Color.TextColors.Text); Console.Write("{0:f}".PadLeft(30, ' '), DateTime.Now); Console.Write("\n");
+            Color.SetColor(Color.TextColors.Text); Console.Write("{0:f}".PadLeft(28, ' '), DateTime.Now); Console.Write("\n");
             //Color.SetColor(Color.TextColors.DefaultForeGround);
 
             if (Login.validPassword)
@@ -73,7 +73,7 @@ namespace BakeryConsole
             }
         }
 
-        public static void PrintOnConsole(string aString, int left, int top, Color.TextColors aColor)  //TODO: capture screenbuffer to display 'windows'
+        public static void PrintOnConsole(string aString, int left, int top, Color.TextColors aColor)  
         {
             Color.SetColor(aColor);
             int currentCursorPosTop = Console.CursorTop;                            // store current cursor pos
@@ -83,8 +83,9 @@ namespace BakeryConsole
             Console.SetCursorPosition(currentCursorPosLeft, currentCursorPosTop);
         }
 
-        public static void SystemMessage(string aString)     
+        public static void SystemMessage(string aString, bool aWarning)     
         {
+            Color.SetWarningColor(aWarning);
             System.Threading.Timer aTimer = new System.Threading.Timer(EventPrint, aString, 100, Timeout.Infinite);
         }
 
@@ -111,11 +112,11 @@ namespace BakeryConsole
 
         private static void StoreCursorPos(out int currentCursorPosTop, out int currentCursorPosLeft)
         {
-            currentCursorPosTop = Console.CursorTop;
+            currentCursorPosTop  = Console.CursorTop;
             currentCursorPosLeft = Console.CursorLeft;
         }
 
-        public static string GetInput(string fieldName,              // string to display
+        public static string GetInput(string fieldName,              // string to display               
                                       string fieldValue,             // string value for editing
                                       string checkinputString,       // accepted input
                                       int lengthQuestionField,       // field width displays string
@@ -133,7 +134,9 @@ namespace BakeryConsole
             // declare local variables
 
             int cursorLeft = Console.CursorLeft;                           // store current cursorposition, left and top
-            int cursorTop = Console.CursorTop;                             // TODO: Why doesn't Console.GetCursorPosition exist/Work? (see MS docs https://docs.microsoft.com/en-us/dotnet/api/system.console.getcursorposition?view=net-5.0 )
+            int cursorTop = Console.CursorTop;                             
+            
+            
             StringBuilder inputStringbuilder = new StringBuilder();        // stringbuilder to append the single input characters to
             ConsoleKeyInfo inp = new ConsoleKeyInfo();
             int indexInStringbuilder = 1;
@@ -152,9 +155,7 @@ namespace BakeryConsole
                 inputStringbuilder.Append(fieldValue);
                 indexInStringbuilder = inputStringbuilder.Length + 1;      // cursor 1 position after string
                 Checkfieldlength(lengthInputField, indexInStringbuilder - 1);
-                //Color.SetColor(Color.TextColors.Input);
                 PrintInputString(showInput, false, inputStringbuilder, Color.TextColors.Input);
-                //Color.SetColor(Color.TextColors.DefaultForeGround);
             }
             do
             {
@@ -166,7 +167,7 @@ namespace BakeryConsole
 
                     {
                         indexInStringbuilder++;
-                        Checkfieldlength(lengthInputField, indexInStringbuilder - 1);
+                        //Checkfieldlength(lengthInputField, indexInStringbuilder - 1);
 
                         if (toUpper)
                         {
@@ -187,7 +188,6 @@ namespace BakeryConsole
                         }
 
                         Console.SetCursorPosition(lengthQuestionField + 1, cursorTop);      // position cursor at start inputfield
-                        //Color.SetColor(Color.TextColors.Input);
                         PrintInputString(showInput, false, inputStringbuilder,Color.TextColors.Input);
                         Console.SetCursorPosition(lengthQuestionField + indexInStringbuilder, cursorTop);
                     }
@@ -197,7 +197,6 @@ namespace BakeryConsole
                         Checkfieldlength(lengthInputField, indexInStringbuilder - 1);
                         inputStringbuilder.Remove(indexInStringbuilder - 1, 1);
                         Console.SetCursorPosition(lengthQuestionField + 1, cursorTop);
-                        //Color.SetColor(Color.TextColors.Input);
                         PrintInputString(showInput, true, inputStringbuilder,Color.TextColors.Input);
                         Console.SetCursorPosition(lengthQuestionField + indexInStringbuilder, cursorTop);
                     }
@@ -240,6 +239,10 @@ namespace BakeryConsole
 
                         IO.PrintOnConsole(indexInStringbuilder.ToString() + " " + inputStringbuilder + "       ", 0, 0,Color.TextColors.Defaults);
                     }
+                    else if (checkinputString.Contains(inp.KeyChar.ToString()))              // valid input but end of field 
+                    {                                                                        // since we already tested on valid input
+                        IO.SystemMessage("Maximum field length", false);                     // and field length in first if statement
+                    }
                 } while (inp.Key != ConsoleKey.Enter & inp.Key != ConsoleKey.Escape);
 
                 if (inputStringbuilder.Length >= minInputLength)
@@ -249,13 +252,7 @@ namespace BakeryConsole
                 }
                 else
                 {
-
-                    SystemMessage("Field cannot be empty");
-
-
-                    //Color.SetColor(Color.TextColors.SystemMessage);
-                    //IO.PrintOnConsole("Field cannot be empty", 1, 1);
-                    //Color.SetColor(Color.TextColors.DefaultForeGround);
+                    SystemMessage("Field cannot be empty", true);
                 }
             } while (!checkedValidLength);
 
@@ -316,26 +313,20 @@ namespace BakeryConsole
             DateTime parsedDateHelpstring;
             if (DateTime.TryParse(aDateString, out parsedDateHelpstring))   // Tryparse method passing back two values: bool and out var
             {
-                if (CalculateAge(parsedDateHelpstring) > 100 || CalculateAge(parsedDateHelpstring) < 1)      //TODO: move age check to set; of DoB?
+                if (CalculateAge(parsedDateHelpstring) > 100 || CalculateAge(parsedDateHelpstring) < 1)      
                 {
-                    Color.SetWarningColor(true);
-                    IO.SystemMessage($"Impossible age: {CalculateAge(parsedDateHelpstring)}");
-                    //IO.PrintOnConsole($"Invalid Age: {CalculateAge(parsedDateHelpstring)} ".PadRight(30, ' '), 1, 34);
+                    IO.SystemMessage($"Impossible age: {CalculateAge(parsedDateHelpstring)}", true);
                     parsedDateHelpstring = DateTime.Parse("01/01/0001");
                 }
                 else
                 {
-                    Color.SetWarningColor(false);
-                    IO.SystemMessage($"Parsed date string succesfully to {parsedDateHelpstring:dd-MM-yyyy}");
-                    //IO.PrintOnConsole($"Parsed date string succesfully to {parsedDateHelpstring:dd-MM-yyyy}", 1, 34);
+                    IO.SystemMessage($"Parsed date string succesfully to {parsedDateHelpstring:dd-MM-yyyy}", false);
                 }
             }
             else
             {
                 // if invalid date, DateTime remains at initialised 01/01/01 value
-                Color.SetWarningColor(true);
-                IO.SystemMessage($"Warning: Could not parse date string, set to {parsedDateHelpstring:dd-MM-yy}");
-                //IO.PrintOnConsole($"Could not parse date string, set to {parsedDateHelpstring:dd-MM-yy}", 1, 34);
+                IO.SystemMessage($"Warning: Could not parse date string, set to {parsedDateHelpstring:dd-MM-yy}", false);
             }
 
             return parsedDateHelpstring;
@@ -353,41 +344,29 @@ namespace BakeryConsole
             return age;
         }
 
-        public static void Checkfieldlength(int lengthInputField, int indexInStringbuilder)
+        public static void Checkfieldlength(int lengthInputField, int indexInStringbuilder)  // OBSOLETE
         {
             if (indexInStringbuilder == lengthInputField & lengthInputField > 1)
             {
-                Color.SetWarningColor(false);
-                IO.SystemMessage("Maximum field length");
-                
-                //Color.SetColor(Color.TextColors.SystemMessage);
-                //IO.PrintOnConsole("Max field length", 1, 1);
-                //Color.SetColor(Color.TextColors.DefaultForeGround);
+                IO.SystemMessage("Maximum field length", false);
             }
-            //else
-            //{
-            //    IO.PrintOnConsole("                             ", 1, 1);
-            //}
         }
 
         private static void PrintInputString(bool showInput, bool deltrailspace, StringBuilder inputStringbuilder, Color.TextColors aColor)
         {
             Color.SetColor(aColor);
 
-            if   (showInput) 
-                 { Console.Write(inputStringbuilder); } 
-            else { Console.Write("".PadRight(inputStringbuilder.Length, '*')); }
-
-            if   (deltrailspace) { Console.Write(" "); }
+            if (showInput)     { Console.Write(inputStringbuilder); } 
+            else               { Console.Write("".PadRight(inputStringbuilder.Length, '*')); }
+            
+            if (deltrailspace) { Console.Write(" "); }
         }
+
+        // Generic JSON routines
 
         public static List<T> PopulateList<T>(string aFilename) where T : class
         {
             var getaListFromJSON = DeserializeJSONfile<T>(aFilename);
-            //if (getaListFromJSON != null)                            // file Exists
-            //{
-            //    var a = new List<T>();
-            //}
             return getaListFromJSON;
         }
 
@@ -403,21 +382,12 @@ namespace BakeryConsole
                 }                                                                                                    // on the constructor
                 catch (Exception e)
                 {
-                    Color.SetWarningColor(true);
-                    IO.SystemMessage($"Error parsing json file{aFilename} {e}");
-
-                    //IO.PrintOnConsole($"Error parsing json file{aFilename} {e}", 1, 1,Color.TextColors.SystemMessage);
-                    //Thread.Sleep(500);
-                    //Color.SetColor(Color.TextColors.DefaultForeGround);
+                    IO.SystemMessage($"Error parsing json file{aFilename} {e}", true);
                 }
             }
             else
             {
-                Color.SetWarningColor(false);
-                IO.SystemMessage($"File {aFilename} doesn't exist, creating new file ");
-                //IO.PrintOnConsole($"File {aFilename} doesn't exist, creating new file ", 1, 34);
-                //Thread.Sleep(750);
-                //IO.PrintOnConsole($"".PadRight(80, ' '), 1, 34);
+                IO.SystemMessage($"File {aFilename} doesn't exist, creating new file ", false);
             }
             return getaListFromJSON;
         }
@@ -431,13 +401,7 @@ namespace BakeryConsole
             }
             catch (Exception e)
             {
-                Color.SetWarningColor(true);
-                IO.SystemMessage($"Error writing to file {aFilename} {e}");
-
-                //Color.SetColor(Color.TextColors.SystemMessage);
-                //IO.PrintOnConsole($"Error writing to file {aFilename} {e}", 1, 34);
-                //Color.SetColor(Color.TextColors.DefaultForeGround);
-                //Thread.Sleep(500);
+                IO.SystemMessage($"Error writing to file {aFilename} {e}", true);
             }
         }
     }
