@@ -91,23 +91,10 @@ namespace BakeryConsole
 
         public static void EventPrint(Object state)
         {
-            //int currentCursorPosTop, currentCursorPosLeft;
-            //StoreCursorPos(out currentCursorPosTop, out currentCursorPosLeft);
-            //Color.SetColor(Color.TextColors.SystemMessage);
             string a = "(System): " + state;
-            //Console.SetCursorPosition(0, 34);
             PrintOnConsole(a.PadRight(79, ' '), 0, 34, Color.TextColors.SystemMessage);
-            //Console.Write(a.PadRight(79, ' '));
-            //Console.SetCursorPosition(currentCursorPosLeft, currentCursorPosTop);
-            //Color.SetColor(Color.TextColors.Defaults);
             Thread.Sleep(WarningLength);
             PrintOnConsole("".PadRight(79, ' '), 0, 34, Color.TextColors.Defaults);
-
-            //StoreCursorPos(out currentCursorPosTop, out currentCursorPosLeft);
-            //Color.SetColor(Color.TextColors.Defaults);
-            //Console.SetCursorPosition(0, 34);
-            //Console.Write("".PadRight(79, ' '));
-            //Console.SetCursorPosition(currentCursorPosLeft, currentCursorPosTop);   // restore cursor
         }
 
         private static void StoreCursorPos(out int currentCursorPosTop, out int currentCursorPosLeft)
@@ -307,21 +294,26 @@ namespace BakeryConsole
             Color.SetColor(Color.TextColors.DefaultForeGround);
         }
 
-        public static DateTime ParseToDateTime(string aDateString)
+        public static DateTime ParseToDateTime(string aDateString, bool checkAge)
 
         {
             DateTime parsedDateHelpstring;
             if (DateTime.TryParse(aDateString, out parsedDateHelpstring))   // Tryparse method passing back two values: bool and out var
             {
-                if (CalculateAge(parsedDateHelpstring) > 100 || CalculateAge(parsedDateHelpstring) < 1)      
+
+            if (checkAge)
                 {
-                    IO.SystemMessage($"Impossible age: {CalculateAge(parsedDateHelpstring)}", true);
-                    parsedDateHelpstring = DateTime.Parse("01/01/0001");
+                    if (CalculateAge(parsedDateHelpstring) > 100 || CalculateAge(parsedDateHelpstring) < 1)
+                    {
+                        IO.SystemMessage($"Impossible age: {CalculateAge(parsedDateHelpstring)}", true);
+                        parsedDateHelpstring = DateTime.Parse("01/01/0001");
+                    }
+                    else
+                    {
+                        IO.SystemMessage($"Parsed date string succesfully to {parsedDateHelpstring:dd-MM-yyyy}", false);
+                    }
                 }
-                else
-                {
-                    IO.SystemMessage($"Parsed date string succesfully to {parsedDateHelpstring:dd-MM-yyyy}", false);
-                }
+            
             }
             else
             {
