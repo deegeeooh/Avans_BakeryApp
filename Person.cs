@@ -8,7 +8,7 @@ namespace BakeryConsole
     {
     }
 
-    internal class Person
+    class Person
     {
         private static int lengthQuestionField = 30;
 
@@ -100,7 +100,7 @@ namespace BakeryConsole
             FirstName =     IO.GetInput(fieldNames[3], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[3, 1], false, true, true, true, true, fieldProperties[3, 2]);
             Gender =        IO.GetInput(fieldNames[4], "", "MmFfXx", lengthQuestionField, fieldProperties[4, 1], true, true, true, true, true, fieldProperties[4, 2]);
             RelationType =  IO.GetInput(fieldNames[5], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[5, 1], false, true, true, true, true, fieldProperties[5, 2]);
-            DateOfBirth =   IO.ParseToDateTime(IO.GetInput(fieldNames[6], "", checkinputStringDate, lengthQuestionField, fieldProperties[6, 1], false, true, true, true, true, fieldProperties[6, 2]));
+            DateOfBirth =   IO.ParseToDateTime(IO.GetInput(fieldNames[6], "", checkinputStringDate, lengthQuestionField, fieldProperties[6, 1], false, true, true, true, true, fieldProperties[6, 2]), true);
             Address =       IO.GetInput(fieldNames[7], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[7, 1], false, true, true, true, true, fieldProperties[7, 2]);
             Zipcode =       IO.GetInput(fieldNames[8], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[8, 1], false, true, true, true, true, fieldProperties[8, 2]);
             City =          IO.GetInput(fieldNames[9], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[9, 1], false, true, true, true, true, fieldProperties[9, 2]);
@@ -115,6 +115,19 @@ namespace BakeryConsole
             // set deleteflag
             Active = true;
         }
+
+        public Person(bool clearForm)
+        {
+            var cursor = Console.CursorTop;
+            if (clearForm)
+            {
+                for (int i = 0; i < fieldProperties.GetLength(0); i++)
+                {
+                    IO.PrintBoundaries(fieldNames[i], "", lengthQuestionField, fieldProperties[i, 1], cursor, false); Console.WriteLine(); cursor++;
+                }
+            }
+        }
+
 
         public Person(Person aPerson, bool displayOnly, bool clearForm) 
         {
@@ -132,13 +145,13 @@ namespace BakeryConsole
                                              true,
                                              fieldProperties[1, 2]);
 
-                // call GetInput() with the passed values of alist  //TODO: this can also be done as a separate constructor
+                // call GetInput() with the passed values of aPerson
                 RecordCounter = aPerson.RecordCounter;
                 Prefix = IO.GetInput(fieldNames[2], aPerson.Prefix, checkinputStringAlpha, lengthQuestionField, fieldProperties[2, 1], false, true, true, true, true, fieldProperties[2, 2]);
                 FirstName = IO.GetInput(fieldNames[3], aPerson.FirstName, checkinputStringAlpha, lengthQuestionField, fieldProperties[3, 1], false, true, true, true, true, fieldProperties[3, 2]);
                 Gender = IO.GetInput(fieldNames[4], aPerson.Gender, "mMfFxX", lengthQuestionField, fieldProperties[4, 1], true, true, true, true, true, fieldProperties[4, 2]);
-                RelationType = IO.GetInput(fieldNames[5], aPerson.RelationType, checkinputStringAlpha, lengthQuestionField, fieldProperties[5, 1], true, true, true, true, true, fieldProperties[5, 2]);         //TODO: select from array from EmployeeRoles
-                DateOfBirth = IO.ParseToDateTime(IO.GetInput(fieldNames[6], aPerson.DateOfBirth.ToString("dd/MM/yyyy"), checkinputStringDate, lengthQuestionField, fieldProperties[6, 1], false, true, true, false, true, fieldProperties[6, 2]));
+                RelationType = IO.GetInput(fieldNames[5], aPerson.RelationType, checkinputStringAlpha, lengthQuestionField, fieldProperties[5, 1], true, true, true, true, true, fieldProperties[5, 2]);         
+                DateOfBirth = IO.ParseToDateTime(IO.GetInput(fieldNames[6], aPerson.DateOfBirth.ToString("dd/MM/yyyy"), checkinputStringDate, lengthQuestionField, fieldProperties[6, 1], false, true, true, false, true, fieldProperties[6, 2]), true);
                 Address = IO.GetInput(fieldNames[7], aPerson.Address, checkinputStringAlpha, lengthQuestionField, fieldProperties[7, 1], false, true, true, true, true, fieldProperties[7, 2]);
                 Zipcode = IO.GetInput(fieldNames[8], aPerson.Zipcode, checkinputStringAlpha, lengthQuestionField, fieldProperties[8, 1], false, true, true, true, true, fieldProperties[8, 2]);
                 City = IO.GetInput(fieldNames[9], aPerson.City, checkinputStringAlpha, lengthQuestionField, fieldProperties[9, 1], false, true, true, true, true, fieldProperties[9, 2]);
@@ -223,7 +236,6 @@ namespace BakeryConsole
             }
         }
 
-
         [JsonConstructor]                                               // for json, otherwise it will use the default() constructor when deserializing which we don't want here
         public Person(string JUST4JSON_DontCall)
         {
@@ -273,80 +285,28 @@ namespace BakeryConsole
                 aPerson.Mutations.Add(a);                                // needs object reference when = null;
             }
         }
-            
-        //public static void DisplayRecord(List<Person> aList, int aRecord, bool clearform)               //NICE: Somehow make this compacter (iterate Properties with reflection?)
-        //{
-        //    var cursor = Console.CursorTop;
-        //    if (clearform)
-        //    {
-        //        for (int i = 0; i < fieldProperties.GetLength(0); i++)
-        //        {
-        //            IO.PrintBoundaries(fieldNames[i], "", lengthQuestionField, fieldProperties[i, 1], cursor, false); Console.WriteLine(); cursor++;
-        //        }
-        //    }
-        //    else
-        //    {
-        //        IO.PrintBoundaries(fieldNames[0], aList[aRecord - 1].PersonID, lengthQuestionField, fieldProperties[0, 1], cursor, aList[aRecord - 1].Active);
-        //        IfActive();
-        //        Console.WriteLine(); cursor++;
-
-        //        IO.PrintBoundaries(fieldNames[1],  aList[aRecord - 1].LastName, lengthQuestionField, fieldProperties[1, 1], cursor, aList[aRecord - 1].Active); Console.WriteLine(); cursor++;
-        //        IO.PrintBoundaries(fieldNames[2],  aList[aRecord - 1].Prefix, lengthQuestionField, fieldProperties[2, 1], cursor, aList[aRecord - 1].Active); Console.WriteLine(); cursor++;
-        //        IO.PrintBoundaries(fieldNames[3],  aList[aRecord - 1].FirstName, lengthQuestionField, fieldProperties[3, 1], cursor, aList[aRecord - 1].Active); Console.WriteLine(); cursor++;
-        //        IO.PrintBoundaries(fieldNames[4],  aList[aRecord - 1].Gender, lengthQuestionField, fieldProperties[4, 1], cursor, aList[aRecord - 1].Active); Console.WriteLine(); cursor++;
-        //        IO.PrintBoundaries(fieldNames[5],  aList[aRecord - 1].RelationType, lengthQuestionField, fieldProperties[5, 1], cursor, aList[aRecord - 1].Active); Console.WriteLine(); cursor++;
-        //        IO.PrintBoundaries(fieldNames[6],  aList[aRecord - 1].DateOfBirth.ToString("dd/MM/yyyy"), lengthQuestionField, fieldProperties[6, 1], cursor, aList[aRecord - 1].Active); 
-        //        CheckAge(); Console.WriteLine(); cursor++;
-        //        IO.PrintBoundaries(fieldNames[7],  aList[aRecord - 1].Address, lengthQuestionField, fieldProperties[7, 1], cursor, aList[aRecord - 1].Active); Console.WriteLine(); cursor++;
-        //        IO.PrintBoundaries(fieldNames[8],  aList[aRecord - 1].Zipcode, lengthQuestionField, fieldProperties[8, 1], cursor, aList[aRecord - 1].Active); Console.WriteLine(); cursor++;
-        //        IO.PrintBoundaries(fieldNames[9],  aList[aRecord - 1].City, lengthQuestionField, fieldProperties[9, 1], cursor, aList[aRecord - 1].Active); Console.WriteLine(); cursor++;
-        //        IO.PrintBoundaries(fieldNames[10], aList[aRecord - 1].Country, lengthQuestionField, fieldProperties[10, 1], cursor, aList[aRecord - 1].Active); Console.WriteLine(); cursor++;
-        //        IO.PrintBoundaries(fieldNames[11], aList[aRecord - 1].Telephone, lengthQuestionField, fieldProperties[11, 1], cursor, aList[aRecord - 1].Active); Console.WriteLine(); cursor++;
-        //        IO.PrintBoundaries(fieldNames[12], aList[aRecord - 1].Email, lengthQuestionField, fieldProperties[12, 1], cursor, aList[aRecord - 1].Active); Console.WriteLine(); cursor++;
-        //    }
-
-        //    void IfActive()
-        //    {
-        //        if (!aList[aRecord - 1].Active)
-        //        {
-        //            IO.PrintOnConsole(" *Inactive* ", lengthQuestionField + fieldProperties[0, 1] + 5, cursor, Color.TextColors.Inverted);
-        //        }
-        //        else
-        //        {
-        //            IO.PrintOnConsole("".PadRight(12,' '), lengthQuestionField + fieldProperties[0, 1] + 5, cursor, Color.TextColors.Defaults);
-        //        }
-        //    }
-
-        //    void CheckAge()
-        //    {
-        //        if (aList[aRecord - 1].DateOfBirth.ToString("ddMMyyyy") != "01010001")
-        //        {
-        //            IO.PrintOnConsole("(Age: " + (IO.CalculateAge(aList[aRecord - 1].DateOfBirth).ToString()) + ")   "
-        //                ,lengthQuestionField + fieldProperties[6, 1] + 5, cursor, Color.TextColors.Defaults);
-        //        }
-        //        else
-        //        {
-        //            IO.PrintOnConsole("            " 
-        //                , lengthQuestionField + fieldProperties[6, 1] + 5, cursor, Color.TextColors.Defaults);
-        //        }
-        //    }
-        //}
 
         public static void SetTotalRecords(int aRecord)
         {
             totalRecords = aRecord;
         }
 
-        public static void ToggleDeletionFlag(List<Person> aList, int aRecordnumber)
+        public static void ToggleDeletionFlag(Person aPerson, int aRecordnumber)
         {
-            bool flagToggle = (aList[aRecordnumber - 1].Active) ? false : true;
-            aList[aRecordnumber - 1].Active = flagToggle;
+            bool flagToggle = aPerson.Active ? false : true;
+            aPerson.Active = flagToggle;
             totalInActiveRecords++;
-            IO.WriteToFile<Person>(Program.filePeople, aList);
+            if (aPerson.Active)
+            {
+                IO.SystemMessage("Record has been set to Active", false);
+            }else
+            {
+                IO.SystemMessage("Record has been marked for Deletion", false);
+            }
         }
-        public static bool CheckIfActive<T>(List<T> aList, int aRecordsnumber) where T : Person
+        public static bool CheckIfActive(Person aPerson, int aRecordsnumber)
         {
-            return aList[aRecordsnumber - 1].Active;
+            return aPerson.Active;
         }
 
         public static int GetTotalRecords()
