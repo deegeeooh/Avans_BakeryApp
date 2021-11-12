@@ -4,6 +4,11 @@ using System.IO;
 
 namespace BakeryConsole
 {
+
+    /// <summary>
+    ///  Totally unnecessary but nicely working color stuff
+    /// </summary>
+
     internal class Color
     {
 
@@ -84,10 +89,6 @@ namespace BakeryConsole
 
         public static void SaveColors()
         {
-            //userColor[0].SystemBackGround  = userColor[0].BackGroundDefault;  // set systemmsg colors to new background
-            //userColor[0].WarningBackGround = userColor[0].BackGroundDefault;
-            //userColor[0].ErrorBackGround   = userColor[0].BackGroundDefault;
-            //userColor[0].SystemForeGround  = userColor[0].TextHigh;           
             IO.WriteToFile<Color>(settingsFile, userColor);
             IO.SystemMessage("Saved color settings to settings.json", false);
         }
@@ -118,7 +119,7 @@ namespace BakeryConsole
                     newColor++; if (newColor == 16) { newColor = 0; }           // increase with 1 until 16, then reset to 0 (Usercolor has 0-15 value)
                     userColor[0].TextHigh = (ConsoleColor)newColor;             // set userColor[0] to new value;
                     IO.SystemMessage("Set Text_High color to "+ 
-                       ( userColor[0].TextHigh.GetType()
+                       ( userColor[0].TextHigh.GetType()                        // get the name of the enum constant
                         .GetEnumName(userColor[0].TextHigh)
                         .ToString()), false);
                     break;
@@ -141,9 +142,6 @@ namespace BakeryConsole
                     newColor++; if (newColor == 16) { newColor = 0; }
                     userColor[0].BackGroundDefault = (ConsoleColor)newColor;
                     Console.BackgroundColor = userColor[0].BackGroundDefault;   // set backgroundcolor here before Console.Clear() in main loop
-                    //userColor[0].SystemBackGround  = userColor[0].BackGroundDefault;
-                    //userColor[0].WarningBackGround = userColor[0].BackGroundDefault;
-                    //userColor[0].ErrorBackGround   = userColor[0].BackGroundDefault;
                     IO.SystemMessage("Set Background color to " + 
                       ( userColor[0].BackGroundDefault.GetType()
                        .GetEnumName(userColor[0].BackGroundDefault)
@@ -177,44 +175,47 @@ namespace BakeryConsole
                 case 5:     //randomize with of without including backgroundcolor
 
                     var rand = new Random();
-                    if (aRndBackground) { userColor[0].BackGroundDefault = (ConsoleColor)rand.Next(16); }
+                    if    (aRndBackground) 
+                          { userColor[0].BackGroundDefault = (ConsoleColor)rand.Next(16);    }
 
-                    do { userColor[0].TextHigh = (ConsoleColor)rand.Next(16); } while 
-                        (userColor[0].TextHigh == userColor[0].BackGroundDefault);
+                    do    { userColor[0].TextHigh          = (ConsoleColor)rand.Next(16);    }
+                    while ( userColor[0].TextHigh          == userColor[0].BackGroundDefault );
                     
-                    do { userColor[0].ForeGroundDefault = (ConsoleColor)rand.Next(16); } while 
-                        (userColor[0].ForeGroundDefault == userColor[0].BackGroundDefault);
+                    do    { userColor[0].ForeGroundDefault = (ConsoleColor)rand.Next(16);    } 
+                    while ( userColor[0].ForeGroundDefault == userColor[0].BackGroundDefault );
                     
-                    do { userColor[0].MenuSelectDefault = (ConsoleColor)rand.Next(16); } while 
-                        (userColor[0].MenuSelectDefault == userColor[0].BackGroundDefault |
-                         userColor[0].MenuSelectDefault == userColor[0].ForeGroundDefault);
+                    do    { userColor[0].MenuSelectDefault = (ConsoleColor)rand.Next(16);    } 
+                    while ( userColor[0].MenuSelectDefault == userColor[0].BackGroundDefault 
+                          | userColor[0].MenuSelectDefault == userColor[0].ForeGroundDefault );
 
-                    do { userColor[0].Title = (ConsoleColor)rand.Next(16); } while 
-                        (userColor[0].Title == userColor[0].BackGroundDefault);
+                    do    { userColor[0].Title             = (ConsoleColor)rand.Next(16);    }
+                    while ( userColor[0].Title             == userColor[0].BackGroundDefault );
                     
-                    do { userColor[0].InputText = (ConsoleColor)rand.Next(16); } while 
-                        (userColor[0].InputText == userColor[0].BackGroundDefault |
-                         userColor[0].InputText == userColor[0].TextHigh |
-                         userColor[0].InputText == userColor[0].ForeGroundDefault |
-                         userColor[0].InputText == userColor[0].MenuSelectDefault);
+                    do    { userColor[0].InputText         = (ConsoleColor)rand.Next(16);    }
+                    while ( userColor[0].InputText         == userColor[0].BackGroundDefault 
+                          | userColor[0].InputText         == userColor[0].TextHigh 
+                          | userColor[0].InputText         == userColor[0].ForeGroundDefault 
+                          | userColor[0].InputText         == userColor[0].MenuSelectDefault );
 
-                    //Console.BackgroundColor = userColor[0].BackGroundDefault;
                     IO.SystemMessage("Randomized text colors", false);
+
                     break;
 
                 case 6:     // input text color
+                    
                     newColor = (int)userColor[0].InputText;
-                    newColor++; if (newColor == 16) { newColor = 0; }
+                    newColor++; 
+                    if (newColor == 16 ) 
+                       { newColor = 0; }
                     userColor[0].InputText = (ConsoleColor)newColor;
-                    IO.SystemMessage("Set Input text color to " +
-                       (userColor[0].InputText.GetType()
-                        .GetEnumName(userColor[0].InputText)
-                        .ToString()), false);
-                    break;
-
-                default:
+                    
+                    IO.SystemMessage("Set Input text color to " + (userColor[0].InputText.GetType()
+                                    .GetEnumName(userColor[0].InputText)
+                                    .ToString())
+                                    ,false);
                     break;
             }
+            
             Console.BackgroundColor = userColor[0].BackGroundDefault;
             IO.SetWarningLength(Program.warningLenghtDefault);
         }
