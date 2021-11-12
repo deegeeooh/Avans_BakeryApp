@@ -173,15 +173,15 @@ namespace BakeryConsole
         private static void BrowseRecords(string aFilename, Enum classSelector)
         {
 
-            var peopleList   = new List<Person> ();
-            var employeeList = new List<Employee> ();
-            var customerList = new List<Customer> ();
-            var productList  = new List<Product>();
+            var peopleList    = new List<Person> ();
+            var employeeList  = new List<Employee> ();
+            var customerList  = new List<Customer> ();
+            var productList   = new List<Product>();
 
-            int cursorLeft   = Console.CursorLeft;                           // store current cursorposition, left and top
-            int cursorTop    = Console.CursorTop;
-            int recordIndex  = 1;
-            int recordsInList= 0;
+            int cursorLeft    = Console.CursorLeft;                           // store current cursorposition, left and top
+            int cursorTop     = Console.CursorTop;
+            int recordIndex   = 1;
+            int recordsInList = 0;
 
             
 
@@ -198,8 +198,7 @@ namespace BakeryConsole
                     }
                     else
                     {
-                        _ = new Person(true);
-
+                        _ = new Person(true);                   // display empty input form
                     }
                     break;
 
@@ -212,9 +211,7 @@ namespace BakeryConsole
                         _ = new Employee(employeeList[recordIndex - 1], true, false);
                     } else
                     {
-                        //_ = new Person(true);
                         _ = new Employee(true);
-                        
                     }
                     break;
 
@@ -222,9 +219,7 @@ namespace BakeryConsole
                     customerList = IO.PopulateList<Customer> (aFilename);
                     if (customerList.Count > 0)
                     {
-                        recordsInList = customerList.Count;
-                        //Customer.SetTotalRecords(maxRecords);
-                        //Customer.DisplayRecord(peopleList, recordIndex, false);
+                       
                     } else
                     {
                         //Customer.DisplayRecord(peopleList, recordIndex, false);
@@ -236,12 +231,12 @@ namespace BakeryConsole
                     if (productList.Count > 0)
                     {
                         recordsInList = productList.Count;
-                        //Products.SetTotalRecords(maxRecords);
-                        //Products.DisplayRecord(peopleList, recordIndex, false);
+                        Product.SetTotalRecords(recordsInList);
+                        _ = new Product(productList[recordIndex - 1], true);
                     }
                     else
                     {
-                        //Products.DisplayRecord(peopleList, recordIndex, false);
+                        _ = new Product(true);
                     }
                     break;
                 }
@@ -287,9 +282,21 @@ namespace BakeryConsole
                                         _ = new Employee(employeeList[recordIndex - 1], true, false);
                                     }
                                     break;
+
                                 case ClassSelect.Customers:
                                     break;
+
                                 case ClassSelect.Product:
+
+                                    if (productList[recordIndex - 1].Active)
+                                    {
+                                        productList.Insert(recordIndex - 1,
+                                            new Product(productList[recordIndex - 1], false));
+                                        productList.RemoveAt(recordIndex);
+                                        IO.WriteToFile(aFilename, productList);
+                                        Console.SetCursorPosition(cursorLeft, cursorTop);
+                                        _ = new Product(productList[recordIndex - 1], true);
+                                    }
                                     break;
                             }
 
@@ -299,15 +306,15 @@ namespace BakeryConsole
 
                     case ConsoleKey.Insert:         // *** Add New Record *** //                                       
 
-                        
-                        recordIndex = recordsInList;                                        // increase number of records
+                                                              // increase number of records
                         Console.SetCursorPosition(cursorLeft, cursorTop);
 
                         switch (classSelector)
+                        
                         {
                             case ClassSelect.Person:
 
-                                _ = new Person(peopleList[recordIndex - 1], true, true);
+                                _ = new Person(true);                                       // clear inputform
                                 Console.SetCursorPosition(cursorLeft, cursorTop + 1);
                                 peopleList.Add(new Person());                               // call standard constructor
                                 recordsInList++;
@@ -319,22 +326,35 @@ namespace BakeryConsole
 
                             case ClassSelect.Employee:
                                
-                                _ = new Employee(employeeList[recordIndex - 1], true, true);
+                                _ = new Employee(true);
                                 Console.SetCursorPosition(cursorLeft, cursorTop + 1);
                                 employeeList.Add(new Employee());                               // call standard constructor
                                 recordsInList++;
                                 Employee.SetTotalRecords(recordsInList);                      // update records in class static
                                 Console.SetCursorPosition(cursorLeft, cursorTop);
-                                _ = new Employee(employeeList[recordIndex - 2], true, false);
+                                _ = new Employee(employeeList[recordIndex - 1], true, false);
                                 IO.WriteToFile(aFilename, employeeList);                      // write to JSON file
 
-                                return;
+                                break;
+
                             case ClassSelect.Customers:
                                 break;
+
                             case ClassSelect.Product:
+                                
+                                _ = new Product(true);
+                                Console.SetCursorPosition(cursorLeft, cursorTop + 1);
+                                productList.Add(new Product());                               // call standard constructor
+                                recordsInList++;
+                                Product.SetTotalRecords(recordsInList);                      // update records in class static
+                                Console.SetCursorPosition(cursorLeft, cursorTop);
+                                _ = new Product(productList[recordIndex - 1], true);
+                                IO.WriteToFile(aFilename, productList);                      // write to JSON file
                                 break;
+
+                                
                         }
-                                                                                            // set recordindex to last
+                        recordIndex = recordsInList;                                                               // set recordindex to last
                         UpdateTotalRecordsOnScreen(recordsInList);
                         IO.SystemMessage("Record has been written to file", false);
 
@@ -352,18 +372,22 @@ namespace BakeryConsole
                                     Person.ToggleDeletionFlag(peopleList[recordIndex - 1], recordIndex);     // toggle .Active property
                                     _ = new Person(peopleList[recordIndex - 1], true, false);
                                     IO.WriteToFile(aFilename, peopleList);
-
                                     break;
                                 case ClassSelect.Employee:
 
                                     Employee.ToggleDeletionFlag(employeeList[recordIndex - 1], recordIndex);    
                                     _ = new Employee(employeeList[recordIndex - 1], true, false);
                                     IO.WriteToFile(aFilename, employeeList);
-
                                     break;
+
                                 case ClassSelect.Customers:
                                     break;
+
                                 case ClassSelect.Product:
+                                    Product.ToggleDeletionFlag(productList[recordIndex - 1], recordIndex);
+                                    _ = new Product(productList[recordIndex - 1], true);
+                                    IO.WriteToFile(aFilename, productList);
+
                                     break;
                             }
 
@@ -398,6 +422,7 @@ namespace BakeryConsole
                                 case ClassSelect.Customers:
                                     break;
                                 case ClassSelect.Product:
+                                    _ = new Product(productList[recordIndex - 1], true);
                                     break;
                             }
                             
@@ -426,7 +451,7 @@ namespace BakeryConsole
                                     
                                     break;
                                 case ClassSelect.Product:
-                                    
+                                    _ = new Product(productList[recordIndex - 1], true);
                                     break;
                             }
                         }
@@ -473,13 +498,28 @@ namespace BakeryConsole
                                 {
                                     zoekString.Clear();
                                 }
-                                //recordIndex = SearchStringInList(employeeList, cursorLeft, cursorTop, recordIndex, zoekstring);
+                                //recordIndex = SearchStringInList(productList, cursorLeft, cursorTop, recordIndex, zoekstring);
                                 break;
                             case ClassSelect.Customers:
                                 
                                 break;
                             case ClassSelect.Product:
-                                
+                                compareString = BuildZoekString(zoekString, cursorTop);
+
+                                Product foundProduct = productList.Find(product =>
+                                                     product.Name.StartsWith(compareString));
+
+                                if (foundProduct != null)
+                                {
+                                    recordIndex = foundProduct.RecordCounter;
+                                    Console.SetCursorPosition(cursorLeft, cursorTop);
+                                    _ = new Product(foundProduct, true);
+                                }
+                                else
+                                {
+                                    zoekString.Clear();
+                                }
+
                                 break;
                         }
 
