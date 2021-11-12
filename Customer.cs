@@ -11,19 +11,22 @@
         private static int telMaxLenght = 45; private static int telMinLenght = 0;
         private static int emailMaxLenght = 45; private static int emailMinLenght = 1;
         private static int lengthQuestionField = 30;
+        
+        
+        
         private static string checkinputStringAlpha = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789//-@|' .,_";
         // public accessible recordcounter
         private static int totalRecords = 0;
         //private static string[] personID;
 
-        public int RecordCounter { get; set; }
-        public string[] PersonID { get; set; }          // == PersonID
-        public string CompanyName { get; set; }
-        public string Address { get; set; }
-        public string Zipcode { get; set; }
-        public string City { get; set; }
-        public string Telephone { get; set; }
-        public string Email { get; set; }
+        public int RecordCounter   { get; set; }
+        public string[] PersonID   { get; set; }          // == PersonID
+        public string CompanyName  { get; set; }
+        public string Address      { get; set; }
+        public string Zipcode      { get; set; }
+        public string City         { get; set; }
+        public string Telephone    { get; set; }
+        public string Email        { get; set; }
 
         public Customer()
         {
@@ -35,9 +38,7 @@
             //City = IO.GetInput("City: ", "", checkinputStringAlpha, lengthQuestionField, cityMaxLenght, true, true, true, true, cityMinLenght);
             //Telephone = IO.GetInput("Telephone: ", "", checkinputStringAlpha, lengthQuestionField, telMaxLenght, true, true, true, true, telMinLenght);
             //Email = IO.GetInput("Email: ", "", checkinputStringAlpha, lengthQuestionField, emailMaxLenght, true, true, true, true, emailMinLenght);
-
-            // TODO: build customer ID
-            // TODO: store record
+                        
             totalRecords++;
         }
     }

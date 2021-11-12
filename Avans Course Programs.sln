@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31702.278
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bakery Application", "Bakery Application.csproj", "{3CC5349A-6B02-4168-AAF1-92C83E7A4415}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BakeryApplication", "BakeryApplication.csproj", "{3CC5349A-6B02-4168-AAF1-92C83E7A4415}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReflectionTest", "Projects\ReflectionTest\ReflectionTest.csproj", "{CEDBFF66-EC03-4A8D-9178-CAC54C5A5AEB}"
 EndProject

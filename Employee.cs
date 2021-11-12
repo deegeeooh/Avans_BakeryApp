@@ -8,29 +8,19 @@ namespace BakeryConsole
 {
     class Employee : Person
     {
-        private static int lengthQuestionField = 30;
-
-        // input validation strings
-        //private static string checkinputStringAlpha = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789//-@| '.,_";
-
-        //private static string checkinputStringDate = "0123456789/-";
-
-        // public accessible total record counter
-        // public static int totalRecords = 0;
-
         //
         // 2 dimensional array with 3 columns per row: fieldNames index (for readability, not necessary), field max length, field min required length
         //
 
-        private static int[,] empFieldProp = {    { 0,  3,  1 },
+        private static int[,] fieldProperties = { { 0,  3,  1 },
                                                   { 1, 10, 10 },
                                                   { 2, 10,  0 },
                                                   { 3,  10, 0 } };
 
-        private static String[] empFieldnames = { "Job Title:",                                  //0
-                                                  "Date joined:",                                //1
-                                                  "Date exit:",                                  //2
-                                                  "Salary per month:" };                         //3
+        private static String[] fieldNames =      { "Job Title:",                                  //0
+                                                    "Date joined:",                                //1
+                                                    "Date exit:",                                  //2
+                                                    "Salary per month:" };                         //3
                                                
         public string JobTitle      { get; set; }
         public DateTime DateJoined  { get; set; }
@@ -43,10 +33,10 @@ namespace BakeryConsole
         {
             //totalRecords++;
             //RecordCounter = totalRecords;
-            JobTitle    = IO.GetInput(empFieldnames[0],                    "", checkinputStringAlpha, lengthQuestionField, empFieldProp[0, 1], false, true, true, true, true,  empFieldProp[0, 2]);
-            DateJoined  = IO.ParseToDateTime(IO.GetInput(empFieldnames[1], "", checkinputStringDate,  lengthQuestionField, empFieldProp[1, 1], false, true, true, false, true, empFieldProp[1, 2]), false);
-            DateExit    = IO.ParseToDateTime(IO.GetInput(empFieldnames[2], "", checkinputStringDate,  lengthQuestionField, empFieldProp[2, 1], false, true, true, false, true, empFieldProp[2, 2]), false);
-            Salary      = Int32.Parse(IO.GetInput(empFieldnames[3],        "", checkinputStringNum,   lengthQuestionField, empFieldProp[3, 1], true, true, true, true, true,   empFieldProp[3, 2]));
+            JobTitle    = IO.GetInput(fieldNames[0],                    "", checkinputStringAlpha, lengthQuestionField, fieldProperties[0, 1], false, true, true, true, true,  fieldProperties[0, 2]);
+            DateJoined  = IO.ParseToDateTime(IO.GetInput(fieldNames[1], "", checkinputStringDate,  lengthQuestionField, fieldProperties[1, 1], false, true, true, false, true, fieldProperties[1, 2]), false);
+            DateExit    = IO.ParseToDateTime(IO.GetInput(fieldNames[2], "", checkinputStringDate,  lengthQuestionField, fieldProperties[2, 1], false, true, true, false, true, fieldProperties[2, 2]), false);
+            Salary      = Int32.Parse(IO.GetInput(fieldNames[3],        "", checkinputStringNum,   lengthQuestionField, fieldProperties[3, 1], true, true, true, true, true,   fieldProperties[3, 2]));
             // SickDays    = Int32.Parse(IO.GetInput(empFieldnames[4],        "", checkinputStringNum,   lengthQuestionField, empFieldProp[4, 1], true, true, true, true, true,   empFieldProp[4, 2]));
             IsEmployee  = true;
             
@@ -59,32 +49,39 @@ namespace BakeryConsole
             var cursor = Console.CursorTop;
             if (clearForm)
             {
-                for (int i = 0; i < empFieldProp.GetLength(0); i++)
+                for (int i = 0; i < fieldProperties.GetLength(0); i++)
                 {
-                    IO.PrintBoundaries(empFieldnames[i], "", lengthQuestionField, empFieldProp[i, 1], cursor, false); Console.WriteLine(); cursor++;
+                    IO.PrintBoundaries(fieldNames[i], "", lengthQuestionField, fieldProperties[i, 1], cursor, false); Console.WriteLine(); cursor++;
                 }
             }
         }
 
 
-        public Employee(Employee anEmployee, bool displayOnly, bool clearForm) : base (anEmployee,displayOnly,clearForm)
+        public Employee(Employee anEmployee, bool displayOnly, bool clearForm) : base (anEmployee,displayOnly,clearForm) //TODO: clear
         {
             if (!displayOnly)
             {
 
-                JobTitle    = IO.GetInput(empFieldnames[0], anEmployee.JobTitle, checkinputStringAlpha, lengthQuestionField, empFieldProp[0, 1], false, true, true, true, true, empFieldProp[0, 2]);
-                DateJoined  = IO.ParseToDateTime(IO.GetInput(empFieldnames[1], anEmployee.DateJoined.ToString("dd/MM/yyyy"), checkinputStringDate, lengthQuestionField, empFieldProp[1, 1], false, true, true, false, true, empFieldProp[1, 2]), false);
-                DateExit    = IO.ParseToDateTime(IO.GetInput(empFieldnames[2], anEmployee.DateExit.ToString("dd/MM/yyyy"), checkinputStringDate, lengthQuestionField, empFieldProp[2, 1], false, true, true, false, true, empFieldProp[2, 2]), false);
-                Salary      = Int32.Parse(IO.GetInput(empFieldnames[3], anEmployee.Salary.ToString(), checkinputStringNum, lengthQuestionField, empFieldProp[3, 1], true, true, true, true, true, empFieldProp[3, 2]));
+                JobTitle    = IO.GetInput(fieldNames[0], anEmployee.JobTitle, checkinputStringAlpha, lengthQuestionField, fieldProperties[0, 1], false, true, true, true, true, fieldProperties[0, 2]);
+                DateJoined  = IO.ParseToDateTime(IO.GetInput(fieldNames[1], anEmployee.DateJoined.ToString("dd/MM/yyyy"), checkinputStringDate, lengthQuestionField, fieldProperties[1, 1], false, true, true, false, true, fieldProperties[1, 2]), false);
+                DateExit    = IO.ParseToDateTime(IO.GetInput(fieldNames[2], anEmployee.DateExit.ToString("dd/MM/yyyy"), checkinputStringDate, lengthQuestionField, fieldProperties[2, 1], false, true, true, false, true, fieldProperties[2, 2]), false);
+                Salary      = Int32.Parse(IO.GetInput(fieldNames[3], anEmployee.Salary.ToString(), checkinputStringNum, lengthQuestionField, fieldProperties[3, 1], true, true, true, true, true, fieldProperties[3, 2]));
                // SickDays    = Int32.Parse(IO.GetInput(empFieldnames[4], anEmployee.SickDays.ToString(), checkinputStringNum, lengthQuestionField, empFieldProp[4, 1], true, true, true, true, true, empFieldProp[4, 2]));
                 IsEmployee  = true;
-                
+
+
+                if (anEmployee.Mutations == null)
+                {
+                    anEmployee.Mutations = new List<Mutation>();
+                }
+                this.Mutations = anEmployee.Mutations;
+
                 // check which values changed and store them in the Person.Mutations list
 
-                CheckMutations(this, anEmployee.JobTitle, this.JobTitle, 1);                // we are using this with the new instanced value:
-                CheckMutations(this, anEmployee.DateJoined.ToString(), this.DateJoined.ToString(), 2);
-                CheckMutations(this, anEmployee.DateExit.ToString(), this.DateExit.ToString(), 3);
-                CheckMutations(this, anEmployee.Salary.ToString(), this.Salary.ToString(), 4);
+                CheckMutations(anEmployee, anEmployee.JobTitle, this.JobTitle, fieldNames[0], anEmployee.Mutations.Count);                          // we are using this with the new instanced value:
+                CheckMutations(anEmployee, anEmployee.DateJoined.ToString(), this.DateJoined.ToString(), fieldNames[1], anEmployee.Mutations.Count);
+                CheckMutations(anEmployee, anEmployee.DateExit.ToString(), this.DateExit.ToString(), fieldNames[2], anEmployee.Mutations.Count);
+                CheckMutations(anEmployee, anEmployee.Salary.ToString(), this.Salary.ToString(), fieldNames[3], anEmployee.Mutations.Count);
                // CheckMutations(this, anEmployee.SickDays.ToString(), this.SickDays.ToString(), 5);
             }
             else
@@ -92,17 +89,17 @@ namespace BakeryConsole
                 var cursor = Console.CursorTop;
                 if (clearForm)
                 {
-                    for (int i = 0; i < empFieldProp.GetLength(0); i++)
+                    for (int i = 0; i < fieldProperties.GetLength(0); i++)
                     {
-                        IO.PrintBoundaries(empFieldnames[i], "", lengthQuestionField, empFieldProp[i, 1], cursor, false); Console.WriteLine(); cursor++;
+                        IO.PrintBoundaries(fieldNames[i], "", lengthQuestionField, fieldProperties[i, 1], cursor, false); Console.WriteLine(); cursor++;
                     }
                 }
                 else
                 {
-                    IO.PrintBoundaries(empFieldnames[0], anEmployee.JobTitle, lengthQuestionField, empFieldProp[0, 1], cursor, anEmployee.Active); Console.WriteLine(); cursor++;
-                    IO.PrintBoundaries(empFieldnames[1], anEmployee.DateJoined.ToString("dd/MM/yyyy"), lengthQuestionField, empFieldProp[1, 1], cursor, anEmployee.Active); Console.WriteLine(); cursor++;
-                    IO.PrintBoundaries(empFieldnames[2], anEmployee.DateExit.ToString("dd/MM/yyyy"), lengthQuestionField, empFieldProp[2, 1], cursor, anEmployee.Active); Console.WriteLine(); cursor++;
-                    IO.PrintBoundaries(empFieldnames[3], anEmployee.Salary.ToString(), lengthQuestionField, empFieldProp[3, 1], cursor, anEmployee.Active); Console.WriteLine(); cursor++;
+                    IO.PrintBoundaries(fieldNames[0], anEmployee.JobTitle, lengthQuestionField, fieldProperties[0, 1], cursor, anEmployee.Active); Console.WriteLine(); cursor++;
+                    IO.PrintBoundaries(fieldNames[1], anEmployee.DateJoined.ToString("dd/MM/yyyy"), lengthQuestionField, fieldProperties[1, 1], cursor, anEmployee.Active); Console.WriteLine(); cursor++;
+                    IO.PrintBoundaries(fieldNames[2], anEmployee.DateExit.ToString("dd/MM/yyyy"), lengthQuestionField, fieldProperties[2, 1], cursor, anEmployee.Active); Console.WriteLine(); cursor++;
+                    IO.PrintBoundaries(fieldNames[3], anEmployee.Salary.ToString(), lengthQuestionField, fieldProperties[3, 1], cursor, anEmployee.Active); Console.WriteLine(); cursor++;
                     //IO.PrintBoundaries(empFieldnames[5], anEmployee.SickDays.ToString(), lengthQuestionField, empFieldProp[5, 1], cursor, anEmployee.Active); Console.WriteLine(); cursor++;
                 }  
             }

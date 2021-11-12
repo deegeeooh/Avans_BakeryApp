@@ -10,7 +10,7 @@ namespace BakeryConsole
 
     class Person
     {
-        private static int lengthQuestionField = 30;
+        public static int lengthQuestionField = 30;
 
         // input validation strings
         public static string checkinputStringAlpha = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789//-@| '.,_";
@@ -19,7 +19,7 @@ namespace BakeryConsole
 
         // public accessible total record counter
         private static int totalRecords = 0;             // static class attribute, belongs to the class not the object instances
-        private static int totalInActiveRecords = 0;
+        private static int totalInActiveRecords = 0;     // not stored or read atm
         //
         // 2 dimensional array with 3 columns per row: fieldNames index (for readability, not necessary), field max length, field min required length
         //
@@ -41,7 +41,7 @@ namespace BakeryConsole
         // user interface fields
 
         private static String[] fieldNames = { "PersonID: "                 ,   // 0
-                                               "Surname: "                  ,   // 1
+                                               "Last name: "                ,   // 1
                                                "Prefix:"                    ,   // 2
                                                "First Name:"                ,   // 3
                                                "Gender: (M/F/X)"            ,   // 4
@@ -95,25 +95,26 @@ namespace BakeryConsole
             //Console.WriteLine(Person.fieldNames[1]);
 
             RecordCounter = totalRecords;
-            LastName =      IO.GetInput(fieldNames[1], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[1, 1], false, true, true, true, true, fieldProperties[1, 2]);
-            Prefix =        IO.GetInput(fieldNames[2], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[2, 1], false, true, true, true, true, fieldProperties[2, 2]);
-            FirstName =     IO.GetInput(fieldNames[3], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[3, 1], false, true, true, true, true, fieldProperties[3, 2]);
-            Gender =        IO.GetInput(fieldNames[4], "", "MmFfXx", lengthQuestionField, fieldProperties[4, 1], true, true, true, true, true, fieldProperties[4, 2]);
-            RelationType =  IO.GetInput(fieldNames[5], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[5, 1], false, true, true, true, true, fieldProperties[5, 2]);
-            DateOfBirth =   IO.ParseToDateTime(IO.GetInput(fieldNames[6], "", checkinputStringDate, lengthQuestionField, fieldProperties[6, 1], false, true, true, true, true, fieldProperties[6, 2]), true);
-            Address =       IO.GetInput(fieldNames[7], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[7, 1], false, true, true, true, true, fieldProperties[7, 2]);
-            Zipcode =       IO.GetInput(fieldNames[8], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[8, 1], false, true, true, true, true, fieldProperties[8, 2]);
-            City =          IO.GetInput(fieldNames[9], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[9, 1], false, true, true, true, true, fieldProperties[9, 2]);
-            Country =       IO.GetInput(fieldNames[10], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[10, 1], false, true, true, true, true, fieldProperties[10, 2]);
-            Telephone =     IO.GetInput(fieldNames[11], "", "0123456789+-", lengthQuestionField, fieldProperties[11, 1], false, true, true, true, true, fieldProperties[11, 2]);
-            Email =         IO.GetInput(fieldNames[12], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[12, 1], false, true, true, true, true, fieldProperties[12, 2]);
-
-            CheckMutations(this, " ", "[Created:]", 1);  // create a single mutation to indicate creation datestamp
+            LastName      = IO.GetInput(fieldNames[1], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[1, 1], false, true, true, true, true, fieldProperties[1, 2]);
+            Prefix        = IO.GetInput(fieldNames[2], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[2, 1], false, true, true, true, true, fieldProperties[2, 2]);
+            FirstName     = IO.GetInput(fieldNames[3], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[3, 1], false, true, true, true, true, fieldProperties[3, 2]);
+            Gender        = IO.GetInput(fieldNames[4], "", "MmFfXx", lengthQuestionField, fieldProperties[4, 1], true, true, true, true, true, fieldProperties[4, 2]);
+            RelationType  = IO.GetInput(fieldNames[5], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[5, 1], false, true, true, true, true, fieldProperties[5, 2]);
+            DateOfBirth   = IO.ParseToDateTime(IO.GetInput(fieldNames[6], "", checkinputStringDate, lengthQuestionField, fieldProperties[6, 1], false, true, true, true, true, fieldProperties[6, 2]), true);
+            Address       = IO.GetInput(fieldNames[7], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[7, 1], false, true, true, true, true, fieldProperties[7, 2]);
+            Zipcode       = IO.GetInput(fieldNames[8], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[8, 1], false, true, true, true, true, fieldProperties[8, 2]);
+            City          = IO.GetInput(fieldNames[9], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[9, 1], false, true, true, true, true, fieldProperties[9, 2]);
+            Country       = IO.GetInput(fieldNames[10], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[10, 1], false, true, true, true, true, fieldProperties[10, 2]);
+            Telephone     = IO.GetInput(fieldNames[11], "", "0123456789+-", lengthQuestionField, fieldProperties[11, 1], false, true, true, true, true, fieldProperties[11, 2]);
+            Email         = IO.GetInput(fieldNames[12], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[12, 1], false, true, true, true, true, fieldProperties[12, 2]);
+            Active        = true;
+            
+            CheckMutations(this, " ", "[Created:]", "", 0);  // create a single mutation to indicate creation datestamp
 
             // construct unique employee ID
             PersonID = ConstructID(this);
             // set deleteflag
-            Active = true;
+            
         }
 
         public Person(bool clearForm)
@@ -133,20 +134,21 @@ namespace BakeryConsole
         {
             if (!displayOnly)
             {
-                LastName = IO.GetInput(fieldNames[1],
-                                             aPerson.LastName,
-                                             checkinputStringAlpha,
-                                             lengthQuestionField,
-                                             fieldProperties[1, 1],
-                                             false,
-                                             true,
-                                             true,
-                                             true,
-                                             true,
-                                             fieldProperties[1, 2]);
+                
 
                 // call GetInput() with the passed values of aPerson
                 RecordCounter = aPerson.RecordCounter;
+                LastName = IO.GetInput(fieldNames[1],  aPerson.LastName,
+                                                      checkinputStringAlpha,
+                                                      lengthQuestionField,
+                                                      fieldProperties[1, 1],
+                                                      false,
+                                                      true,
+                                                      true,
+                                                      true,
+                                                      true,
+                                                      fieldProperties[1, 2]);
+                
                 Prefix = IO.GetInput(fieldNames[2], aPerson.Prefix, checkinputStringAlpha, lengthQuestionField, fieldProperties[2, 1], false, true, true, true, true, fieldProperties[2, 2]);
                 FirstName = IO.GetInput(fieldNames[3], aPerson.FirstName, checkinputStringAlpha, lengthQuestionField, fieldProperties[3, 1], false, true, true, true, true, fieldProperties[3, 2]);
                 Gender = IO.GetInput(fieldNames[4], aPerson.Gender, "mMfFxX", lengthQuestionField, fieldProperties[4, 1], true, true, true, true, true, fieldProperties[4, 2]);
@@ -162,19 +164,25 @@ namespace BakeryConsole
                 Active = true;
 
                 // check which values changed and store them in the Person.Mutations list
-
-                CheckMutations(this, aPerson.LastName, this.LastName, 1);                // we are using this with the new instanced value:
-                CheckMutations(this, aPerson.Prefix, this.Prefix, 2);
-                CheckMutations(this, aPerson.FirstName, this.FirstName, 3);
-                CheckMutations(this, aPerson.Gender, this.Gender, 4);
-                CheckMutations(this, aPerson.RelationType, this.RelationType, 5);
-                CheckMutations(this, aPerson.DateOfBirth.ToString(), this.DateOfBirth.ToString(), 6);
-                CheckMutations(this, aPerson.Address, this.Address, 7);
-                CheckMutations(this, aPerson.Zipcode, this.Zipcode, 8);
-                CheckMutations(this, aPerson.City, this.City, 9);
-                CheckMutations(this, aPerson.Country, this.Country, 10);
-                CheckMutations(this, aPerson.Telephone, this.Telephone, 11);
-                CheckMutations(this, aPerson.Email, this.Email, 12);
+                
+                if (aPerson.Mutations == null)
+                {
+                    aPerson.Mutations = new List<Mutation>();
+                }
+                this.Mutations = aPerson.Mutations;                     // copy existing mutations to this new instance
+                
+                CheckMutations(aPerson, aPerson.LastName,               this.LastName,  fieldNames[1], aPerson.Mutations.Count);                // we are using this with the new instanced value:
+                CheckMutations(aPerson, aPerson.Prefix,                 this.Prefix,    fieldNames[2], aPerson.Mutations.Count);
+                CheckMutations(aPerson, aPerson.FirstName,              this.FirstName, fieldNames[3], aPerson.Mutations.Count);
+                CheckMutations(aPerson, aPerson.Gender,                 this.Gender,    fieldNames[4], aPerson.Mutations.Count);
+                CheckMutations(aPerson, aPerson.RelationType,           this.RelationType, fieldNames[5], aPerson.Mutations.Count);
+                CheckMutations(aPerson, aPerson.DateOfBirth.ToString(), this.DateOfBirth.ToString(), fieldNames[6], aPerson.Mutations.Count);
+                CheckMutations(aPerson, aPerson.Address,                this.Address,   fieldNames[7], aPerson.Mutations.Count);
+                CheckMutations(aPerson, aPerson.Zipcode,                this.Zipcode,   fieldNames[8], aPerson.Mutations.Count);
+                CheckMutations(aPerson, aPerson.City,                   this.City,      fieldNames[9], aPerson.Mutations.Count);
+                CheckMutations(aPerson, aPerson.Country,                this.Country,   fieldNames[10], aPerson.Mutations.Count);
+                CheckMutations(aPerson, aPerson.Telephone,              this.Telephone, fieldNames[11], aPerson.Mutations.Count);
+                CheckMutations(aPerson, aPerson.Email,                  this.Email,     fieldNames[12], aPerson.Mutations.Count);
             }
             else
             {
@@ -260,29 +268,35 @@ namespace BakeryConsole
             return b + a;
         }
 
-        public static void CheckMutations<T>(T aPerson, string old, string newVal, int aFieldnumber) where T : Person                   // NICE: make method generic and store mutations in separate file
+        public static void CheckMutations<T>(T aPerson, string old, string newVal, string fieldName, int existingNumberOfMutations) where T : Person                   // NICE: make method generic and store mutations in separate file
         {
             if (old != newVal)
             {
-                int len;
-                if (aPerson.Mutations != null)
+                if (aPerson.Mutations == null)
                 {
-                    len = aPerson.Mutations.Count;
-                }
-                else
-                {
-                    aPerson.Mutations = new List<Mutation>();            // set object reference so we can use Mutations.Add
-                    len = 0;
+                    aPerson.Mutations = new List<Mutation>();
                 }
 
-                Mutation a = new Mutation(len + 1,
-                                          DateTime.Now,
-                                          fieldNames[aFieldnumber],
-                                          old,
-                                          "",                            // placeholder because:
-                                          //newVal.Replace(old, ""),     // TODO: old cannot be empty, throws exception
-                                          newVal);
-                aPerson.Mutations.Add(a);                                // needs object reference when = null;
+
+                //int len;
+                //if (aPerson.Mutations != null)
+                //{
+                //    len = aPerson.Mutations.Count;
+                //}
+                //else
+                //{
+                //    aPerson.Mutations = new List<Mutation>();            // set object reference so we can use Mutations.Add
+                //    len = 0;
+                //}
+
+                Mutation newMutation = new Mutation(existingNumberOfMutations + 1,
+                                           DateTime.Now,
+                                           fieldName,
+                                           old,
+                                           "",                            // placeholder because:
+                                           //newVal.Replace(old, ""),     // TODO: old cannot be empty, throws exception
+                                           newVal);
+                aPerson.Mutations.Add(newMutation);                       // needs object reference when = null;
             }
         }
 

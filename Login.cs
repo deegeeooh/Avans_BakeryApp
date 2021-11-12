@@ -19,15 +19,13 @@ namespace BakeryConsole
 
             if (passWordInput == passWord)
             {
-                Color.SetWarningColor(false);
-                IO.SystemMessage("Welcome, you have been logged in succesfully");
+                IO.SystemMessage("Welcome, you have been logged in succesfully", false);
                 validPassword = true;
                 return;                             // exit if statement
             }
             else
             {
-                Color.SetWarningColor(true);
-                IO.SystemMessage("Invalid password");
+                IO.SystemMessage("Invalid password", true);
                 validPassword = false;
                 
             }
