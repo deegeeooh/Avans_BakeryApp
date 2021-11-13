@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace BakeryConsole
 {
@@ -10,7 +11,10 @@ namespace BakeryConsole
         // class variables
         private static int    lengthQuestionField    = 30;
         private static string checkinputStringAlpha  = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789//-@| '.,_";
-        private static string checkinputStringNum    = "0123456789";
+
+        //string nfi = NumberFormatInfo.CurrentInfo.CurrencyDecimalSeparator;
+       
+        private static string checkinputStringNum    = "0123456789" + NumberFormatInfo.CurrentInfo.CurrencyDecimalSeparator;             //depending on OS region settings
         private static int    totalRecords = 0;
         private static int    totalInactiveRecords = 0;
 
@@ -19,9 +23,9 @@ namespace BakeryConsole
                                                   { 2,   1,  1 },
                                                   { 3,  10,  1 },
                                                   { 4,  10,  1 },
-                                                  { 5,   5,  0 },
-                                                  { 6,   5,  0 },
-                                                  { 7,   5,  0 } };
+                                                  { 5,   8,  0 },
+                                                  { 6,   8,  0 },
+                                                  { 7,   8,  0 } };
 
         private static String[] fieldNames =      { "ID:",                  //0
                                                    "Name:",                 //1
@@ -40,8 +44,8 @@ namespace BakeryConsole
         public string ProductType       { get; set; }
         public DateTime ProductionDate  { get; set; }
         public DateTime ExpirationDate  { get; set; }
-        public int SalesPrice           { get; set; }
-        public int CostPrice            { get; set; }
+        public float SalesPrice         { get; set; }
+        public float CostPrice          { get; set; }
         public int Stock                { get; set; }
 
 
@@ -54,11 +58,23 @@ namespace BakeryConsole
             ProductType    = IO.GetInput(fieldNames[2], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[2, 1], false, true, true, true, true, fieldProperties[2, 2]);
             ProductionDate = IO.ParseToDateTime(IO.GetInput(fieldNames[3], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[3, 1], false, true, true, true, true, fieldProperties[3, 2]),false);
             ExpirationDate = IO.ParseToDateTime(IO.GetInput(fieldNames[4], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[4, 1], false, true, true, true, true, fieldProperties[4, 2]), false);
-            SalesPrice     = Int16.Parse(IO.GetInput(fieldNames[5], "", checkinputStringNum, lengthQuestionField, fieldProperties[5, 1], false, true, true, true, true, fieldProperties[5, 2]));
-            CostPrice      = Int16.Parse(IO.GetInput(fieldNames[6], "", checkinputStringNum, lengthQuestionField, fieldProperties[6, 1], false, true, true, true, true, fieldProperties[6, 2]));
-            Stock          = Int16.Parse(IO.GetInput(fieldNames[7], "", checkinputStringNum, lengthQuestionField, fieldProperties[7, 1], false, true, true, true, true, fieldProperties[7, 2]));
+            
+            while (ExpirationDate != null & ExpirationDate.CompareTo(ProductionDate) <= 0)
+                
+            {
+                Console.SetCursorPosition(0, Console.CursorTop - 1);
+                IO.SystemMessage("Expiration date should be after Production date", false);
+                ExpirationDate = IO.ParseToDateTime(IO.GetInput(fieldNames[4], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[4, 1], false, true, true, true, true, fieldProperties[4, 2]), false);
+            }
+
+
+            SalesPrice     = float.Parse(IO.GetInput(fieldNames[5], "", checkinputStringNum, lengthQuestionField, fieldProperties[5, 1], false, true, true, true, true, fieldProperties[5, 2]));
+            CostPrice      = float.Parse(IO.GetInput(fieldNames[6], "", checkinputStringNum, lengthQuestionField, fieldProperties[6, 1], false, true, true, true, true, fieldProperties[6, 2]));
+            Stock          = Int32.Parse(IO.GetInput(fieldNames[7], "", checkinputStringNum, lengthQuestionField, fieldProperties[7, 1], false, true, true, true, true, fieldProperties[7, 2]));
             ID             = ConstructID(this);
             Active         = true;
+
+            CheckMutations (this, " ", "[Created:]", "", 0);
         }
 
         public Product(bool clearForm)                           // Constructor for displaying clear screen
@@ -84,16 +100,21 @@ namespace BakeryConsole
                 ProductType =                       IO.GetInput(fieldNames[2], aProduct.ProductType, checkinputStringAlpha, lengthQuestionField, fieldProperties[2, 1], false, true, true, true, true, fieldProperties[2, 2]);
                 ProductionDate = IO.ParseToDateTime(IO.GetInput(fieldNames[3], aProduct.ProductionDate.ToString("dd/MM/yyyy"), checkinputStringAlpha, lengthQuestionField, fieldProperties[3, 1], false, true, true, true, true, fieldProperties[3, 2]), false);
                 ExpirationDate = IO.ParseToDateTime(IO.GetInput(fieldNames[4], aProduct.ExpirationDate.ToString("dd/MM/yyyy"), checkinputStringAlpha, lengthQuestionField, fieldProperties[4, 1], false, true, true, true, true, fieldProperties[4, 2]), false);
-                SalesPrice =            Int16.Parse(IO.GetInput(fieldNames[5], aProduct.SalesPrice.ToString(), checkinputStringNum, lengthQuestionField, fieldProperties[5, 1], false, true, true, true, true, fieldProperties[5, 2]));
-                CostPrice =             Int16.Parse(IO.GetInput(fieldNames[6], aProduct.CostPrice.ToString(), checkinputStringNum, lengthQuestionField, fieldProperties[6, 1], false, true, true, true, true, fieldProperties[6, 2]));
-                Stock =                 Int16.Parse(IO.GetInput(fieldNames[7], aProduct.Stock.ToString(), checkinputStringNum, lengthQuestionField, fieldProperties[7, 1], false, true, true, true, true, fieldProperties[7, 2]));
+
+                while (ExpirationDate != null & ExpirationDate.CompareTo(ProductionDate) <= 0)
+                {
+                    Console.SetCursorPosition(0, Console.CursorTop - 1);
+                    IO.SystemMessage("Expiration date should be after Production date", false);
+                    ExpirationDate = IO.ParseToDateTime(IO.GetInput(fieldNames[4], aProduct.ExpirationDate.ToString("dd/MM/yyyy"), checkinputStringAlpha, lengthQuestionField, fieldProperties[4, 1], false, true, true, true, true, fieldProperties[4, 2]), false);
+                }
+
+
+                SalesPrice =          float.Parse(IO.GetInput(fieldNames[5], aProduct.SalesPrice.ToString(format: "N2"), checkinputStringNum, lengthQuestionField, fieldProperties[5, 1], false, true, true, true, true, fieldProperties[5, 2]));
+                CostPrice =           float.Parse(IO.GetInput(fieldNames[6], aProduct.CostPrice.ToString(format: "N2"), checkinputStringNum, lengthQuestionField, fieldProperties[6, 1], false, true, true, true, true, fieldProperties[6, 2]));
+                Stock =               Int16.Parse(IO.GetInput(fieldNames[7], aProduct.Stock.ToString(), checkinputStringNum, lengthQuestionField, fieldProperties[7, 1], false, true, true, true, true, fieldProperties[7, 2]));
                 ID = ConstructID(this);
                 Active = true;
-
-                //if (aProduct.Mutations == null)
-                //{
-                //    aProduct.Mutations = new List<Mutation>();
-                //}
+                
                 this.Mutations = aProduct.Mutations;
 
                 CheckMutations(aProduct, aProduct.Name,                      this.Name,                      fieldNames[1], aProduct.Mutations.Count);
@@ -113,9 +134,9 @@ namespace BakeryConsole
                 IO.PrintBoundaries(fieldNames[2], aProduct.ProductType, lengthQuestionField, fieldProperties[2, 1], cursorColumn, aProduct.Active); Console.WriteLine(); cursorColumn++;
                 IO.PrintBoundaries(fieldNames[3], aProduct.ProductionDate.ToString("dd/MM/yyyy"), lengthQuestionField, fieldProperties[3, 1], cursorColumn, aProduct.Active); Console.WriteLine(); cursorColumn++;
                 IO.PrintBoundaries(fieldNames[4], aProduct.ExpirationDate.ToString("dd/MM/yyyy"), lengthQuestionField, fieldProperties[4, 1], cursorColumn, aProduct.Active); Console.WriteLine(); cursorColumn++;
-                IO.PrintBoundaries(fieldNames[5], aProduct.SalesPrice.ToString(), lengthQuestionField, fieldProperties[5, 1], cursorColumn, aProduct.Active); Console.WriteLine(); cursorColumn++;
-                IO.PrintBoundaries(fieldNames[6], aProduct.CostPrice.ToString(), lengthQuestionField, fieldProperties[6, 1], cursorColumn, aProduct.Active); Console.WriteLine(); cursorColumn++;
-                IO.PrintBoundaries(fieldNames[7], aProduct.Stock.ToString(), lengthQuestionField, fieldProperties[7, 1], cursorColumn, aProduct.Active); Console.WriteLine(); cursorColumn++;
+                IO.PrintBoundaries(fieldNames[5], aProduct.SalesPrice.ToString("N2").PadLeft(fieldProperties[5,1],' ') , lengthQuestionField, fieldProperties[5, 1], cursorColumn, aProduct.Active); Console.WriteLine(); cursorColumn++;
+                IO.PrintBoundaries(fieldNames[6], aProduct.CostPrice.ToString("N2").PadLeft(fieldProperties[5, 1], ' '), lengthQuestionField, fieldProperties[6, 1], cursorColumn, aProduct.Active); Console.WriteLine(); cursorColumn++;
+                IO.PrintBoundaries(fieldNames[7], aProduct.Stock.ToString().PadLeft(fieldProperties[5, 1], ' '), lengthQuestionField, fieldProperties[7, 1], cursorColumn, aProduct.Active); Console.WriteLine(); cursorColumn++;
             }
             
         }
@@ -157,6 +178,11 @@ namespace BakeryConsole
         {
             if (old != newVal)
             {
+                if (aProduct.Mutations == null)
+                {
+                    aProduct.Mutations = new List<Mutation>();
+                }
+
                 Mutation newMutation = new Mutation(existingNumberOfMutations + 1,
                                            DateTime.Now,
                                            fieldName,
