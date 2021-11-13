@@ -154,11 +154,11 @@ namespace BakeryConsole
                 {
                     inp = Console.ReadKey(true);                            // read 1 key, don't display the readkey input (true)
                     string tempString;
-                    IO.PrintOnConsole(indexInStringbuilder.ToString() + " " + inputStringbuilder + "       ", 0, 0, Color.TextColors.Defaults);
+                    IO.PrintOnConsole(indexInStringbuilder.ToString() + " " + inputStringbuilder + lengthInputField.ToString()+ "      ", 0, 0, Color.TextColors.Defaults);
                     if (checkinputString.Contains(inp.KeyChar.ToString()) & indexInStringbuilder <= lengthInputField)         // only accept valid characters other than functions
 
                     {
-                        indexInStringbuilder++;
+                        
                         //Checkfieldlength(lengthInputField, indexInStringbuilder - 1);
 
                         if (toUpper)
@@ -170,20 +170,29 @@ namespace BakeryConsole
                             tempString = inp.KeyChar.ToString();
                         }
 
-                        if (inputStringbuilder.Length + 1 < indexInStringbuilder)
+                      if (inputStringbuilder.Length < indexInStringbuilder)                               // append when cursor is the end
                         {
                             inputStringbuilder.Append(tempString);
-                        }
+                            indexInStringbuilder++;                                                       // index embedded in if{} because 
+                        }                                                                                 // input might not be valid with insert =>
                         else
                         {
-                            inputStringbuilder.Insert(indexInStringbuilder - 2, tempString);
+                            if (inputStringbuilder.Length < lengthInputField)                            // Insert only as long as not max inputlenght
+                            {
+                                inputStringbuilder.Insert(indexInStringbuilder - 2, tempString);
+                                indexInStringbuilder++;
+                            }
+                            else
+                            {
+                                IO.SystemMessage("Maximum input length", false);
+                            }
                         }
 
                         Console.SetCursorPosition(lengthQuestionField + 1, cursorTop);      // position cursor at start inputfield
                         PrintInputString(showInput, false, inputStringbuilder,Color.TextColors.Input);
                         Console.SetCursorPosition(lengthQuestionField + indexInStringbuilder, cursorTop);
                     }
-                    else if (inp.Key == ConsoleKey.Backspace & indexInStringbuilder > 1)
+                    else if (inp.Key == ConsoleKey.Backspace & indexInStringbuilder > 1)                        //BACKSPACE
                     {
                         indexInStringbuilder--;
                         Checkfieldlength(lengthInputField, indexInStringbuilder - 1);
@@ -192,7 +201,7 @@ namespace BakeryConsole
                         PrintInputString(showInput, true, inputStringbuilder,Color.TextColors.Input);
                         Console.SetCursorPosition(lengthQuestionField + indexInStringbuilder, cursorTop);
                     }
-                    else if (inp.Key == ConsoleKey.Delete)
+                    else if (inp.Key == ConsoleKey.Delete)                                                      //DELETE
                     {
                         if (inputStringbuilder.Length > 0 & indexInStringbuilder <= inputStringbuilder.Length)
                         {
@@ -203,7 +212,7 @@ namespace BakeryConsole
                             Console.SetCursorPosition(lengthQuestionField + indexInStringbuilder, cursorTop);
                         }
                     }
-                    else if (inp.Key == ConsoleKey.LeftArrow ||                         // move cursor
+                    else if (inp.Key == ConsoleKey.LeftArrow ||                                                 // move cursor
                              inp.Key == ConsoleKey.RightArrow ||
                              inp.Key == ConsoleKey.Home ||
                              inp.Key == ConsoleKey.End)
@@ -218,12 +227,12 @@ namespace BakeryConsole
                             indexInStringbuilder++;
                             Console.SetCursorPosition(lengthQuestionField + indexInStringbuilder, cursorTop);
                         }
-                        else if (inp.Key == ConsoleKey.Home)
+                        else if (inp.Key == ConsoleKey.Home)                                                    // HOME
                         {
                             indexInStringbuilder = 1;
                             Console.SetCursorPosition(lengthQuestionField + indexInStringbuilder, cursorTop);
                         }
-                        else if (inp.Key == ConsoleKey.End & inputStringbuilder.Length > 0)
+                        else if (inp.Key == ConsoleKey.End & inputStringbuilder.Length > 0)                     // END
                         {
                             indexInStringbuilder = inputStringbuilder.Length + 1;
                             Console.SetCursorPosition(lengthQuestionField + indexInStringbuilder, cursorTop);
@@ -233,10 +242,9 @@ namespace BakeryConsole
                     }
                     else if (checkinputString.Contains(inp.KeyChar.ToString()))              // valid input but end of field 
                     {                                                                        // since we already tested on valid input
-                        IO.SystemMessage("Maximum field length", false);                     // and field length in first if statement
+                        IO.SystemMessage("Maximum input length", false);                     // and field length in first if statement
                     }
-                    
-                    IO.PrintOnConsole(indexInStringbuilder.ToString() + " " + inputStringbuilder + "       ", 0, 0, Color.TextColors.Defaults);
+                    IO.PrintOnConsole(indexInStringbuilder.ToString() + " " + inputStringbuilder + lengthInputField.ToString() + "      ", 0, 0, Color.TextColors.Defaults);
                 
                 } while (inp.Key != ConsoleKey.Enter & inp.Key != ConsoleKey.Escape);
 
