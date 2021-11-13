@@ -91,9 +91,11 @@ namespace BakeryConsole
         public Person()                                 // Main Constructor method;
         {
             totalRecords++;
+            
 
-            //Console.WriteLine(Person.fieldNames[1]);
+            var cursor = Console.CursorTop;
 
+            Active        = true;
             RecordCounter = totalRecords;
             LastName      = IO.GetInput(fieldNames[1], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[1, 1], false, true, true, true, true, fieldProperties[1, 2]);
             Prefix        = IO.GetInput(fieldNames[2], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[2, 1], false, true, true, true, true, fieldProperties[2, 2]);
@@ -101,13 +103,14 @@ namespace BakeryConsole
             Gender        = IO.GetInput(fieldNames[4], "", "MmFfXx", lengthQuestionField, fieldProperties[4, 1], true, true, true, true, true, fieldProperties[4, 2]);
             RelationType  = IO.GetInput(fieldNames[5], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[5, 1], false, true, true, true, true, fieldProperties[5, 2]);
             DateOfBirth   = IO.ParseToDateTime(IO.GetInput(fieldNames[6], "", checkinputStringDate, lengthQuestionField, fieldProperties[6, 1], false, true, true, true, true, fieldProperties[6, 2]), true);
+            CheckAge(DateOfBirth, cursor + 5);
             Address       = IO.GetInput(fieldNames[7], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[7, 1], false, true, true, true, true, fieldProperties[7, 2]);
             Zipcode       = IO.GetInput(fieldNames[8], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[8, 1], false, true, true, true, true, fieldProperties[8, 2]);
             City          = IO.GetInput(fieldNames[9], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[9, 1], false, true, true, true, true, fieldProperties[9, 2]);
             Country       = IO.GetInput(fieldNames[10], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[10, 1], false, true, true, true, true, fieldProperties[10, 2]);
             Telephone     = IO.GetInput(fieldNames[11], "", "0123456789+-", lengthQuestionField, fieldProperties[11, 1], false, true, true, true, true, fieldProperties[11, 2]);
             Email         = IO.GetInput(fieldNames[12], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[12, 1], false, true, true, true, true, fieldProperties[12, 2]);
-            Active        = true;
+            
             
             CheckMutations(this, " ", "[Created:]", "", 0);  // create a single mutation to indicate creation datestamp
 
@@ -130,12 +133,11 @@ namespace BakeryConsole
         }
 
 
-        public Person(Person aPerson, bool displayOnly, bool clearForm) 
+        public Person(Person aPerson, bool displayOnly) 
         {
-            if (!displayOnly)
+            if (!displayOnly)               //EDIT record
             {
                 
-
                 // call GetInput() with the passed values of aPerson
                 RecordCounter = aPerson.RecordCounter;
                 LastName = IO.GetInput(fieldNames[1],  aPerson.LastName,
@@ -154,6 +156,7 @@ namespace BakeryConsole
                 Gender = IO.GetInput(fieldNames[4], aPerson.Gender, "mMfFxX", lengthQuestionField, fieldProperties[4, 1], true, true, true, true, true, fieldProperties[4, 2]);
                 RelationType = IO.GetInput(fieldNames[5], aPerson.RelationType, checkinputStringAlpha, lengthQuestionField, fieldProperties[5, 1], true, true, true, true, true, fieldProperties[5, 2]);         
                 DateOfBirth = IO.ParseToDateTime(IO.GetInput(fieldNames[6], aPerson.DateOfBirth.ToString("dd/MM/yyyy"), checkinputStringDate, lengthQuestionField, fieldProperties[6, 1], false, true, true, false, true, fieldProperties[6, 2]), true);
+                CheckAge(aPerson.DateOfBirth, Console.CursorTop); 
                 Address = IO.GetInput(fieldNames[7], aPerson.Address, checkinputStringAlpha, lengthQuestionField, fieldProperties[7, 1], false, true, true, true, true, fieldProperties[7, 2]);
                 Zipcode = IO.GetInput(fieldNames[8], aPerson.Zipcode, checkinputStringAlpha, lengthQuestionField, fieldProperties[8, 1], false, true, true, true, true, fieldProperties[8, 2]);
                 City = IO.GetInput(fieldNames[9], aPerson.City, checkinputStringAlpha, lengthQuestionField, fieldProperties[9, 1], false, true, true, true, true, fieldProperties[9, 2]);
@@ -165,10 +168,10 @@ namespace BakeryConsole
 
                 // check which values changed and store them in the Person.Mutations list
                 
-                if (aPerson.Mutations == null)
-                {
-                    aPerson.Mutations = new List<Mutation>();
-                }
+                //if (aPerson.Mutations == null)                          // TODO: obsolete since there is always a mutation created when new record
+                //{
+                //    aPerson.Mutations = new List<Mutation>();
+                //}
                 this.Mutations = aPerson.Mutations;                     // copy existing mutations to this new instance
                 
                 CheckMutations(aPerson, aPerson.LastName,               this.LastName,  fieldNames[1], aPerson.Mutations.Count);                // we are using this with the new instanced value:
@@ -184,63 +187,27 @@ namespace BakeryConsole
                 CheckMutations(aPerson, aPerson.Telephone,              this.Telephone, fieldNames[11], aPerson.Mutations.Count);
                 CheckMutations(aPerson, aPerson.Email,                  this.Email,     fieldNames[12], aPerson.Mutations.Count);
             }
-            else
+            else        // Display Record
             {
                 var cursor = Console.CursorTop;
-                if (clearForm)
-                {
-                    for (int i = 0; i < fieldProperties.GetLength(0); i++)
-                    {
-                        IO.PrintBoundaries(fieldNames[i], "", lengthQuestionField, fieldProperties[i, 1], cursor, false); Console.WriteLine(); cursor++;
-                    }
-                }
-                else
-                {
-                    IO.PrintBoundaries(fieldNames[0], aPerson.PersonID, lengthQuestionField, fieldProperties[0, 1], cursor, aPerson.Active);
-                    IfActive();
-                    Console.WriteLine(); cursor++;
+               
+                IO.PrintBoundaries(fieldNames[0], aPerson.PersonID, lengthQuestionField, fieldProperties[0, 1], cursor, aPerson.Active);
+                IfActive(aPerson.Active, cursor);
+                Console.WriteLine(); cursor++;
 
-                    IO.PrintBoundaries(fieldNames[1], aPerson.LastName, lengthQuestionField, fieldProperties[1, 1], cursor, aPerson.Active); Console.WriteLine(); cursor++;
-                    IO.PrintBoundaries(fieldNames[2], aPerson.Prefix, lengthQuestionField, fieldProperties[2, 1], cursor, aPerson.Active); Console.WriteLine(); cursor++;
-                    IO.PrintBoundaries(fieldNames[3], aPerson.FirstName, lengthQuestionField, fieldProperties[3, 1], cursor, aPerson.Active); Console.WriteLine(); cursor++;
-                    IO.PrintBoundaries(fieldNames[4], aPerson.Gender, lengthQuestionField, fieldProperties[4, 1], cursor, aPerson.Active); Console.WriteLine(); cursor++;
-                    IO.PrintBoundaries(fieldNames[5], aPerson.RelationType, lengthQuestionField, fieldProperties[5, 1], cursor, aPerson.Active); Console.WriteLine(); cursor++;
-                    IO.PrintBoundaries(fieldNames[6], aPerson.DateOfBirth.ToString("dd/MM/yyyy"), lengthQuestionField, fieldProperties[6, 1], cursor, aPerson.Active);
-                    CheckAge(); Console.WriteLine(); cursor++;
-                    IO.PrintBoundaries(fieldNames[7], aPerson.Address, lengthQuestionField, fieldProperties[7, 1], cursor, aPerson.Active); Console.WriteLine(); cursor++;
-                    IO.PrintBoundaries(fieldNames[8], aPerson.Zipcode, lengthQuestionField, fieldProperties[8, 1], cursor, aPerson.Active); Console.WriteLine(); cursor++;
-                    IO.PrintBoundaries(fieldNames[9], aPerson.City, lengthQuestionField, fieldProperties[9, 1], cursor, aPerson.Active); Console.WriteLine(); cursor++;
-                    IO.PrintBoundaries(fieldNames[10], aPerson.Country, lengthQuestionField, fieldProperties[10, 1], cursor, aPerson.Active); Console.WriteLine(); cursor++;
-                    IO.PrintBoundaries(fieldNames[11], aPerson.Telephone, lengthQuestionField, fieldProperties[11, 1], cursor, aPerson.Active); Console.WriteLine(); cursor++;
-                    IO.PrintBoundaries(fieldNames[12], aPerson.Email, lengthQuestionField, fieldProperties[12, 1], cursor, aPerson.Active); Console.WriteLine(); cursor++;
-                }
-
-                void IfActive()
-                {
-                    if (!aPerson.Active)
-                    {
-                        IO.PrintOnConsole(" *Inactive* ", lengthQuestionField + fieldProperties[0, 1] + 5, cursor, Color.TextColors.Inverted);
-                    }
-                    else
-                    {
-                        IO.PrintOnConsole("".PadRight(12, ' '), lengthQuestionField + fieldProperties[0, 1] + 5, cursor, Color.TextColors.Defaults);
-                    }
-                }
-
-                void CheckAge()
-                {
-                    if (aPerson.DateOfBirth.ToString("ddMMyyyy") != "01010001")
-                    {
-                        IO.PrintOnConsole("(Age: " + (IO.CalculateAge(aPerson.DateOfBirth).ToString()) + ")   "
-                            , lengthQuestionField + fieldProperties[6, 1] + 5, cursor, Color.TextColors.Defaults);
-                    }
-                    else
-                    {
-                        IO.PrintOnConsole("            "
-                            , lengthQuestionField + fieldProperties[6, 1] + 5, cursor, Color.TextColors.Defaults);
-                    }
-                }
-
+                IO.PrintBoundaries(fieldNames[1], aPerson.LastName, lengthQuestionField, fieldProperties[1, 1], cursor, aPerson.Active); Console.WriteLine(); cursor++;
+                IO.PrintBoundaries(fieldNames[2], aPerson.Prefix, lengthQuestionField, fieldProperties[2, 1], cursor, aPerson.Active); Console.WriteLine(); cursor++;
+                IO.PrintBoundaries(fieldNames[3], aPerson.FirstName, lengthQuestionField, fieldProperties[3, 1], cursor, aPerson.Active); Console.WriteLine(); cursor++;
+                IO.PrintBoundaries(fieldNames[4], aPerson.Gender, lengthQuestionField, fieldProperties[4, 1], cursor, aPerson.Active); Console.WriteLine(); cursor++;
+                IO.PrintBoundaries(fieldNames[5], aPerson.RelationType, lengthQuestionField, fieldProperties[5, 1], cursor, aPerson.Active); Console.WriteLine(); cursor++;
+                IO.PrintBoundaries(fieldNames[6], aPerson.DateOfBirth.ToString("dd/MM/yyyy"), lengthQuestionField, fieldProperties[6, 1], cursor, aPerson.Active);
+                CheckAge(aPerson.DateOfBirth, cursor); Console.WriteLine(); cursor++;
+                IO.PrintBoundaries(fieldNames[7], aPerson.Address, lengthQuestionField, fieldProperties[7, 1], cursor, aPerson.Active); Console.WriteLine(); cursor++;
+                IO.PrintBoundaries(fieldNames[8], aPerson.Zipcode, lengthQuestionField, fieldProperties[8, 1], cursor, aPerson.Active); Console.WriteLine(); cursor++;
+                IO.PrintBoundaries(fieldNames[9], aPerson.City, lengthQuestionField, fieldProperties[9, 1], cursor, aPerson.Active); Console.WriteLine(); cursor++;
+                IO.PrintBoundaries(fieldNames[10], aPerson.Country, lengthQuestionField, fieldProperties[10, 1], cursor, aPerson.Active); Console.WriteLine(); cursor++;
+                IO.PrintBoundaries(fieldNames[11], aPerson.Telephone, lengthQuestionField, fieldProperties[11, 1], cursor, aPerson.Active); Console.WriteLine(); cursor++;
+                IO.PrintBoundaries(fieldNames[12], aPerson.Email, lengthQuestionField, fieldProperties[12, 1], cursor, aPerson.Active); Console.WriteLine(); cursor++;
             }
         }
 
@@ -267,6 +234,32 @@ namespace BakeryConsole
 
             return b + a;
         }
+
+        private void CheckAge(DateTime aDatetime, int aCursor)
+        {
+            if (aDatetime.ToString("ddMMyyyy") != "01010001")
+            {
+                IO.PrintOnConsole("(Age: " + (IO.CalculateAge(aDatetime).ToString()) + ")   "
+                    , lengthQuestionField + fieldProperties[6, 1] + 5, aCursor, Color.TextColors.Defaults);
+            }
+            else
+            {
+                IO.PrintOnConsole("            "
+                    , lengthQuestionField + fieldProperties[6, 1] + 5, aCursor, Color.TextColors.Defaults);
+            }
+        }
+
+        private void IfActive(bool isRecordActive, int aCursor)
+        {
+            if (!isRecordActive)
+            {
+                IO.PrintOnConsole(" *Inactive* ", lengthQuestionField + fieldProperties[0, 1] + 5, aCursor, Color.TextColors.Inverted);
+            }else
+            {
+                IO.PrintOnConsole("".PadRight(12, ' '), lengthQuestionField + fieldProperties[0, 1] + 5, aCursor, Color.TextColors.Defaults);
+            }
+        }
+
 
         public static void CheckMutations<T>(T aPerson, string old, string newVal, string fieldName, int existingNumberOfMutations) where T : Person                   // NICE: make method generic and store mutations in separate file
         {
