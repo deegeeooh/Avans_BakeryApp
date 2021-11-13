@@ -54,7 +54,7 @@ namespace BakeryConsole
             WarningForeGround = ConsoleColor.White;
             WarningBackGround = ConsoleColor.DarkBlue;
             ErrorForeGround   = ConsoleColor.Red;
-            ErrorBackGround   = ConsoleColor.DarkBlue;
+            ErrorBackGround   = ConsoleColor.White;
             SystemForeGround  = ConsoleColor.White;
             SystemBackGround  = ConsoleColor.DarkBlue;
         }
