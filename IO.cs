@@ -1,16 +1,15 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading;
-
 
 namespace BakeryConsole
 {
     internal class IO
     {
-
         public static int WarningLength { get; set; }                   // length in ms of system message events
         public static void SetWarningLength (int aValueInMs)            
         {
@@ -44,9 +43,15 @@ namespace BakeryConsole
 
             PrintMenuString(menuString, Color.TextColors.MenuSelect);
             Color.SetColor(Color.TextColors.Text);
-            Console.Write    ("=".PadRight(80,'=') + "\n");
+            
+            if (Debugger.IsAttached)
+            {
+                Console.Write("1234567890_234567890_234567890_234567890_234567890_234567890_234567890_234567890\n");
+            }else
+            {
+                Console.Write    ("=".PadRight(80,'=') + "\n");
+            }
             PrintOnConsole   ("_".PadRight(80,'_'), 0, 33,Color.TextColors.Text);
-
         }
 
         private static void PrintMenuString(string menuString, Color.TextColors aColorMenuOption)                 
@@ -97,7 +102,7 @@ namespace BakeryConsole
             PrintOnConsole("".PadRight(79, ' '), 0, 34, Color.TextColors.Defaults);
         }
 
-        private static void StoreCursorPos(out int currentCursorPosTop, out int currentCursorPosLeft)
+        public static void StoreCursorPos(out int currentCursorPosTop, out int currentCursorPosLeft)
         {
             currentCursorPosTop  = Console.CursorTop;
             currentCursorPosLeft = Console.CursorLeft;
@@ -122,7 +127,6 @@ namespace BakeryConsole
 
             int cursorLeft = Console.CursorLeft;                           // store current cursorposition, left and top
             int cursorTop = Console.CursorTop;                             
-            
             
             StringBuilder inputStringbuilder = new StringBuilder();        // stringbuilder to append the single input characters to
             ConsoleKeyInfo inp = new ConsoleKeyInfo();
@@ -150,6 +154,7 @@ namespace BakeryConsole
                 {
                     inp = Console.ReadKey(true);                            // read 1 key, don't display the readkey input (true)
                     string tempString;
+                    IO.PrintOnConsole(indexInStringbuilder.ToString() + " " + inputStringbuilder + "       ", 0, 0, Color.TextColors.Defaults);
                     if (checkinputString.Contains(inp.KeyChar.ToString()) & indexInStringbuilder <= lengthInputField)         // only accept valid characters other than functions
 
                     {
@@ -230,6 +235,9 @@ namespace BakeryConsole
                     {                                                                        // since we already tested on valid input
                         IO.SystemMessage("Maximum field length", false);                     // and field length in first if statement
                     }
+                    
+                    IO.PrintOnConsole(indexInStringbuilder.ToString() + " " + inputStringbuilder + "       ", 0, 0, Color.TextColors.Defaults);
+                
                 } while (inp.Key != ConsoleKey.Enter & inp.Key != ConsoleKey.Escape);
 
                 if (inputStringbuilder.Length >= minInputLength)
@@ -282,7 +290,11 @@ namespace BakeryConsole
             Console.Write(displayString.PadRight(lengthQuestionField, ' '));
             if (fieldValue == "")
             {
+                //Console.Write("|".PadRight(lengthInputField + 1, ' ') +            // print input field boundaries
+                //"|".PadRight(Program.windowWidth - lengthQuestionField - lengthInputField + 2, ' ')); // fillout with " " to edge
+
                 Console.Write("|".PadRight(lengthInputField + 1, ' ') + "|");            // print input field boundaries
+                Console.Write("".PadRight(Program.windowWidth - lengthQuestionField - lengthInputField - 2, 'X')); // fillout with " " to edge
             }
             else                                                                         // if an existing field value is passed on, print that
             {
