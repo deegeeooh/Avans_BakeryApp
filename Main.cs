@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using System.Threading;
+using System.Diagnostics;
 
 namespace BakeryConsole
 {
@@ -27,9 +28,9 @@ namespace BakeryConsole
         private static string fileEmployees     = "employees.json";
         private static string fileProducts      = "products.json";
 
-        public static int windowHeight          =  36;
-        public static int windowWidth           =  80;
-        public static int warningLenghtDefault  = 750;              // displaytime in ms for system messages 
+        public static int windowHeight          =    35;
+        public static int windowWidth           =    80;
+        public static int warningLenghtDefault  =  1250;              // displaytime in ms for system messages 
 
         public static ClassSelect classSelect = new ClassSelect();
 
@@ -194,7 +195,7 @@ namespace BakeryConsole
                     {
                         recordsInList = peopleList.Count;
                         Person.SetTotalRecords(recordsInList);
-                        _ = new Person(peopleList[recordIndex - 1], true, false);
+                        _ = new Person(peopleList[recordIndex - 1], true);
                     }
                     else
                     {
@@ -208,7 +209,7 @@ namespace BakeryConsole
                     {
                         recordsInList = employeeList.Count;
                         Employee.SetTotalRecords(recordsInList);
-                        _ = new Employee(employeeList[recordIndex - 1], true, false);
+                        _ = new Employee(employeeList[recordIndex - 1], true);
                     } else
                     {
                         _ = new Employee(true);
@@ -263,11 +264,11 @@ namespace BakeryConsole
                                     if (peopleList[recordIndex - 1].Active) 
                                     {
                                         peopleList.Insert(recordIndex - 1,                      // insert record at current position list
-                                             new Person(peopleList[recordIndex - 1], false, false));  // (recordindex starts @ 1, list index @ 0
+                                             new Person(peopleList[recordIndex - 1], false));  // (recordindex starts @ 1, list index @ 0
                                         peopleList.RemoveAt(recordIndex);                       // remove next entry (this was the old record)
                                         IO.WriteToFile(aFilename, peopleList);                  // write to file , #records unchanged
                                         Console.SetCursorPosition(cursorLeft, cursorTop);       // cursor back to top
-                                        _ = new Person(peopleList[recordIndex - 1], true, false);
+                                        _ = new Person(peopleList[recordIndex - 1], true);
                                     }
                                     break;
 
@@ -275,11 +276,11 @@ namespace BakeryConsole
                                     if (employeeList[recordIndex - 1].Active)
                                     {
                                         employeeList.Insert(recordIndex - 1,
-                                            new Employee(employeeList[recordIndex - 1], false, false));
+                                            new Employee(employeeList[recordIndex - 1], false));
                                         employeeList.RemoveAt(recordIndex);                       
                                         IO.WriteToFile(aFilename, employeeList);                  
                                         Console.SetCursorPosition(cursorLeft, cursorTop);       
-                                        _ = new Employee(employeeList[recordIndex - 1], true, false);
+                                        _ = new Employee(employeeList[recordIndex - 1], true);
                                     }
                                     break;
 
@@ -317,10 +318,10 @@ namespace BakeryConsole
                                 _ = new Person(true);                                       // clear inputform
                                 Console.SetCursorPosition(cursorLeft, cursorTop + 1);
                                 peopleList.Add(new Person());                               // call standard constructor
-                                recordsInList++;
+                                recordsInList++; recordIndex = recordsInList;
                                 Person.SetTotalRecords(recordsInList);                      // update records in class static
                                 Console.SetCursorPosition(cursorLeft, cursorTop);
-                                _ = new Person(peopleList[recordIndex - 1], true, false);       // display next record (we update recordindex
+                                _ = new Person(peopleList[recordIndex - 1], true);       // display next record (we update recordindex
                                 IO.WriteToFile(aFilename, peopleList);                      // write to JSON file
                                 break;
 
@@ -329,10 +330,10 @@ namespace BakeryConsole
                                 _ = new Employee(true);
                                 Console.SetCursorPosition(cursorLeft, cursorTop + 1);
                                 employeeList.Add(new Employee());                               // call standard constructor
-                                recordsInList++;
+                                recordsInList++; recordIndex = recordsInList;
                                 Employee.SetTotalRecords(recordsInList);                      // update records in class static
                                 Console.SetCursorPosition(cursorLeft, cursorTop);
-                                _ = new Employee(employeeList[recordIndex - 1], true, false);
+                                _ = new Employee(employeeList[recordIndex - 1], true);
                                 IO.WriteToFile(aFilename, employeeList);                      // write to JSON file
 
                                 break;
@@ -345,7 +346,7 @@ namespace BakeryConsole
                                 _ = new Product(true);
                                 Console.SetCursorPosition(cursorLeft, cursorTop + 1);
                                 productList.Add(new Product());                               // call standard constructor
-                                recordsInList++;
+                                recordsInList++; recordIndex = recordsInList;
                                 Product.SetTotalRecords(recordsInList);                      // update records in class static
                                 Console.SetCursorPosition(cursorLeft, cursorTop);
                                 _ = new Product(productList[recordIndex - 1], true);
@@ -354,7 +355,7 @@ namespace BakeryConsole
 
                                 
                         }
-                        recordIndex = recordsInList;                                                               // set recordindex to last
+                                                                                   // set recordindex to last
                         UpdateTotalRecordsOnScreen(recordsInList);
                         IO.SystemMessage("Record has been written to file", false);
 
@@ -370,13 +371,13 @@ namespace BakeryConsole
                                 case ClassSelect.Person:
 
                                     Person.ToggleDeletionFlag(peopleList[recordIndex - 1], recordIndex);     // toggle .Active property
-                                    _ = new Person(peopleList[recordIndex - 1], true, false);
+                                    _ = new Person(peopleList[recordIndex - 1], true);
                                     IO.WriteToFile(aFilename, peopleList);
                                     break;
                                 case ClassSelect.Employee:
 
                                     Employee.ToggleDeletionFlag(employeeList[recordIndex - 1], recordIndex);    
-                                    _ = new Employee(employeeList[recordIndex - 1], true, false);
+                                    _ = new Employee(employeeList[recordIndex - 1], true);
                                     IO.WriteToFile(aFilename, employeeList);
                                     break;
 
@@ -391,14 +392,7 @@ namespace BakeryConsole
                                     break;
                             }
 
-                            //if (Person.CheckIfActive(peopleList, recordIndex))
-                            //{
-                            //    IO.SystemMessage("Record has been set to Active", false);
-                            //}
-                            //else
-                            //{
-                            //    IO.SystemMessage("Record has been marked for Deletion", false);
-                            //}
+                           
                         }
                         break;
 
@@ -412,12 +406,12 @@ namespace BakeryConsole
                             switch (classSelector)
                             {
                                 case ClassSelect.Person:
-                                    _ = new Person(peopleList[recordIndex - 1], true, false);
+                                    _ = new Person(peopleList[recordIndex - 1], true);
                                     //Person.DisplayRecord(peopleList, recordIndex, false);           
                                     break;
 
                                 case ClassSelect.Employee:
-                                    _ = new Employee(employeeList[recordIndex - 1], true, false);
+                                    _ = new Employee(employeeList[recordIndex - 1], true);
                                     break;
                                 case ClassSelect.Customers:
                                     break;
@@ -440,12 +434,12 @@ namespace BakeryConsole
                             switch (classSelector) 
                             {
                                 case ClassSelect.Person:
-                                    _ = new Person(peopleList[recordIndex - 1], true, false);
+                                    _ = new Person(peopleList[recordIndex - 1], true);
                                     //Person.DisplayRecord(peopleList, recordIndex, false);
                                     break;
 
                                 case ClassSelect.Employee:
-                                    _ = new Employee(employeeList[recordIndex - 1], true, false);
+                                    _ = new Employee(employeeList[recordIndex - 1], true);
                                     break;
                                 case ClassSelect.Customers:
                                     
@@ -474,7 +468,7 @@ namespace BakeryConsole
                                 {
                                     recordIndex = foundPerson.RecordCounter;
                                     Console.SetCursorPosition(cursorLeft, cursorTop);
-                                    _ = new Person(foundPerson, true, false);
+                                    _ = new Person(foundPerson, true);
                                 }
                                 else
                                 {
@@ -492,7 +486,7 @@ namespace BakeryConsole
                                 {
                                     recordIndex = foundEmployee.RecordCounter;
                                     Console.SetCursorPosition(cursorLeft, cursorTop);
-                                    _ = new Employee(foundEmployee, true, false);
+                                    _ = new Employee(foundEmployee, true);
                                 }
                                 else
                                 {
@@ -525,6 +519,13 @@ namespace BakeryConsole
 
                         break;
                 }
+
+                if (Debugger.IsAttached)
+                {
+                    IO.PrintOnConsole("Recordindex: " + recordIndex, 0, 0, Color.TextColors.Defaults);
+                }
+
+
             } while (inputKey.Key != ConsoleKey.Home);
         }
 
@@ -561,7 +562,7 @@ namespace BakeryConsole
                 if (personSearchResult != null)
                 {
                     Console.SetCursorPosition(cursorLeft, cursorTop);
-                    _ = new Person(peopleList[recordIndex - 1], true, false);
+                    _ = new Person(peopleList[recordIndex - 1], true);
                     recordIndex = personSearchResult.RecordCounter;
                 }
                 else
