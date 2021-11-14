@@ -96,8 +96,7 @@ namespace BakeryConsole
 
         public static void SaveColors()
         {
-            IO.WriteToFile<Color>(settingsFile, userColor);
-            IO.SystemMessage("Saved color settings to settings.json", false);
+            IO.WriteToFile<Color>(settingsFile, userColor, "");
         }
 
         public static void SetWarningColor (bool aWarning)          // swap between warning and error colors for Color.SystemMessage
@@ -258,7 +257,7 @@ namespace BakeryConsole
 
                     Console.ForegroundColor = userColor[0].ForeGroundDefault;
                     break;
-
+                    
                 case TextColors.DefaultBackGround:
                     Console.BackgroundColor = userColor[0].BackGroundDefault;
                     break;
