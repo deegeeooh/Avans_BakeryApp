@@ -1,9 +1,9 @@
-﻿using System;
+﻿using System.Diagnostics;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using System.Threading;
-using System.Diagnostics;
 
 namespace BakeryConsole
 {
@@ -15,11 +15,13 @@ namespace BakeryConsole
         Customers,
         Product
     }
-
+    
     internal class Program
     {
-        // declare variables
-        private static ConsoleKeyInfo inputKey = new ConsoleKeyInfo();
+    public static bool _debugEnabled { get; set; }
+
+    // declare variables
+        private static ConsoleKeyInfo inputKey  = new ConsoleKeyInfo();
         private static string validation        = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ " + ConsoleKey.Backspace.ToString();
         private static string compareString     = "";
         public  static string filePeople        = "people.json";
@@ -34,11 +36,16 @@ namespace BakeryConsole
 
         public static ClassSelect classSelect = new ClassSelect();
 
-        private static void Main(string[] args)
+        
+
+
+        private static void Main()
         {
             
-            // Prevent using CTL+C for termination
-            Console.TreatControlCAsInput = true;
+            // Control - C interrupt handling
+            Console.TreatControlCAsInput = true;                     // ConsoleCancel Eventhandler toggle;
+            Console.CancelKeyPress      += new ConsoleCancelEventHandler(HandleCTRLC);  //set custom eventhandler
+
             // init console window properties
             // Console.SetWindowPosition(11, 9);                     //TODO: figure out SetWindowsPosition
 
@@ -55,9 +62,12 @@ namespace BakeryConsole
             do
             {
                 IO.DisplayMenu("Main Menu", "(L)ogin\n(P)eople\n(E)mployees\n(C)ustomers\nPro(D)ucts\n(M)asterdata\n\n(F3-F10) change colors, (F11) reset (F12) save\n\nEnter your choice, Escape to Exit program\n\n", Color.TextColors.MenuSelect);
-                inputKey = Console.ReadKey(true);                    // 'true' | dont'display the input on the console
+
+                DebugMessage("Debug Mode is ON");
+
+                inputKey = Console.ReadKey(true);                               // 'true' | dont'display the input on the console
                 CheckMenuInput();
-                RecordManager.ResetRecordCounter();            // Reset counter to 0 to when switching classes
+                RecordManager.ResetRecordCounter();                             // Reset counter to 0 to when switching classes
 
             } while (inputKey.Key != ConsoleKey.Escape);
 
@@ -65,10 +75,28 @@ namespace BakeryConsole
             Thread.Sleep(500);
             Console.ResetColor();
         }
+        static void HandleCTRLC(object sender, ConsoleCancelEventArgs args)     // custom Control-C eventhandler
+        {
+            IO.SystemMessage("Control-C is pressed, returning to main menu", false);
+            args.Cancel = true;
+            return;
+        }
+
+        [Conditional("DEBUG")]                                                  // Only executed with DEBUG configuration Build && _debugEnabled
+        private static void DebugMessage(string aString)                        // using System.Diagnostics;
+        {
+            //bool a = new Program()._debugEnabled;
+            if (_debugEnabled) IO.SystemMessage(aString, false);
+        }
 
         private static void CheckMenuInput()
         {
             //if ((inputKey.Modifiers & ConsoleModifiers.Control) != 0) { Console.Write("Control+"); }
+
+            if (inputKey.KeyChar == 126)                 // tilde key ascii 126 DEBUG mode, not the same as ConsoleKey.F15 (?)
+            {
+                _debugEnabled = _debugEnabled ? false : true; // toggle
+            }
 
             if (inputKey.Key == ConsoleKey.L || !Login.validPassword & inputKey.Key != ConsoleKey.Escape)
             {
