@@ -38,10 +38,7 @@ namespace BakeryConsole
             DateExit         = IO.ParseToDateTime(IO.GetInput(fieldNames[2], "", checkinputStringDate,  lengthQuestionField, fieldProperties[2, 1], false, true, true, false, true, fieldProperties[2, 2]), false);
             string getSalary = IO.GetInput(fieldNames[3], "", checkinputStringNum, lengthQuestionField, fieldProperties[3, 1], true, true, true, true, true, fieldProperties[3, 2]);
             Salary = (getSalary != "") ? Int32.Parse(getSalary) : 0;
-
-            //Salary      = Int32.Parse(IO.GetInput(fieldNames[3],        "", checkinputStringNum,   lengthQuestionField, fieldProperties[3, 1], true, true, true, true, true,   fieldProperties[3, 2]));
-            // SickDays    = Int32.Parse(IO.GetInput(empFieldnames[4],        "", checkinputStringNum,   lengthQuestionField, empFieldProp[4, 1], true, true, true, true, true,   empFieldProp[4, 2]));
-            IsEmployee  = true;
+            IsEmployee      = true;         // OBSOLETE
             
             
             //CheckMutations(this, " ", "[Created:]", "", 0);          // create a single mutation to indicate creation datestamp
@@ -70,11 +67,7 @@ namespace BakeryConsole
                 Salary = Int32.Parse(IO.GetInput(fieldNames[3], anEmployee.Salary.ToString(), checkinputStringNum, lengthQuestionField, fieldProperties[3, 1], true, true, true, true, true, fieldProperties[3, 2]));
                 // SickDays    = Int32.Parse(IO.GetInput(empFieldnames[4], anEmployee.SickDays.ToString(), checkinputStringNum, lengthQuestionField, empFieldProp[4, 1], true, true, true, true, true, empFieldProp[4, 2]));
                 IsEmployee = true;
-
-                //if (anEmployee.Mutations == null)
-                //{
-                //    anEmployee.Mutations = new List<Mutation>();
-                //}
+                
                 this.Mutations = anEmployee.Mutations;
 
                 // check which values changed and store them in the Person.Mutations list

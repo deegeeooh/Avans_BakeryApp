@@ -1,50 +1,45 @@
-﻿using System.Diagnostics;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Reflection;
 using System.Text;
 using System.Threading;
 
 namespace BakeryConsole
 {
-
-    enum ClassSelect
+    internal enum ClassSelect
     {
         Person,
         Employee,
         Customers,
         Product
     }
-    
+
     internal class Program
     {
-    public static bool _debugEnabled { get; set; }
+        public static bool _debugEnabled { get; set; }
 
-    // declare variables
-        private static ConsoleKeyInfo inputKey  = new ConsoleKeyInfo();
-        private static string validation        = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ " + ConsoleKey.Backspace.ToString();
-        private static string compareString     = "";
-        public  static string filePeople        = "people.json";
-        private static string fileCustomers     = "customers.json";
-        private static string fileEmployeeRoles = "employeeRoles.json";
-        private static string fileEmployees     = "employees.json";
-        private static string fileProducts      = "products.json";
+        // init object references
+        private static ConsoleKeyInfo inputKey      = new ConsoleKeyInfo();
+        public static ClassSelect classSelect       = new ClassSelect();
 
-        public static int windowHeight          =    35;
-        public static int windowWidth           =    80;
-        public static int warningLenghtDefault  =  1250;              // displaytime in ms for system messages 
-
-        public static ClassSelect classSelect = new ClassSelect();
-
-        
-
+        // declare variables
+        private static string validation            = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ " + ConsoleKey.Backspace.ToString();
+        private static string compareString         = "";
+        public static string  filePeople            = "people.json";
+        private static string fileCustomers         = "customers.json";
+        private static string fileEmployeeRoles     = "employeeRoles.json";
+        private static string fileEmployees         = "employees.json";
+        private static string fileProducts          = "products.json";
+        public static int     windowHeight          = 35;
+        public static int     windowWidth           = 80;
+        public static int     warningLenghtDefault  = 1000;              // displaytime in ms for system messages
 
         private static void Main()
         {
-            
             // Control - C interrupt handling
             Console.TreatControlCAsInput = true;                     // ConsoleCancel Eventhandler toggle;
-            Console.CancelKeyPress      += new ConsoleCancelEventHandler(HandleCTRLC);  //set custom eventhandler
+            Console.CancelKeyPress += new ConsoleCancelEventHandler(HandleCTRLC);  //set custom eventhandler
 
             // init console window properties
             // Console.SetWindowPosition(11, 9);                     //TODO: figure out SetWindowsPosition
@@ -52,9 +47,9 @@ namespace BakeryConsole
             // initialize variables and window
             Console.SetWindowSize(windowWidth, windowHeight);
             Console.SetBufferSize(windowWidth, windowHeight);
-            IO.SetWarningLength  (warningLenghtDefault);
-            Console.Title        = "Bakery for Console";
-            Console.CursorSize   = 60;
+            IO.SetWarningLength(warningLenghtDefault);
+            Console.Title = "Bakery for Console";
+            Console.CursorSize = 60;
             Color.InitializeColors();                               // read settings.json and set color scheme
             Console.Clear();
 
@@ -68,14 +63,14 @@ namespace BakeryConsole
                 inputKey = Console.ReadKey(true);                               // 'true' | dont'display the input on the console
                 CheckMenuInput();
                 RecordManager.ResetRecordCounter();                             // Reset counter to 0 to when switching classes
-
             } while (inputKey.Key != ConsoleKey.Escape);
 
             Console.WriteLine("\n\nYou have been logged out.. Goodbye!");       // De MZZL!
             Thread.Sleep(500);
             Console.ResetColor();
         }
-        static void HandleCTRLC(object sender, ConsoleCancelEventArgs args)     // custom Control-C eventhandler
+
+        private static void HandleCTRLC(object sender, ConsoleCancelEventArgs args)     // custom Control-C eventhandler
         {
             IO.SystemMessage("Control-C is pressed, returning to main menu", false);
             args.Cancel = true;
@@ -93,72 +88,62 @@ namespace BakeryConsole
         {
             //if ((inputKey.Modifiers & ConsoleModifiers.Control) != 0) { Console.Write("Control+"); }
 
-            if (inputKey.KeyChar == 126)                 // tilde key ascii 126 DEBUG mode, not the same as ConsoleKey.F15 (?)
+            if (inputKey.KeyChar == 126)                         // DEBUG mode; tilde key ascii 126, not the same as ConsoleKey.F15 (?)
             {
-                _debugEnabled = _debugEnabled ? false : true; // toggle
+                _debugEnabled = _debugEnabled ? false : true;   // toggle static property
             }
 
             if (inputKey.Key == ConsoleKey.L || !Login.validPassword & inputKey.Key != ConsoleKey.Escape)
             {
                 _ = new Login();                               // _ discard unnecessary var declaration
             }
-
-            else if (inputKey.Key == ConsoleKey.P)                                                 // Person
+            else if (inputKey.Key == ConsoleKey.P)                                                  // Person
             {
                 IO.DisplayMenu("Browse/edit People", "(Ins)ert to Add\n(Enter)to Edit\n(Del)ete to remove Record\nUse arrow keys to browse\n(Home) Main menu\n\n", Color.TextColors.MenuSelect);
-                BrowseRecords(filePeople, ClassSelect.Person);
-                //People();
+                BrowseRecords(filePeople, ClassSelect.Person);                                      //People
             }
-
-            else if (inputKey.Key == ConsoleKey.E & Login.validPassword)                           // Employees
+            else if (inputKey.Key == ConsoleKey.E & Login.validPassword)                            // Employees
             {
                 IO.DisplayMenu("Browse/edit Employees", "(Ins)ert to Add\n(Enter)to Edit\n(Del)ete to remove Record\nUse arrow keys to browse\n(Home) Main menu\n\n", Color.TextColors.MenuSelect);
                 BrowseRecords(fileEmployees, ClassSelect.Employee);
                 //EditEmployees();
             }
-
-            else if (inputKey.Key == ConsoleKey.C & Login.validPassword)                           // Customers
+            else if (inputKey.Key == ConsoleKey.C & Login.validPassword)                            // Customers
             {
                 IO.DisplayMenu("Browse/edit customer records", "(A)dd\nArrows to browse\n(Del)ete\n", Color.TextColors.MenuSelect);
                 BrowseRecords(fileCustomers, ClassSelect.Customers);
             }
-
-            else if (inputKey.Key == ConsoleKey.D & Login.validPassword)                           // Products
+            else if (inputKey.Key == ConsoleKey.D & Login.validPassword)                            // Products
             {
                 IO.DisplayMenu("Browse / edit Products", "(Ins)ert to Add\n(Enter)to Edit\n(Del)ete to remove Record\nUse arrow keys to browse\n(Home) Main menu\n\n", Color.TextColors.MenuSelect);
                 BrowseRecords(fileProducts, ClassSelect.Product);
             }
-
-            else if (inputKey.Key == ConsoleKey.M & Login.validPassword)                           // Master Data
+            else if (inputKey.Key == ConsoleKey.M & Login.validPassword)                            // Master Data
             {
                 IO.DisplayMenu("Edit Master Data", "(A)dd\nArrows to browse\n(Del)ete\n", Color.TextColors.MenuSelect);
                 Console.WriteLine("  You Pressed D");
             }
-            
-            else if (inputKey.Key == ConsoleKey.F3)  { Color.CycleColors(6, false); return; }      // input text color
-            else if (inputKey.Key == ConsoleKey.F4)  { Color.CycleColors(0, false); return; }      // highlighted text color
-            else if (inputKey.Key == ConsoleKey.F5)  { Color.CycleColors(1, false); return; }      // normal text
-            else if (inputKey.Key == ConsoleKey.F6)  { Color.CycleColors(2, false); return; }      // background
-            else if (inputKey.Key == ConsoleKey.F7)  { Color.CycleColors(3, false); return; }      // Menu select color
-            else if (inputKey.Key == ConsoleKey.F8)  { Color.CycleColors(4, false); return; }      // Software license nameholder Color
-            else if (inputKey.Key == ConsoleKey.F9)  { Color.CycleColors(5, true ); return; }      // Random colors including background
-            else if (inputKey.Key == ConsoleKey.F10) { Color.CycleColors(5, false); return; }      // Random colors excluding background
-            else if (inputKey.Key == ConsoleKey.F11) { Color.SetStandardColor();            }      // Set/Reset to standard color scheme
-            else if (inputKey.Key == ConsoleKey.F12) { Color.SaveColors();                  }      // 
-            
-            else if (inputKey.Key == ConsoleKey.A)                                                 // Assembly info via recursion (test routine)
-            
+            else if (inputKey.Key == ConsoleKey.F3) { Color.CycleColors(6, false); return; }        // input text color
+            else if (inputKey.Key == ConsoleKey.F4) { Color.CycleColors(0, false); return; }        // highlighted text color
+            else if (inputKey.Key == ConsoleKey.F5) { Color.CycleColors(1, false); return; }        // normal text
+            else if (inputKey.Key == ConsoleKey.F6) { Color.CycleColors(2, false); return; }        // background
+            else if (inputKey.Key == ConsoleKey.F7) { Color.CycleColors(3, false); return; }        // Menu select color
+            else if (inputKey.Key == ConsoleKey.F8) { Color.CycleColors(4, false); return; }        // Software license nameholder Color
+            else if (inputKey.Key == ConsoleKey.F9) { Color.CycleColors(5, true); return; }         // Random colors including background
+            else if (inputKey.Key == ConsoleKey.F10) { Color.CycleColors(5, false); return; }       // Random colors excluding background
+            else if (inputKey.Key == ConsoleKey.F11) { Color.SetStandardColor(); }                  // Set/Reset to standard color scheme
+            else if (inputKey.Key == ConsoleKey.F12) { Color.SaveColors(); }                        //
+            else if (inputKey.Key == ConsoleKey.A)                                                  // Assembly info via recursion (test routine)
             {
-                //IO.DisplayMenu("Browse/edit product records", "(A)dd\nArrows to browse\n(Del)ete\n", 2);
                 ShowAssemblyInfo();
             }
-            else if (inputKey.Key == ConsoleKey.Escape)                               // exit program
+            else if (inputKey.Key == ConsoleKey.Escape)                                             // exit program
             {
                 return;
             }
         }
 
-        private static void ShowAssemblyInfo()                                          // test recursion routine 
+        private static void ShowAssemblyInfo()                                                      // test recursion routine
         {
             Console.Clear();
 
@@ -192,68 +177,62 @@ namespace BakeryConsole
             Console.ReadKey();
         }
 
-        ////private static void BrowseRecords<P, E, Pr, C>(string aFilename, ClassSelect anEnum)  
-        //                    where P  : Person 
-        //                    where E  : Employee 
-        //                    where Pr : Product
-        //                    where C  : Customer
-        
-        private static void BrowseRecords(string aFilename, Enum classSelector)
+        private static void BrowseRecords(string aFilename, Enum classSelector)                     // Main record handling routine
         {
+            var peopleList = new List<Person>();
+            var employeeList = new List<Employee>();
+            var customerList = new List<Customer>();
+            var productList = new List<Product>();
 
-            var peopleList    = new List<Person> ();
-            var employeeList  = new List<Employee> ();
-            var customerList  = new List<Customer> ();
-            var productList   = new List<Product>();
-
-            int cursorLeft    = Console.CursorLeft;                           // store current cursorposition, left and top
-            int cursorTop     = Console.CursorTop;
-            int recordIndex   = 1;
+            int cursorLeft = Console.CursorLeft;                                                    // store current cursorposition, left and top
+            int cursorTop = Console.CursorTop;
+            int recordIndex = 1;
             int recordsInList = 0;
 
             switch (classSelector)
 
-                {
+            {
                 case ClassSelect.Person:
-                    peopleList = IO.PopulateList<Person>(aFilename);            // try to read JSON file to list
-                    if (peopleList.Count > 0)                                   // succeeded, there are records
+                    peopleList = IO.PopulateList<Person>(aFilename);                                // try to read JSON file to list
+                    if (peopleList.Count > 0)                                                       // succeeded, there are records
                     {
                         recordsInList = peopleList.Count;
                         Person.SetTotalRecords(recordsInList);
-                        _ = new Person(peopleList[recordIndex - 1], true);      //display first record
+                        _ = new Person(peopleList[recordIndex - 1], true);                          //display first record
                     }
                     else
                     {
-                        _ = new Person(true);                                   // display empty input form
+                        _ = new Person(true);                                                       // display empty input form
                     }
                     break;
 
                 case ClassSelect.Employee:
-                    employeeList = IO.PopulateList<Employee> (aFilename);
+                    employeeList = IO.PopulateList<Employee>(aFilename);
                     if (employeeList.Count > 0)
                     {
                         recordsInList = employeeList.Count;
                         Employee.SetTotalRecords(recordsInList);
                         _ = new Employee(employeeList[recordIndex - 1], true);
-                    } else
+                    }
+                    else
                     {
                         _ = new Employee(true);
                     }
                     break;
 
                 case ClassSelect.Customers:
-                    customerList = IO.PopulateList<Customer> (aFilename);
+                    customerList = IO.PopulateList<Customer>(aFilename);
                     if (customerList.Count > 0)
                     {
-                       
-                    } else
+                    }
+                    else
                     {
                         //Customer.DisplayRecord(peopleList, recordIndex, false);
                     }
                     break;
 
                 case ClassSelect.Product:
-                    productList  = IO.PopulateList<Product>(aFilename);
+                    productList = IO.PopulateList<Product>(aFilename);
                     if (productList.Count > 0)
                     {
                         recordsInList = productList.Count;
@@ -265,36 +244,37 @@ namespace BakeryConsole
                         _ = new Product(true);
                     }
                     break;
-                }
+            }
 
             UpdateTotalRecordsOnScreen(recordsInList);
             //string inputString = "abcdefghijklmnopqrstuvwxyz" + ConsoleKey.Backspace.ToString();
             StringBuilder zoekString = new StringBuilder();
-            
-            do                                                                              // NICE: figure out generic calling of methods via a generic
+
+            do                                                                                      // NICE: figure out generic calling of methods via a generic
             {
                 inputKey = Console.ReadKey(true);
 
                 switch (inputKey.Key)
                 {
-                   
                     case ConsoleKey.Enter:          // *** EDIT Record *** //
 
                         if (recordsInList > 0) // & Person.CheckIfActive(peopleList[recordIndex - 1], recordIndex)) // some record is being displayed
                         {
-                                      // set cursor on first inputfield after ID
-                                
+                            // set cursor on first inputfield after ID
+
                             switch (classSelector)      //TODO: fix check on active record
                             {
                                 case ClassSelect.Person:
-                                    if (peopleList[recordIndex - 1].Active) 
+                                    if (peopleList[recordIndex - 1].Active)
                                     {
-                                        Console.SetCursorPosition(cursorLeft, cursorTop + 1);
+                                        IO.SetCursorPosition(cursorLeft, cursorTop + 1);
+                                        //Console.SetCursorPosition(cursorLeft, cursorTop + 1);
                                         peopleList.Insert(recordIndex - 1,                      // insert record at current position list
                                              new Person(peopleList[recordIndex - 1], false));  // (recordindex starts @ 1, list index @ 0
                                         peopleList.RemoveAt(recordIndex);                       // remove next entry (this was the old record)
-                                        IO.WriteToFile(aFilename, peopleList);                  // write to file , #records unchanged
-                                        Console.SetCursorPosition(cursorLeft, cursorTop);       // cursor back to top
+                                        IO.WriteToFile(aFilename, peopleList, "");                  // write to file , #records unchanged
+                                        IO.SetCursorPosition(cursorLeft, cursorTop);
+                                        //Console.SetCursorPosition(cursorLeft, cursorTop);       // cursor back to top
                                         _ = new Person(peopleList[recordIndex - 1], true);
                                     }
                                     break;
@@ -302,12 +282,14 @@ namespace BakeryConsole
                                 case ClassSelect.Employee:
                                     if (employeeList[recordIndex - 1].Active)
                                     {
-                                        Console.SetCursorPosition(cursorLeft, cursorTop + 1);
+                                        IO.SetCursorPosition(cursorLeft, cursorTop + 1);
+                                        //Console.SetCursorPosition(cursorLeft, cursorTop + 1);
                                         employeeList.Insert(recordIndex - 1,
                                             new Employee(employeeList[recordIndex - 1], false));
-                                        employeeList.RemoveAt(recordIndex);                       
-                                        IO.WriteToFile(aFilename, employeeList);                  
-                                        Console.SetCursorPosition(cursorLeft, cursorTop);       
+                                        employeeList.RemoveAt(recordIndex);
+                                        IO.WriteToFile(aFilename, employeeList, "");
+                                        IO.SetCursorPosition(cursorLeft, cursorTop);
+                                        //Console.SetCursorPosition(cursorLeft, cursorTop);
                                         _ = new Employee(employeeList[recordIndex - 1], true);
                                     }
                                     break;
@@ -319,51 +301,54 @@ namespace BakeryConsole
 
                                     if (productList[recordIndex - 1].Active)
                                     {
-                                        Console.SetCursorPosition(cursorLeft, cursorTop + 1);
+                                        IO.SetCursorPosition(cursorLeft, cursorTop + 1);
+                                        //Console.SetCursorPosition(cursorLeft, cursorTop + 1);
                                         productList.Insert(recordIndex - 1,
                                             new Product(productList[recordIndex - 1], false));
                                         productList.RemoveAt(recordIndex);
-                                        IO.WriteToFile(aFilename, productList);
-                                        Console.SetCursorPosition(cursorLeft, cursorTop);
+                                        IO.WriteToFile(aFilename, productList, "");
+                                        IO.SetCursorPosition(cursorLeft, cursorTop);
+                                        //Console.SetCursorPosition(cursorLeft, cursorTop);
                                         _ = new Product(productList[recordIndex - 1], true);
                                     }
                                     break;
                             }
-
-                            IO.SystemMessage("Record has been updated in file", false);
                         }
                         break;
-                    
+
                     case ConsoleKey.I:
-                    case ConsoleKey.Insert:                                           
+                    case ConsoleKey.Insert:
+                        
+                        IO.SetCursorPosition(cursorLeft, cursorTop);
+                        //Console.SetCursorPosition(cursorLeft, cursorTop);
 
-                        Console.SetCursorPosition(cursorLeft, cursorTop);
-
-                        switch (classSelector)                  // *** ADD NEW RECORD *** //     
+                        switch (classSelector)                  // *** ADD NEW RECORD *** //
 
                         {
                             case ClassSelect.Person:
 
                                 _ = new Person(true);                                       // clear inputform
-                                Console.SetCursorPosition(cursorLeft, cursorTop + 1);
+                                IO.SetCursorPosition(cursorLeft, cursorTop + 1);
+                                //Console.SetCursorPosition(cursorLeft, cursorTop + 1);
                                 peopleList.Add(new Person());                               // call standard constructor
                                 recordsInList++; recordIndex = recordsInList;
                                 //Person.SetTotalRecords(recordsInList);                    // update records in class static
                                 Console.SetCursorPosition(cursorLeft, cursorTop);
                                 _ = new Person(peopleList[recordIndex - 1], true);          // display next record (we update recordindex
-                                IO.WriteToFile(aFilename, peopleList);                      // write to JSON file
+                                IO.WriteToFile(aFilename, peopleList, "");                      // write to JSON file
                                 break;
 
                             case ClassSelect.Employee:
-                               
+
                                 _ = new Employee(true);
-                                Console.SetCursorPosition(cursorLeft, cursorTop + 1);
+                                IO.SetCursorPosition(cursorLeft, cursorTop + 1);
+                                //Console.SetCursorPosition(cursorLeft, cursorTop + 1);
                                 employeeList.Add(new Employee());                             // call standard constructor
                                 recordsInList++; recordIndex = recordsInList;
                                 //Employee.SetTotalRecords(recordsInList);                    // update records in class static
                                 Console.SetCursorPosition(cursorLeft, cursorTop);
                                 _ = new Employee(employeeList[recordIndex - 1], true);
-                                IO.WriteToFile(aFilename, employeeList);                      // write to JSON file
+                                IO.WriteToFile(aFilename, employeeList, "");                      // write to JSON file
 
                                 break;
 
@@ -371,43 +356,43 @@ namespace BakeryConsole
                                 break;
 
                             case ClassSelect.Product:
-                                
+
                                 _ = new Product(true);
-                                Console.SetCursorPosition(cursorLeft, cursorTop + 1);
+                                IO.SetCursorPosition(cursorLeft, cursorTop + 1);
+                                //Console.SetCursorPosition(cursorLeft, cursorTop + 1);
                                 productList.Add(new Product());                               // call standard constructor
                                 recordsInList++; recordIndex = recordsInList;
                                 //Product.SetTotalRecords(recordsInList);                      // update records in class static
                                 Console.SetCursorPosition(cursorLeft, cursorTop);
                                 _ = new Product(productList[recordIndex - 1], true);
-                                IO.WriteToFile(aFilename, productList);                      // write to JSON file
+                                IO.WriteToFile(aFilename, productList, "");                      // write to JSON file
                                 break;
-
-                                
                         }
-                                                                                   
+
                         UpdateTotalRecordsOnScreen(recordsInList);
                         IO.SystemMessage("Record has been written to file", false);
 
                         break;
 
-                    case ConsoleKey.Delete:                     // *** DELETE Record *** //                      
+                    case ConsoleKey.Delete:                     // *** DELETE Record *** //
                         if (recordsInList > 0)
                         {
-                            Console.SetCursorPosition(cursorLeft, cursorTop);
-                           
+                            IO.SetCursorPosition(cursorLeft, cursorTop);
+
                             switch (classSelector)
                             {
                                 case ClassSelect.Person:
 
                                     Person.ToggleDeletionFlag(peopleList[recordIndex - 1], recordIndex);     // toggle .Active property
                                     _ = new Person(peopleList[recordIndex - 1], true);
-                                    IO.WriteToFile(aFilename, peopleList);
+                                    IO.WriteToFile(aFilename, peopleList, "");
                                     break;
+
                                 case ClassSelect.Employee:
 
-                                    Employee.ToggleDeletionFlag(employeeList[recordIndex - 1], recordIndex);    
+                                    Employee.ToggleDeletionFlag(employeeList[recordIndex - 1], recordIndex);
                                     _ = new Employee(employeeList[recordIndex - 1], true);
-                                    IO.WriteToFile(aFilename, employeeList);
+                                    IO.WriteToFile(aFilename, employeeList, "");
                                     break;
 
                                 case ClassSelect.Customers:
@@ -416,12 +401,10 @@ namespace BakeryConsole
                                 case ClassSelect.Product:
                                     Product.ToggleDeletionFlag(productList[recordIndex - 1], recordIndex);
                                     _ = new Product(productList[recordIndex - 1], true);
-                                    IO.WriteToFile(aFilename, productList);
+                                    IO.WriteToFile(aFilename, productList, "");
 
                                     break;
                             }
-
-                           
                         }
                         break;
 
@@ -431,36 +414,9 @@ namespace BakeryConsole
                         if (recordIndex > 1)
                         {
                             recordIndex--;
-                            Console.SetCursorPosition(cursorLeft, cursorTop);
+                            IO.SetCursorPosition(cursorLeft, cursorTop);
+                            //Console.SetCursorPosition(cursorLeft, cursorTop);
                             switch (classSelector)
-                            {
-                                case ClassSelect.Person:
-                                    _ = new Person(peopleList[recordIndex - 1], true);
-                                    //Person.DisplayRecord(peopleList, recordIndex, false);           
-                                    break;
-
-                                case ClassSelect.Employee:
-                                    _ = new Employee(employeeList[recordIndex - 1], true);
-                                    break;
-                                case ClassSelect.Customers:
-                                    break;
-                                case ClassSelect.Product:
-                                    _ = new Product(productList[recordIndex - 1], true);
-                                    break;
-                            }
-                            
-                        }
-                        break;
-
-                    case ConsoleKey.RightArrow:                                             //browse
-                    case ConsoleKey.DownArrow:
-
-                        if (recordIndex < recordsInList)                                    // while not EoF
-                        {
-                            recordIndex++;
-                            Console.SetCursorPosition(cursorLeft, cursorTop);
-                            
-                            switch (classSelector) 
                             {
                                 case ClassSelect.Person:
                                     _ = new Person(peopleList[recordIndex - 1], true);
@@ -470,9 +426,41 @@ namespace BakeryConsole
                                 case ClassSelect.Employee:
                                     _ = new Employee(employeeList[recordIndex - 1], true);
                                     break;
+
                                 case ClassSelect.Customers:
-                                    
                                     break;
+
+                                case ClassSelect.Product:
+                                    _ = new Product(productList[recordIndex - 1], true);
+                                    break;
+                            }
+                        }
+                        break;
+
+                    case ConsoleKey.RightArrow:                                             //browse
+                    case ConsoleKey.DownArrow:
+
+                        if (recordIndex < recordsInList)                                    // while not EoF
+                        {
+                            recordIndex++;
+                            IO.SetCursorPosition(cursorLeft, cursorTop);
+                            //Console.SetCursorPosition(cursorLeft, cursorTop);
+
+                            switch (classSelector)
+                            {
+                                case ClassSelect.Person:
+                                    _ = new Person(peopleList[recordIndex - 1], true);
+                                    //Person.DisplayRecord(peopleList, recordIndex, false);
+                                    break;
+
+                                case ClassSelect.Employee:
+                                    _ = new Employee(employeeList[recordIndex - 1], true);
+                                    break;
+
+                                case ClassSelect.Customers:
+
+                                    break;
+
                                 case ClassSelect.Product:
                                     _ = new Product(productList[recordIndex - 1], true);
                                     break;
@@ -481,9 +469,9 @@ namespace BakeryConsole
 
                         break;
 
-                    default:                                                                // search  
+                    default:                                                                // search
                                                                                             // NICE: sort option
-                        switch (classSelector)                                              // NICE: search through entire record as 1 string 
+                        switch (classSelector)                                              // NICE: search through entire record as 1 string
                         {
                             case ClassSelect.Person:
                                 //recordIndex = SearchStringInList(peopleList, cursorLeft, cursorTop, recordIndex, zoekstring);
@@ -492,11 +480,12 @@ namespace BakeryConsole
 
                                 Person foundPerson = peopleList.Find(person =>
                                                      person.LastName.StartsWith(compareString));
-                                
+
                                 if (foundPerson != null)
                                 {
                                     recordIndex = foundPerson.RecordCounter;
-                                    Console.SetCursorPosition(cursorLeft, cursorTop);
+                                    IO.SetCursorPosition(cursorLeft, cursorTop);
+                                    //Console.SetCursorPosition(cursorLeft, cursorTop);
                                     _ = new Person(foundPerson, true);
                                 }
                                 else
@@ -505,6 +494,7 @@ namespace BakeryConsole
                                 }
 
                                 break;
+
                             case ClassSelect.Employee:
                                 compareString = BuildZoekString(zoekString, cursorTop);
 
@@ -514,7 +504,8 @@ namespace BakeryConsole
                                 if (foundEmployee != null)
                                 {
                                     recordIndex = foundEmployee.RecordCounter;
-                                    Console.SetCursorPosition(cursorLeft, cursorTop);
+                                    IO.SetCursorPosition(cursorLeft, cursorTop);
+                                    //Console.SetCursorPosition(cursorLeft, cursorTop);
                                     _ = new Employee(foundEmployee, true);
                                 }
                                 else
@@ -523,9 +514,11 @@ namespace BakeryConsole
                                 }
                                 //recordIndex = SearchStringInList(productList, cursorLeft, cursorTop, recordIndex, zoekstring);
                                 break;
+
                             case ClassSelect.Customers:
-                                
+
                                 break;
+
                             case ClassSelect.Product:
                                 compareString = BuildZoekString(zoekString, cursorTop);
 
@@ -535,7 +528,8 @@ namespace BakeryConsole
                                 if (foundProduct != null)
                                 {
                                     recordIndex = foundProduct.RecordCounter;
-                                    Console.SetCursorPosition(cursorLeft, cursorTop);
+                                    IO.SetCursorPosition(cursorLeft, cursorTop);
+                                    //Console.SetCursorPosition(cursorLeft, cursorTop);
                                     _ = new Product(foundProduct, true);
                                 }
                                 else
@@ -553,12 +547,10 @@ namespace BakeryConsole
                 {
                     IO.PrintOnConsole("Recordindex: " + recordIndex, 0, 0, Color.TextColors.Defaults);
                 }
-
-
             } while (inputKey.Key != ConsoleKey.Home & inputKey.Key != ConsoleKey.Q);
         }
 
-        private static string  BuildZoekString(StringBuilder zoekstring, int cursorTop) 
+        private static string BuildZoekString(StringBuilder zoekstring, int cursorTop)
         {
             string returnString;
 
@@ -566,12 +558,11 @@ namespace BakeryConsole
             {
                 zoekstring.Append(inputKey.KeyChar.ToString());
             }
-            
+
             IO.PrintOnConsole("Searching: [ " + zoekstring.ToString() + " ]".PadRight(20, ' '), 1, cursorTop - 1, Color.TextColors.Defaults);
             returnString = zoekstring.ToString();
             return returnString;
         }
-
 
         private static int SearchStringInList(List<Person> peopleList, int cursorLeft, int cursorTop, int recordIndex, StringBuilder zoekstring)
         {
@@ -590,7 +581,8 @@ namespace BakeryConsole
                 );                                                                          // I hate how this syntax looks
                 if (personSearchResult != null)
                 {
-                    Console.SetCursorPosition(cursorLeft, cursorTop);
+                    IO.SetCursorPosition(cursorLeft, cursorTop);
+                    //Console.SetCursorPosition(cursorLeft, cursorTop);
                     _ = new Person(peopleList[recordIndex - 1], true);
                     recordIndex = personSearchResult.RecordCounter;
                 }
@@ -599,7 +591,7 @@ namespace BakeryConsole
                     zoekstring.Clear();
                 }
             }
-            
+
             return recordIndex;
         }
 

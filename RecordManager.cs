@@ -46,14 +46,16 @@ namespace BakeryConsole
         {
             bool flagToggle = anInheritor.Active ? false : true;
             anInheritor.Active = flagToggle;
+            
             if (anInheritor.Active)
             {
-                IO.SystemMessage("Record has been set to Active", false);
+                IO.SystemMessage("Record has been set to Active, changes written to file", false);
             }
             else
             {
-                IO.SystemMessage("Record has been marked for Deletion", false);
+                IO.SystemMessage("Record has been marked for Deletion, changes written to file", false);
             }
+
         }
         public static void SetTotalRecords(int aRecord)
         {

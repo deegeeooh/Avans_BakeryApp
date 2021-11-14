@@ -10,6 +10,7 @@ namespace BakeryConsole
 {
     internal class IO
     {
+        private static readonly object ConsoleLock = new object();
         public static int WarningLength { get; set; }                   // length in ms of system message events
         public static void SetWarningLength (int aValueInMs)            
         {
@@ -20,36 +21,44 @@ namespace BakeryConsole
         {
             Console.SetWindowSize(Program.windowWidth, Program.windowHeight);
             Console.Clear();
-            Color.SetColor(Color.TextColors.Text);
-            Console.Write("\n"+ "=".PadRight(80, '=')); 
-            Color.SetColor(Color.TextColors.Title);
-            //Console.Write("Bakker Vlaaieboer & Zn.\n"); Color.SetColor(Color.TextColors.Text); Console.Write("{0:dd/MM/yyyy HH:mm}".PadRight(30, ' '), DateTime.Now);
-            Console.Write("Bakker Vlaaieboer & Zn."); 
-            Color.SetColor(Color.TextColors.Text); Console.Write("{0:f}".PadLeft(28, ' '), DateTime.Now); Console.Write("\n");
-            //Color.SetColor(Color.TextColors.DefaultForeGround);
+            //PrintOnConsole("\n=".PadRight(80, '='), 0,Console.CursorTop, Color.TextColors.Text);
+            lock (ConsoleLock)
+            {
+                Color.SetColor(Color.TextColors.Text);
+                Console.Write("\n" + "=".PadRight(80, '='));
+                Color.SetColor(Color.TextColors.Title);
+                Console.Write("Bakker Vlaaieboer & Zn.");
+                Color.SetColor(Color.TextColors.Text);
+                Console.Write("{0:f}".PadLeft(28, ' '), DateTime.Now); Console.Write("\n");
 
-            if (Login.validPassword)
-            {
-                PrintOnConsole("* Logged in *", 65, Console.CursorTop, Color.TextColors.Input);
+
+                if (Login.validPassword)
+                {
+                    PrintOnConsole("* Logged in *", 65, Console.CursorTop, Color.TextColors.Input);
+                }
+                else
+                {
+                    PrintOnConsole("* Logged out *", 65, Console.CursorTop, Color.TextColors.DefaultForeGround);
+                }
+
+                Color.SetColor(Color.TextColors.Text);
+                Console.Write("\n");
+                Console.Write("=".PadRight(80, '=') + "\n");
+                Color.SetColor(Color.TextColors.MenuSelect); Console.WriteLine(title + "\n");    // menu name
             }
-            else
-            {
-                PrintOnConsole("* Logged out *", 65, Console.CursorTop,Color.TextColors.DefaultForeGround);
-            }
-            Color.SetColor(Color.TextColors.Text);
-            Console.Write("\n");
-            Console.Write("=".PadRight(80, '=') + "\n");
-            Color.SetColor(Color.TextColors.MenuSelect); Console.WriteLine(title + "\n");    // menu name
 
             PrintMenuString(menuString, Color.TextColors.MenuSelect);
-            Color.SetColor(Color.TextColors.Text);
-            
-            if (Debugger.IsAttached)
+            lock (ConsoleLock)
             {
-                Console.Write("1234567890_234567890_234567890_234567890_234567890_234567890_234567890_234567890\n");
-            }else
-            {
-                Console.Write    ("=".PadRight(80,'=') + "\n");
+                Color.SetColor(Color.TextColors.Text);
+                if (Debugger.IsAttached)
+                {
+                    Console.Write("1234567890_234567890_234567890_234567890_234567890_234567890_234567890_234567890\n");
+                }
+                else
+                {
+                    Console.Write("=".PadRight(80, '=') + "\n");
+                }
             }
             PrintOnConsole   ("_".PadRight(80,'_'), 0, 33,Color.TextColors.Text);
         }
@@ -58,34 +67,45 @@ namespace BakeryConsole
         {
             Color.SetColor(Color.TextColors.DefaultForeGround);
             var menustringCharArray = menuString.ToCharArray();
-            for (int i = 0; i < menuString.Length; i++)
+            lock (ConsoleLock)
             {
-                if (menustringCharArray[i].ToString() == "(")   // NICE make this method compacter
+                for (int i = 0; i < menuString.Length; i++)
                 {
-                    Console.Write(menustringCharArray[i]);      // print the "("
-                    i++;
-                    do                                          // until ")" is found print every char in color
+                    if (menustringCharArray[i].ToString() == "(")   // NICE make this method compacter
                     {
-                        Color.SetColor(aColorMenuOption);
-                        Console.Write(menustringCharArray[i]);
+                        Console.Write(menustringCharArray[i]);      // print the "("
                         i++;
-                    } while (menustringCharArray[i].ToString() != ")");
+                        do                                          // until ")" is found print every char in color
+                        {
+                            Color.SetColor(aColorMenuOption);
+                            Console.Write(menustringCharArray[i]);
+                            i++;
+                        } while (menustringCharArray[i].ToString() != ")");
 
+                        Color.SetColor(Color.TextColors.DefaultForeGround);
+                    }
                     Color.SetColor(Color.TextColors.DefaultForeGround);
+                    Console.Write(menustringCharArray[i]);
                 }
-                Color.SetColor(Color.TextColors.DefaultForeGround);
-                Console.Write(menustringCharArray[i]);
             }
         }
 
         public static void PrintOnConsole(string aString, int left, int top, Color.TextColors aColor)  
         {
+            
             Color.SetColor(aColor);
             int currentCursorPosTop = Console.CursorTop;                            // store current cursor pos
             int currentCursorPosLeft = Console.CursorLeft;
-            Console.SetCursorPosition(left, top);
-            Console.Write(aString);
-            Console.SetCursorPosition(currentCursorPosLeft, currentCursorPosTop);
+
+            lock (ConsoleLock)
+            {
+                if (Console.CursorTop <= Program.windowWidth - 1)
+                {
+                    Console.SetCursorPosition(left, top);
+                    Console.Write(aString);
+                }
+                Console.SetCursorPosition(currentCursorPosLeft, currentCursorPosTop);
+            }
         }
 
         public static void SystemMessage(string aString, bool aWarning)     
@@ -95,11 +115,43 @@ namespace BakeryConsole
         }
 
         public static void EventPrint(Object state)
-        {            
-            string a = "(System): " + state;
-            PrintOnConsole(a.PadRight(79, ' '), 0, 34, Color.TextColors.SystemMessage);
-            Thread.Sleep(WarningLength);
-            PrintOnConsole("".PadRight(79, ' '), 0, 34, Color.TextColors.Defaults);
+        {
+
+            var aThread = new Thread(EventTask) { IsBackground = true };
+            aThread.Start();
+
+            
+            void EventTask()
+            {
+                    string a = "(System): " + state;
+                    lock (ConsoleLock)
+                    {
+                        PrintOnConsole(a.PadRight(79, ' '), 0, 34, Color.TextColors.SystemMessage);
+                    }
+                    Thread.Sleep(WarningLength);
+
+                    lock (ConsoleLock)
+                    {
+                        PrintOnConsole("".PadRight(79, ' '), 0, 34, Color.TextColors.Defaults);
+                    }
+            }
+
+        }
+
+        public static void SetCursorPosition(int aCursorColumn, int aCursorRow)
+        {
+            lock (ConsoleLock)
+            {
+                try
+                {
+                    Console.CursorTop = aCursorRow;
+                    Console.CursorLeft = aCursorColumn;
+                }
+                catch (Exception e)
+                {
+                    SystemMessage("Exception while setting cursor {e}".PadRight(79,' '), true);
+                }
+            }
         }
 
         public static void StoreCursorPos(out int currentCursorPosTop, out int currentCursorPosLeft)
@@ -130,7 +182,7 @@ namespace BakeryConsole
             
             StringBuilder inputStringbuilder = new StringBuilder();        // stringbuilder to append the single input characters to
             ConsoleKeyInfo inp = new ConsoleKeyInfo();
-            int indexInStringbuilder = 1;
+            int indexInStringbuilder = 1;                                   // where is the cursor in het stringbuilder
             string returnString;
             bool checkedValidLength = false;
 
@@ -145,7 +197,7 @@ namespace BakeryConsole
             {
                 inputStringbuilder.Append(fieldValue);
                 indexInStringbuilder = inputStringbuilder.Length + 1;      // cursor 1 position after string
-                Checkfieldlength(lengthInputField, indexInStringbuilder - 1);
+                //Checkfieldlength(lengthInputField, indexInStringbuilder - 1);
                 PrintInputString(showInput, false, inputStringbuilder, Color.TextColors.Input);
             }
             do
@@ -158,58 +210,61 @@ namespace BakeryConsole
                     if (checkinputString.Contains(inp.KeyChar.ToString()) & indexInStringbuilder <= lengthInputField)         // only accept valid characters other than functions
 
                     {
-                        
                         //Checkfieldlength(lengthInputField, indexInStringbuilder - 1);
-
-                        if (toUpper)
+                        if (indexInStringbuilder <= lengthInputField)
                         {
-                            tempString = inp.KeyChar.ToString().ToUpper();
-                        }
-                        else
-                        {
-                            tempString = inp.KeyChar.ToString();
-                        }
-
-                      if (inputStringbuilder.Length < indexInStringbuilder)                               // append when cursor is the end
-                        {
-                            inputStringbuilder.Append(tempString);
-                            indexInStringbuilder++;                                                       // index embedded in if{} because 
-                        }                                                                                 // input might not be valid with insert =>
-                        else
-                        {
-                            if (inputStringbuilder.Length < lengthInputField)                            // Insert only as long as not max inputlenght
+                            if (toUpper)
                             {
-                                inputStringbuilder.Insert(indexInStringbuilder - 1, tempString);
-                                indexInStringbuilder++;
+                                tempString = inp.KeyChar.ToString().ToUpper();
                             }
                             else
                             {
-                                IO.SystemMessage("Maximum input length", false);
+                                tempString = inp.KeyChar.ToString();
                             }
-                        }
 
-                        Console.SetCursorPosition(lengthQuestionField + 1, cursorTop);      // position cursor at start inputfield
+                            if (inputStringbuilder.Length < indexInStringbuilder)                                   // append when cursor is the end
+                            {
+                                inputStringbuilder.Append(tempString);
+                                indexInStringbuilder++;                                                             // index embedded in if{} because 
+                            }                                                                                       // input might not be valid with insert =>
+                            else
+                            {
+                                if (inputStringbuilder.Length < lengthInputField)                                   // Insert only as long as not max inputlenght
+                                {
+                                    inputStringbuilder.Insert(indexInStringbuilder - 1, tempString);
+                                    indexInStringbuilder++;
+                                }
+                                else
+                                {
+                                    IO.SystemMessage("Maximum input length", false);
+                                }
+                            } 
+                        }else
+                        {
+                            IO.SystemMessage("Maximum input length", false);
+                        }
+                        IO.SetCursorPosition(lengthQuestionField + 1, cursorTop);                               // position cursor at start inputfield
                         PrintInputString(showInput, false, inputStringbuilder,Color.TextColors.Input);
-                        Console.SetCursorPosition(lengthQuestionField + indexInStringbuilder, cursorTop);
+                        IO.SetCursorPosition(lengthQuestionField + indexInStringbuilder, cursorTop);
                     }
                     else if (inp.Key == ConsoleKey.Backspace & indexInStringbuilder > 1)                        //BACKSPACE
                     {
                         indexInStringbuilder--;
                         Checkfieldlength(lengthInputField, indexInStringbuilder - 1);
                         inputStringbuilder.Remove(indexInStringbuilder - 1, 1);
-                        Console.SetCursorPosition(lengthQuestionField + 1, cursorTop);
+                        IO.SetCursorPosition(lengthQuestionField + 1, cursorTop);
                         PrintInputString(showInput, true, inputStringbuilder,Color.TextColors.Input);
-                        Console.SetCursorPosition(lengthQuestionField + indexInStringbuilder, cursorTop);
+                        IO.SetCursorPosition(lengthQuestionField + indexInStringbuilder, cursorTop);
                     }
                     else if (inp.Key == ConsoleKey.Delete)                                                      //DELETE
                     {
                         if (inputStringbuilder.Length > 0 & indexInStringbuilder <= inputStringbuilder.Length)
                         {
                             inputStringbuilder.Remove(indexInStringbuilder - 1, 1);
-                            Console.SetCursorPosition(lengthQuestionField + 1, cursorTop);
+                            IO.SetCursorPosition(lengthQuestionField + 1, cursorTop);
                             PrintInputString(showInput, true, inputStringbuilder,Color.TextColors.Input);
                             IO.PrintOnConsole(indexInStringbuilder.ToString() + " " + inputStringbuilder + "       ", 0, 0,Color.TextColors.Defaults);
-                            Console.SetCursorPosition(lengthQuestionField + indexInStringbuilder, cursorTop);
+                            IO.SetCursorPosition(lengthQuestionField + indexInStringbuilder, cursorTop);
                         }
                     }
                     else if (inp.Key == ConsoleKey.LeftArrow ||                                                 // move cursor
@@ -220,22 +275,22 @@ namespace BakeryConsole
                         if (inp.Key == ConsoleKey.LeftArrow & indexInStringbuilder > 1)
                         {
                             indexInStringbuilder--;         // one to the left
-                            Console.SetCursorPosition(lengthQuestionField + indexInStringbuilder, cursorTop);
+                            IO.SetCursorPosition(lengthQuestionField + indexInStringbuilder, cursorTop);
                         }
                         else if (inp.Key == ConsoleKey.RightArrow & indexInStringbuilder <= inputStringbuilder.Length)
                         {
                             indexInStringbuilder++;
-                            Console.SetCursorPosition(lengthQuestionField + indexInStringbuilder, cursorTop);
+                            IO.SetCursorPosition(lengthQuestionField + indexInStringbuilder, cursorTop);
                         }
                         else if (inp.Key == ConsoleKey.Home)                                                    // HOME
                         {
                             indexInStringbuilder = 1;
-                            Console.SetCursorPosition(lengthQuestionField + indexInStringbuilder, cursorTop);
+                            IO.SetCursorPosition(lengthQuestionField + indexInStringbuilder, cursorTop);
                         }
                         else if (inp.Key == ConsoleKey.End & inputStringbuilder.Length > 0)                     // END
                         {
                             indexInStringbuilder = inputStringbuilder.Length + 1;
-                            Console.SetCursorPosition(lengthQuestionField + indexInStringbuilder, cursorTop);
+                            IO.SetCursorPosition(lengthQuestionField + indexInStringbuilder, cursorTop);
                         }
 
                         IO.PrintOnConsole(indexInStringbuilder.ToString() + " " + inputStringbuilder + "       ", 0, 0,Color.TextColors.Defaults);
@@ -248,7 +303,7 @@ namespace BakeryConsole
                 
                 } while (inp.Key != ConsoleKey.Enter & inp.Key != ConsoleKey.Escape);
 
-                if (inputStringbuilder.Length >= minInputLength)
+                if (inputStringbuilder.Length >= minInputLength)//TODO obsolete
                 {
                     checkedValidLength = true;
                     IO.PrintOnConsole("                             ", 0, 0,Color.TextColors.Defaults);
@@ -270,7 +325,7 @@ namespace BakeryConsole
             }
 
             // print inputString to field in case anything was trimmed
-            Console.SetCursorPosition(lengthQuestionField + 1, cursorTop);
+            IO.SetCursorPosition(lengthQuestionField + 1, cursorTop);
             if (showInput)                                                  // not with password
             {
                 Color.SetColor(Color.TextColors.Text);
@@ -279,7 +334,7 @@ namespace BakeryConsole
 
             if (lineFeed) { Console.WriteLine(); }
 
-            Checkfieldlength(lengthInputField, 1);                          // reset warning incase cursor was at last position before 'Enter'
+            //Checkfieldlength(lengthInputField, 1);                          // reset warning incase cursor was at last position before 'Enter'
 
             Color.SetColor(Color.TextColors.Text);
             return returnString;
@@ -295,30 +350,35 @@ namespace BakeryConsole
             var inactiveColor = (active) ? Color.TextColors.Text : Color.TextColors.Inactive;
 
             Color.SetColor(Color.TextColors.DefaultForeGround);
-            Console.Write(displayString.PadRight(lengthQuestionField, ' '));
-            if (fieldValue == "")
+            lock (ConsoleLock)
             {
-                //Console.Write("|".PadRight(lengthInputField + 1, ' ') +            // print input field boundaries
-                //"|".PadRight(Program.windowWidth - lengthQuestionField - lengthInputField + 2, ' ')); // fillout with " " to edge
 
-                Console.Write("|".PadRight(lengthInputField + 1, ' ') + "|");            // print input field boundaries
+                Console.Write(displayString.PadRight(lengthQuestionField, ' '));
+                if (fieldValue == "")
+                {
+                    //Console.Write("|".PadRight(lengthInputField + 1, ' ') +            // print input field boundaries
+                    //"|".PadRight(Program.windowWidth - lengthQuestionField - lengthInputField + 2, ' ')); // fillout with " " to edge
 
-                if (Debugger.IsAttached)
-                {
-                    Console.Write("".PadRight(Program.windowWidth - lengthQuestionField - lengthInputField - 2, 'X')); // fillout with " " to edge
-                }else
-                {
-                    Console.Write("".PadRight(Program.windowWidth - lengthQuestionField - lengthInputField - 2, ' '));
+                    Console.Write("|".PadRight(lengthInputField + 1, ' ') + "|");            // print input field boundaries
+
+                    if (Debugger.IsAttached)
+                    {
+                        Console.Write("".PadRight(Program.windowWidth - lengthQuestionField - lengthInputField - 2, 'X')); // fillout with " " to edge
+                    }
+                    else
+                    {
+                        Console.Write("".PadRight(Program.windowWidth - lengthQuestionField - lengthInputField - 2, ' '));
+                    }
+
                 }
-
+                else                                                                         // if an existing field value is passed on, print that
+                {
+                    Console.Write("|");
+                    Color.SetColor(inactiveColor); Console.Write(fieldValue.PadRight(lengthInputField, ' '));
+                    Color.SetColor(Color.TextColors.DefaultForeGround); Console.Write("|");
+                }
             }
-            else                                                                         // if an existing field value is passed on, print that
-            {
-                Console.Write("|");
-                Color.SetColor(inactiveColor); Console.Write(fieldValue.PadRight(lengthInputField, ' '));
-                Color.SetColor(Color.TextColors.DefaultForeGround); Console.Write("|");
-            }
-            Console.SetCursorPosition(lengthQuestionField + 1, cursorTop);                // reset cursorposition to beginning of the input field
+            IO.SetCursorPosition(lengthQuestionField + 1, cursorTop);                // reset cursorposition to beginning of the input field
             Color.SetColor(Color.TextColors.DefaultForeGround);
         }
 
@@ -342,7 +402,6 @@ namespace BakeryConsole
                         IO.SystemMessage($"Parsed date string succesfully to {parsedDateHelpstring:dd-MM-yyyy}", false);
                     }
                 }
-            
             }
             else
             {
@@ -373,14 +432,16 @@ namespace BakeryConsole
             }
         }
 
-        private static void PrintInputString(bool showInput, bool deltrailspace, StringBuilder inputStringbuilder, Color.TextColors aColor)
+        private static void PrintInputString(bool showInput, bool deltrailspace, StringBuilder inputStringbuilder, Color.TextColors aColor)         //TODO a ccept cursorposition & refactor
         {
-            Color.SetColor(aColor);
+            lock (ConsoleLock)
+            {
+                Color.SetColor(aColor);
+                if (showInput) { Console.Write(inputStringbuilder); }
+                else { Console.Write("".PadRight(inputStringbuilder.Length, '*')); }
 
-            if (showInput)     { Console.Write(inputStringbuilder); } 
-            else               { Console.Write("".PadRight(inputStringbuilder.Length, '*')); }
-            
-            if (deltrailspace) { Console.Write(" "); }
+                if (deltrailspace) { Console.Write(" "); }
+            }
         }
 
         // Generic JSON routines
@@ -413,12 +474,15 @@ namespace BakeryConsole
             return getaListFromJSON;
         }
 
-        public static void WriteToFile<T>(string aFilename, List<T> aListOfObjects) where T : class
+        public static void WriteToFile<T>(string aFilename, List<T> aListOfObjects, string aConsoleMessage) where T : class
         {
             try
             {
                 string jsonString = JsonConvert.SerializeObject(aListOfObjects, Formatting.Indented);
                 File.WriteAllText(aFilename, jsonString);
+                aConsoleMessage = (aConsoleMessage == "") ? "Writing changes to file " : aConsoleMessage;
+                IO.SystemMessage($"{aConsoleMessage} \"{aFilename}\"", false);
+                
             }
             catch (Exception e)
             {
