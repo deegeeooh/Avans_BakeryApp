@@ -254,13 +254,14 @@ namespace BakeryConsole
 
                         if (recordsInList > 0) // & Person.CheckIfActive(peopleList[recordIndex - 1], recordIndex)) // some record is being displayed
                         {
-                            Console.SetCursorPosition(cursorLeft, cursorTop + 1);           // set cursor on first inputfield after ID
+                                      // set cursor on first inputfield after ID
                                 
                             switch (classSelector)      //TODO: fix check on active record
                             {
                                 case ClassSelect.Person:
                                     if (peopleList[recordIndex - 1].Active) 
                                     {
+                                        Console.SetCursorPosition(cursorLeft, cursorTop + 1);
                                         peopleList.Insert(recordIndex - 1,                      // insert record at current position list
                                              new Person(peopleList[recordIndex - 1], false));  // (recordindex starts @ 1, list index @ 0
                                         peopleList.RemoveAt(recordIndex);                       // remove next entry (this was the old record)
@@ -273,6 +274,7 @@ namespace BakeryConsole
                                 case ClassSelect.Employee:
                                     if (employeeList[recordIndex - 1].Active)
                                     {
+                                        Console.SetCursorPosition(cursorLeft, cursorTop + 1);
                                         employeeList.Insert(recordIndex - 1,
                                             new Employee(employeeList[recordIndex - 1], false));
                                         employeeList.RemoveAt(recordIndex);                       
@@ -289,6 +291,7 @@ namespace BakeryConsole
 
                                     if (productList[recordIndex - 1].Active)
                                     {
+                                        Console.SetCursorPosition(cursorLeft, cursorTop + 1);
                                         productList.Insert(recordIndex - 1,
                                             new Product(productList[recordIndex - 1], false));
                                         productList.RemoveAt(recordIndex);
@@ -302,7 +305,7 @@ namespace BakeryConsole
                             IO.SystemMessage("Record has been updated in file", false);
                         }
                         break;
-
+                    case ConsoleKey.I:
                     case ConsoleKey.Insert:                                           
 
                                                               // increase number of records
@@ -524,7 +527,7 @@ namespace BakeryConsole
                 }
 
 
-            } while (inputKey.Key != ConsoleKey.Home);
+            } while (inputKey.Key != ConsoleKey.Home & inputKey.Key != ConsoleKey.Q);
         }
 
         private static string  BuildZoekString(StringBuilder zoekstring, int cursorTop) 
