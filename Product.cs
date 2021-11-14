@@ -64,7 +64,7 @@ namespace BakeryConsole
             while (ExpirationDate != null & ExpirationDate.CompareTo(ProductionDate) <= 0)
                 
             {
-                Console.SetCursorPosition(0, Console.CursorTop - 1);
+                IO.SetCursorPosition(0, Console.CursorTop - 1);
                 IO.SystemMessage("Expiration date should be after Production date", false);
                 ExpirationDate = IO.ParseToDateTime(IO.GetInput(fieldNames[4], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[4, 1], false, true, true, true, true, fieldProperties[4, 2]), false);
             }
@@ -120,32 +120,15 @@ namespace BakeryConsole
 
                 while (ExpirationDate != null & ExpirationDate.CompareTo(ProductionDate) <= 0)
                 {
-                    Console.SetCursorPosition(0, Console.CursorTop - 1);
+                    IO.SetCursorPosition(0, Console.CursorTop - 1);
                     IO.SystemMessage("Expiration date should be after Production date", false);
                     ExpirationDate = IO.ParseToDateTime(IO.GetInput(fieldNames[4], aProduct.ExpirationDate.ToString("dd/MM/yyyy"), checkinputStringAlpha, lengthQuestionField, fieldProperties[4, 1], false, true, true, true, true, fieldProperties[4, 2]), false);
                 }
                 string getSalesPrice = IO.GetInput(fieldNames[5], aProduct.SalesPrice.ToString(format: "F2"), checkinputStringNum, lengthQuestionField, fieldProperties[5, 1], false, true, true, true, true, fieldProperties[5, 2]);
-                SalesPrice = (getSalesPrice!="") ? float.Parse(getSalesPrice) : 0;
+                          SalesPrice = (getSalesPrice!="") ? float.Parse(getSalesPrice) : 0;
 
-                //if (getSalesPrice != "") 
-                //{
-                //    SalesPrice = float.Parse(getSalesPrice);
-                //}else
-                //{
-                //    SalesPrice = 0;
-                //}
-
-                string getCostPrice = IO.GetInput(fieldNames[6], aProduct.CostPrice.ToString(format: "F2"), checkinputStringNum, lengthQuestionField, fieldProperties[6, 1], false, true, true, true, true, fieldProperties[6, 2]);
-                CostPrice = (getCostPrice != "") ? float.Parse(getCostPrice) : 0;
-
-
-                //if (getCostPrice != "")
-                //{
-                //    CostPrice = float.Parse(getCostPrice);
-                //}else
-                //{
-                //    CostPrice = 0;
-                //}
+                string getCostPrice  = IO.GetInput(fieldNames[6], aProduct.CostPrice.ToString(format: "F2"), checkinputStringNum, lengthQuestionField, fieldProperties[6, 1], false, true, true, true, true, fieldProperties[6, 2]);
+                           CostPrice = (getCostPrice != "") ? float.Parse(getCostPrice) : 0;
                 
                 Stock =               Int16.Parse(IO.GetInput(fieldNames[7], aProduct.Stock.ToString(), checkinputStringNum, lengthQuestionField, fieldProperties[7, 1], false, true, true, true, true, fieldProperties[7, 2]));
                 ID = ConstructID(this);
@@ -183,18 +166,7 @@ namespace BakeryConsole
         {
             //Console.WriteLine("Don't be a dick Jason dear"); Console.ReadKey();
         }
-
-        //private static void IfActive(Product aProduct, int aCursor)
-        //{
-        //    if (!aProduct.Active)
-        //    {
-        //        IO.PrintOnConsole(" *Inactive* ", lengthQuestionField + fieldProperties[0, 1] + 5, aCursor, Color.TextColors.Inverted);
-        //    }
-        //    else
-        //    {
-        //        IO.PrintOnConsole("".PadRight(12, ' '), lengthQuestionField + fieldProperties[0, 1] + 5, aCursor, Color.TextColors.Defaults);
-        //    }
-        //}
+        
         private string ConstructID(Product aProduct)
         {
             string a = aProduct.RecordCounter.ToString("D5");            // make a string consisting of 5 decimals
@@ -211,43 +183,6 @@ namespace BakeryConsole
             }
             return b + a;
         }
-        //public static void CheckMutations(Product aProduct, string old, string newVal, string fieldName, int existingNumberOfMutations)
-        //{
-        //    if (old != newVal)
-        //    {
-        //        if (aProduct.Mutations == null)
-        //        {
-        //            aProduct.Mutations = new List<Mutation>();
-        //        }
-
-        //        Mutation newMutation = new Mutation(existingNumberOfMutations + 1,
-        //                                   DateTime.Now,
-        //                                   fieldName,
-        //                                   old,
-        //                                   "",                            // placeholder because:
-        //                                   //newVal.Replace(old, ""),     // TODO: old cannot be empty, throws exception
-        //                                   newVal);
-        //        aProduct.Mutations.Add(newMutation);                      // needs object reference when = null;
-        //    }
-        //}
-        //public static void SetTotalRecords(int aRecord)
-        //{
-        //    totalRecords = aRecord;
-        //}
-        //public static void ToggleDeletionFlag(Product aProduct, int aRecordnumber)
-        //{
-        //    bool flagToggle = aProduct.Active ? false : true;
-        //    aProduct.Active = flagToggle;
-            
-        //    if (aProduct.Active)
-        //    {
-        //        IO.SystemMessage("Record has been set to Active", false);
-        //    }
-        //    else
-        //    {
-        //        IO.SystemMessage("Record has been marked for Deletion", false);
-        //    }
-        //}
 
     }
 }
