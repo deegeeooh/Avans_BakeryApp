@@ -95,7 +95,7 @@ namespace BakeryConsole
         }
 
         public static void EventPrint(Object state)
-        {
+        {            
             string a = "(System): " + state;
             PrintOnConsole(a.PadRight(79, ' '), 0, 34, Color.TextColors.SystemMessage);
             Thread.Sleep(WarningLength);
@@ -154,7 +154,7 @@ namespace BakeryConsole
                 {
                     inp = Console.ReadKey(true);                            // read 1 key, don't display the readkey input (true)
                     string tempString;
-                    IO.PrintOnConsole(indexInStringbuilder.ToString() + " " + inputStringbuilder + lengthInputField.ToString()+ "      ", 0, 0, Color.TextColors.Defaults);
+                    IO.PrintOnConsole(indexInStringbuilder.ToString() + " " + inputStringbuilder + "  " + lengthInputField.ToString() + "      ", 0, 0, Color.TextColors.Defaults);
                     if (checkinputString.Contains(inp.KeyChar.ToString()) & indexInStringbuilder <= lengthInputField)         // only accept valid characters other than functions
 
                     {
@@ -179,7 +179,7 @@ namespace BakeryConsole
                         {
                             if (inputStringbuilder.Length < lengthInputField)                            // Insert only as long as not max inputlenght
                             {
-                                inputStringbuilder.Insert(indexInStringbuilder - 2, tempString);
+                                inputStringbuilder.Insert(indexInStringbuilder - 1, tempString);
                                 indexInStringbuilder++;
                             }
                             else
@@ -244,7 +244,7 @@ namespace BakeryConsole
                     {                                                                        // since we already tested on valid input
                         IO.SystemMessage("Maximum input length", false);                     // and field length in first if statement
                     }
-                    IO.PrintOnConsole(indexInStringbuilder.ToString() + " " + inputStringbuilder + lengthInputField.ToString() + "      ", 0, 0, Color.TextColors.Defaults);
+                    IO.PrintOnConsole(indexInStringbuilder.ToString() + " " + inputStringbuilder + "  "+  lengthInputField.ToString() + "      ", 0, 0, Color.TextColors.Defaults);
                 
                 } while (inp.Key != ConsoleKey.Enter & inp.Key != ConsoleKey.Escape);
 
@@ -302,7 +302,15 @@ namespace BakeryConsole
                 //"|".PadRight(Program.windowWidth - lengthQuestionField - lengthInputField + 2, ' ')); // fillout with " " to edge
 
                 Console.Write("|".PadRight(lengthInputField + 1, ' ') + "|");            // print input field boundaries
-                Console.Write("".PadRight(Program.windowWidth - lengthQuestionField - lengthInputField - 2, 'X')); // fillout with " " to edge
+
+                if (Debugger.IsAttached)
+                {
+                    Console.Write("".PadRight(Program.windowWidth - lengthQuestionField - lengthInputField - 2, 'X')); // fillout with " " to edge
+                }else
+                {
+                    Console.Write("".PadRight(Program.windowWidth - lengthQuestionField - lengthInputField - 2, ' '));
+                }
+
             }
             else                                                                         // if an existing field value is passed on, print that
             {
@@ -313,6 +321,7 @@ namespace BakeryConsole
             Console.SetCursorPosition(lengthQuestionField + 1, cursorTop);                // reset cursorposition to beginning of the input field
             Color.SetColor(Color.TextColors.DefaultForeGround);
         }
+
 
         public static DateTime ParseToDateTime(string aDateString, bool checkAge)
 
