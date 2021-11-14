@@ -17,20 +17,22 @@ namespace BakeryConsole
             WarningLength = aValueInMs;
         }
 
-        public static void DisplayMenu(string title, string menuString, Color.TextColors aColorMenuOption)
+        public static void DisplayMenu(string title, string menuString, Color.TextColors aColorMenuOption)                  //Cleanup
         {
-            Console.SetWindowSize(Program.windowWidth, Program.windowHeight);
-            Console.Clear();
+            
             //PrintOnConsole("\n=".PadRight(80, '='), 0,Console.CursorTop, Color.TextColors.Text);
             lock (ConsoleLock)
             {
+                Color.SetColor(Color.TextColors.Defaults);
+                Console.SetWindowSize(Program.windowWidth, Program.windowHeight);
+                Console.Clear();
+
                 Color.SetColor(Color.TextColors.Text);
                 Console.Write("\n" + "=".PadRight(80, '='));
                 Color.SetColor(Color.TextColors.Title);
                 Console.Write("Bakker Vlaaieboer & Zn.");
                 Color.SetColor(Color.TextColors.Text);
                 Console.Write("{0:f}".PadLeft(28, ' '), DateTime.Now); Console.Write("\n");
-
 
                 if (Login.validPassword)
                 {
@@ -92,22 +94,22 @@ namespace BakeryConsole
 
         public static void PrintOnConsole(string aString, int left, int top, Color.TextColors aColor)  
         {
-            
-            Color.SetColor(aColor);
-            int currentCursorPosTop = Console.CursorTop;                            // store current cursor pos
-            int currentCursorPosLeft = Console.CursorLeft;
-
             lock (ConsoleLock)
             {
-                if (Console.CursorTop <= Program.windowWidth - 1)
+                Color.SetColor(aColor);
+                int currentCursorPosTop = Console.CursorTop;                            // store current cursor pos
+                int currentCursorPosLeft = Console.CursorLeft;
                 {
-                    Console.SetCursorPosition(left, top);
-                    Console.Write(aString);
-                }
-                Console.SetCursorPosition(currentCursorPosLeft, currentCursorPosTop);
+                    if (Console.CursorTop <= Program.windowHeight - 1)
+                    {
+                        Console.SetCursorPosition(left, top);
+                        Console.Write(aString);
+                    }
+                    Console.SetCursorPosition(currentCursorPosLeft, currentCursorPosTop);
+                } 
             }
         }
-
+        
         public static void SystemMessage(string aString, bool aWarning)     
         {
             Color.SetWarningColor(aWarning);
@@ -116,11 +118,8 @@ namespace BakeryConsole
 
         public static void EventPrint(Object state)
         {
-
             var aThread = new Thread(EventTask) { IsBackground = true };
             aThread.Start();
-
-            
             void EventTask()
             {
                     string a = "(System): " + state;
@@ -129,13 +128,11 @@ namespace BakeryConsole
                         PrintOnConsole(a.PadRight(79, ' '), 0, 34, Color.TextColors.SystemMessage);
                     }
                     Thread.Sleep(WarningLength);
-
                     lock (ConsoleLock)
                     {
                         PrintOnConsole("".PadRight(79, ' '), 0, 34, Color.TextColors.Defaults);
                     }
             }
-
         }
 
         public static void SetCursorPosition(int aCursorColumn, int aCursorRow)
@@ -204,9 +201,9 @@ namespace BakeryConsole
             {
                 do
                 {
+                    IO.PrintOnConsole((indexInStringbuilder.ToString() + " " + inputStringbuilder.ToString()).PadRight(79, ' '), 0, 0, Color.TextColors.Defaults);
                     inp = Console.ReadKey(true);                            // read 1 key, don't display the readkey input (true)
                     string tempString;
-                    IO.PrintOnConsole(indexInStringbuilder.ToString() + " " + inputStringbuilder + "  " + lengthInputField.ToString() + "      ", 0, 0, Color.TextColors.Defaults);
                     if (checkinputString.Contains(inp.KeyChar.ToString()) & indexInStringbuilder <= lengthInputField)         // only accept valid characters other than functions
 
                     {
@@ -293,13 +290,13 @@ namespace BakeryConsole
                             IO.SetCursorPosition(lengthQuestionField + indexInStringbuilder, cursorTop);
                         }
 
-                        IO.PrintOnConsole(indexInStringbuilder.ToString() + " " + inputStringbuilder + "       ", 0, 0,Color.TextColors.Defaults);
+                       // IO.PrintOnConsole(indexInStringbuilder.ToString() + " " + inputStringbuilder + "       ", 0, 0,Color.TextColors.Defaults);
                     }
                     else if (checkinputString.Contains(inp.KeyChar.ToString()))              // valid input but end of field 
                     {                                                                        // since we already tested on valid input
                         IO.SystemMessage("Maximum input length", false);                     // and field length in first if statement
                     }
-                    IO.PrintOnConsole(indexInStringbuilder.ToString() + " " + inputStringbuilder + "  "+  lengthInputField.ToString() + "      ", 0, 0, Color.TextColors.Defaults);
+                    //IO.PrintOnConsole(indexInStringbuilder.ToString() + " " + inputStringbuilder + "  "+  lengthInputField.ToString() + "      ", 0, 0, Color.TextColors.Defaults);
                 
                 } while (inp.Key != ConsoleKey.Enter & inp.Key != ConsoleKey.Escape);
 
