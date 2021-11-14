@@ -33,15 +33,18 @@ namespace BakeryConsole
         {
             //totalRecords++;
             //RecordCounter = totalRecords;
-            JobTitle    = IO.GetInput(fieldNames[0],                    "", checkinputStringAlpha, lengthQuestionField, fieldProperties[0, 1], false, true, true, true, true,  fieldProperties[0, 2]);
-            DateJoined  = IO.ParseToDateTime(IO.GetInput(fieldNames[1], "", checkinputStringDate,  lengthQuestionField, fieldProperties[1, 1], false, true, true, false, true, fieldProperties[1, 2]), false);
-            DateExit    = IO.ParseToDateTime(IO.GetInput(fieldNames[2], "", checkinputStringDate,  lengthQuestionField, fieldProperties[2, 1], false, true, true, false, true, fieldProperties[2, 2]), false);
-            Salary      = Int32.Parse(IO.GetInput(fieldNames[3],        "", checkinputStringNum,   lengthQuestionField, fieldProperties[3, 1], true, true, true, true, true,   fieldProperties[3, 2]));
+            JobTitle         = IO.GetInput(fieldNames[0],                    "", checkinputStringAlpha, lengthQuestionField, fieldProperties[0, 1], false, true, true, true, true,  fieldProperties[0, 2]);
+            DateJoined       = IO.ParseToDateTime(IO.GetInput(fieldNames[1], "", checkinputStringDate,  lengthQuestionField, fieldProperties[1, 1], false, true, true, false, true, fieldProperties[1, 2]), false);
+            DateExit         = IO.ParseToDateTime(IO.GetInput(fieldNames[2], "", checkinputStringDate,  lengthQuestionField, fieldProperties[2, 1], false, true, true, false, true, fieldProperties[2, 2]), false);
+            string getSalary = IO.GetInput(fieldNames[3], "", checkinputStringNum, lengthQuestionField, fieldProperties[3, 1], true, true, true, true, true, fieldProperties[3, 2]);
+            Salary = (getSalary != "") ? Int32.Parse(getSalary) : 0;
+
+            //Salary      = Int32.Parse(IO.GetInput(fieldNames[3],        "", checkinputStringNum,   lengthQuestionField, fieldProperties[3, 1], true, true, true, true, true,   fieldProperties[3, 2]));
             // SickDays    = Int32.Parse(IO.GetInput(empFieldnames[4],        "", checkinputStringNum,   lengthQuestionField, empFieldProp[4, 1], true, true, true, true, true,   empFieldProp[4, 2]));
             IsEmployee  = true;
             
-            //CheckMutations(this, " ", "[Created:]", 1);          // create a single mutation to indicate creation datestamp
-
+            
+            //CheckMutations(this, " ", "[Created:]", "", 0);          // create a single mutation to indicate creation datestamp
         }
 
         public Employee(bool clearForm) : base (clearForm)
@@ -61,17 +64,17 @@ namespace BakeryConsole
             if (!displayOnly)
             {
 
-                JobTitle    = IO.GetInput(fieldNames[0], anEmployee.JobTitle, checkinputStringAlpha, lengthQuestionField, fieldProperties[0, 1], false, true, true, true, true, fieldProperties[0, 2]);
-                DateJoined  = IO.ParseToDateTime(IO.GetInput(fieldNames[1], anEmployee.DateJoined.ToString("dd/MM/yyyy"), checkinputStringDate, lengthQuestionField, fieldProperties[1, 1], false, true, true, false, true, fieldProperties[1, 2]), false);
-                DateExit    = IO.ParseToDateTime(IO.GetInput(fieldNames[2], anEmployee.DateExit.ToString("dd/MM/yyyy"), checkinputStringDate, lengthQuestionField, fieldProperties[2, 1], false, true, true, false, true, fieldProperties[2, 2]), false);
-                Salary      = Int32.Parse(IO.GetInput(fieldNames[3], anEmployee.Salary.ToString(), checkinputStringNum, lengthQuestionField, fieldProperties[3, 1], true, true, true, true, true, fieldProperties[3, 2]));
+                JobTitle = IO.GetInput(fieldNames[0], anEmployee.JobTitle, checkinputStringAlpha, lengthQuestionField, fieldProperties[0, 1], false, true, true, true, true, fieldProperties[0, 2]);
+                DateJoined = IO.ParseToDateTime(IO.GetInput(fieldNames[1], anEmployee.DateJoined.ToString("dd/MM/yyyy"), checkinputStringDate, lengthQuestionField, fieldProperties[1, 1], false, true, true, false, true, fieldProperties[1, 2]), false);
+                DateExit = IO.ParseToDateTime(IO.GetInput(fieldNames[2], anEmployee.DateExit.ToString("dd/MM/yyyy"), checkinputStringDate, lengthQuestionField, fieldProperties[2, 1], false, true, true, false, true, fieldProperties[2, 2]), false);
+                Salary = Int32.Parse(IO.GetInput(fieldNames[3], anEmployee.Salary.ToString(), checkinputStringNum, lengthQuestionField, fieldProperties[3, 1], true, true, true, true, true, fieldProperties[3, 2]));
                 // SickDays    = Int32.Parse(IO.GetInput(empFieldnames[4], anEmployee.SickDays.ToString(), checkinputStringNum, lengthQuestionField, empFieldProp[4, 1], true, true, true, true, true, empFieldProp[4, 2]));
-                IsEmployee  = true;
+                IsEmployee = true;
 
-                if (anEmployee.Mutations == null)
-                {
-                    anEmployee.Mutations = new List<Mutation>();
-                }
+                //if (anEmployee.Mutations == null)
+                //{
+                //    anEmployee.Mutations = new List<Mutation>();
+                //}
                 this.Mutations = anEmployee.Mutations;
 
                 // check which values changed and store them in the Person.Mutations list
@@ -80,23 +83,23 @@ namespace BakeryConsole
                 CheckMutations(anEmployee, anEmployee.DateJoined.ToString(), this.DateJoined.ToString(), fieldNames[1], anEmployee.Mutations.Count);
                 CheckMutations(anEmployee, anEmployee.DateExit.ToString(), this.DateExit.ToString(), fieldNames[2], anEmployee.Mutations.Count);
                 CheckMutations(anEmployee, anEmployee.Salary.ToString(), this.Salary.ToString(), fieldNames[3], anEmployee.Mutations.Count);
-               // CheckMutations(this, anEmployee.SickDays.ToString(), this.SickDays.ToString(), 5);
+                // CheckMutations(this, anEmployee.SickDays.ToString(), this.SickDays.ToString(), 5);
             }
             else
             {
                 var cursor = Console.CursorTop;
-                
+
                 IO.PrintBoundaries(fieldNames[0], anEmployee.JobTitle, lengthQuestionField, fieldProperties[0, 1], cursor, anEmployee.Active); Console.WriteLine(); cursor++;
                 IO.PrintBoundaries(fieldNames[1], anEmployee.DateJoined.ToString("dd/MM/yyyy"), lengthQuestionField, fieldProperties[1, 1], cursor, anEmployee.Active); Console.WriteLine(); cursor++;
                 IO.PrintBoundaries(fieldNames[2], anEmployee.DateExit.ToString("dd/MM/yyyy"), lengthQuestionField, fieldProperties[2, 1], cursor, anEmployee.Active); Console.WriteLine(); cursor++;
-                IO.PrintBoundaries(fieldNames[3], anEmployee.Salary.ToString(), lengthQuestionField, fieldProperties[3, 1], cursor, anEmployee.Active); Console.WriteLine(); cursor++;
+                IO.PrintBoundaries(fieldNames[3], anEmployee.Salary.ToString().PadLeft(fieldProperties[3, 1],' '), lengthQuestionField, fieldProperties[3, 1], cursor, anEmployee.Active); Console.WriteLine(); cursor++;
                 //IO.PrintBoundaries(empFieldnames[5], anEmployee.SickDays.ToString(), lengthQuestionField, empFieldProp[5, 1], cursor, anEmployee.Active); Console.WriteLine(); cursor++;
                 
             }
         }
 
         [JsonConstructor]                                               // for json, otherwise it will use the default() constructor when deserializing which we don't want here
-        public Employee(string JUST4JSON_DontCall) : base (JUST4JSON_DontCall)
+        public Employee(string JUST4JSON_DontCall) : base(JUST4JSON_DontCall)
         {
             //Console.WriteLine("Don't be a dick Jason dear"); Console.ReadKey();
         }

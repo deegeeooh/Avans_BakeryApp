@@ -184,22 +184,20 @@ namespace BakeryConsole
             int recordIndex   = 1;
             int recordsInList = 0;
 
-            
-
             switch (classSelector)
 
                 {
                 case ClassSelect.Person:
-                    peopleList = IO.PopulateList<Person>(aFilename);
-                    if (peopleList.Count > 0)
+                    peopleList = IO.PopulateList<Person>(aFilename);            // try to read JSON file to list
+                    if (peopleList.Count > 0)                                   // succeeded, there are records
                     {
                         recordsInList = peopleList.Count;
                         Person.SetTotalRecords(recordsInList);
-                        _ = new Person(peopleList[recordIndex - 1], true);
+                        _ = new Person(peopleList[recordIndex - 1], true);      //display first record
                     }
                     else
                     {
-                        _ = new Person(true);                   // display empty input form
+                        _ = new Person(true);                                   // display empty input form
                     }
                     break;
 
@@ -305,13 +303,13 @@ namespace BakeryConsole
                         }
                         break;
 
-                    case ConsoleKey.Insert:         // *** Add New Record *** //                                       
+                    case ConsoleKey.Insert:                                           
 
                                                               // increase number of records
                         Console.SetCursorPosition(cursorLeft, cursorTop);
 
-                        switch (classSelector)
-                        
+                        switch (classSelector)                  // *** ADD NEW RECORD *** //     
+
                         {
                             case ClassSelect.Person:
 
@@ -319,9 +317,9 @@ namespace BakeryConsole
                                 Console.SetCursorPosition(cursorLeft, cursorTop + 1);
                                 peopleList.Add(new Person());                               // call standard constructor
                                 recordsInList++; recordIndex = recordsInList;
-                                Person.SetTotalRecords(recordsInList);                      // update records in class static
+                                //Person.SetTotalRecords(recordsInList);                    // update records in class static
                                 Console.SetCursorPosition(cursorLeft, cursorTop);
-                                _ = new Person(peopleList[recordIndex - 1], true);       // display next record (we update recordindex
+                                _ = new Person(peopleList[recordIndex - 1], true);          // display next record (we update recordindex
                                 IO.WriteToFile(aFilename, peopleList);                      // write to JSON file
                                 break;
 
@@ -329,9 +327,9 @@ namespace BakeryConsole
                                
                                 _ = new Employee(true);
                                 Console.SetCursorPosition(cursorLeft, cursorTop + 1);
-                                employeeList.Add(new Employee());                               // call standard constructor
+                                employeeList.Add(new Employee());                             // call standard constructor
                                 recordsInList++; recordIndex = recordsInList;
-                                Employee.SetTotalRecords(recordsInList);                      // update records in class static
+                                //Employee.SetTotalRecords(recordsInList);                    // update records in class static
                                 Console.SetCursorPosition(cursorLeft, cursorTop);
                                 _ = new Employee(employeeList[recordIndex - 1], true);
                                 IO.WriteToFile(aFilename, employeeList);                      // write to JSON file
@@ -347,7 +345,7 @@ namespace BakeryConsole
                                 Console.SetCursorPosition(cursorLeft, cursorTop + 1);
                                 productList.Add(new Product());                               // call standard constructor
                                 recordsInList++; recordIndex = recordsInList;
-                                Product.SetTotalRecords(recordsInList);                      // update records in class static
+                                //Product.SetTotalRecords(recordsInList);                      // update records in class static
                                 Console.SetCursorPosition(cursorLeft, cursorTop);
                                 _ = new Product(productList[recordIndex - 1], true);
                                 IO.WriteToFile(aFilename, productList);                      // write to JSON file
