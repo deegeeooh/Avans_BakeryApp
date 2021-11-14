@@ -1,4 +1,8 @@
-﻿namespace BakeryConsole
+﻿using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+
+namespace BakeryConsole
 {
     internal class Customer
     {
@@ -19,14 +23,17 @@
         private static int totalRecords = 0;
         //private static string[] personID;
 
-        public int RecordCounter   { get; set; }
-        public string[] PersonID   { get; set; }          // == PersonID
-        public string CompanyName  { get; set; }
-        public string Address      { get; set; }
-        public string Zipcode      { get; set; }
-        public string City         { get; set; }
-        public string Telephone    { get; set; }
-        public string Email        { get; set; }
+        public int RecordCounter            { get; set; }
+        public string ID                    { get; set; }
+        public bool Active                  { get; set; }
+        public List<Mutation> Mutations     { get; set; }
+        public List<Person> Representatives { get; set; }
+        public string CompanyName           { get; set; }
+        public string Address               { get; set; }
+        public string Zipcode               { get; set; }
+        public string City                  { get; set; }
+        public string Telephone             { get; set; }
+        public string Email                 { get; set; }
 
         public Customer()
         {

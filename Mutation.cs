@@ -17,12 +17,12 @@ namespace BakeryConsole
 
         public Mutation(int aCounter, DateTime aDate, string aFieldName, string anOldString, string aChange, string aNewString)
         {
-            RecordCounter = aCounter;
-            MutationDate = aDate;
-            FieldName = aFieldName;
-            OldValue = anOldString;
-            Changes = aChange;
-            NewValue = aNewString;
+            RecordCounter   = aCounter;
+            MutationDate    = aDate;
+            FieldName       = aFieldName;
+            OldValue        = anOldString;
+            Changes         = aChange;
+            NewValue        = aNewString;
         }
     }
 }

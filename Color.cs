@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Newtonsoft.Json;
 
 namespace BakeryConsole
 {
@@ -62,6 +63,12 @@ namespace BakeryConsole
         public Color()                               // reserved for future color sets
         {
 
+        }
+
+        [JsonConstructor]
+        public Color(string JUST4JSON_DontCall)
+        {
+            //Console.WriteLine("Don't be a dick Jason dear"); Console.ReadKey();
         }
 
         public static void InitializeColors()
