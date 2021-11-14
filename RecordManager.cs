@@ -60,6 +60,11 @@ namespace BakeryConsole
             TotalRecords = aRecord;
         }
 
+        public static void ResetRecordCounter()
+        {
+            TotalRecords = 0;
+        }
+
         public static void IfActive<T>(T anInheriter,  int onCursorColumn , int onCursorRow ) where T : RecordManager
         {
             if (!anInheriter.Active)
@@ -71,6 +76,7 @@ namespace BakeryConsole
                 IO.PrintOnConsole("".PadRight(12, ' '), onCursorColumn, onCursorRow, Color.TextColors.Defaults);
             }
         }
+
 
 
 

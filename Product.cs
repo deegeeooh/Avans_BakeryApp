@@ -5,7 +5,7 @@ using System.Globalization;
 
 namespace BakeryConsole
 {
-    class Product : RecordManager     //TODO: finish products
+    class Product : RecordManager     
                         //NICE: create product orders class
     {
         // class variables
@@ -48,6 +48,7 @@ namespace BakeryConsole
         public float SalesPrice         { get; set; }
         public float CostPrice          { get; set; }
         public int Stock                { get; set; }
+
 
 
         public Product() : base ()                                  // Main Constructor, add new Record
@@ -194,7 +195,7 @@ namespace BakeryConsole
         //        IO.PrintOnConsole("".PadRight(12, ' '), lengthQuestionField + fieldProperties[0, 1] + 5, aCursor, Color.TextColors.Defaults);
         //    }
         //}
-        private static string ConstructID(Product aProduct)
+        private string ConstructID(Product aProduct)
         {
             string a = aProduct.RecordCounter.ToString("D5");            // make a string consisting of 5 decimals
             string b;

@@ -54,12 +54,11 @@ namespace BakeryConsole
             // Main Menu Loop
             do
             {
-                //var emp = new Employee();
-                //Console.ReadKey();
-
                 IO.DisplayMenu("Main Menu", "(L)ogin\n(P)eople\n(E)mployees\n(C)ustomers\nPro(D)ucts\n(M)asterdata\n\n(F3-F10) change colors, (F11) reset (F12) save\n\nEnter your choice, Escape to Exit program\n\n", Color.TextColors.MenuSelect);
                 inputKey = Console.ReadKey(true);                    // 'true' | dont'display the input on the console
                 CheckMenuInput();
+                RecordManager.ResetRecordCounter();            // Reset counter to 0 to when switching classes
+
             } while (inputKey.Key != ConsoleKey.Escape);
 
             Console.WriteLine("\n\nYou have been logged out.. Goodbye!");       // De MZZL!
@@ -98,7 +97,7 @@ namespace BakeryConsole
 
             else if (inputKey.Key == ConsoleKey.D & Login.validPassword)                           // Products
             {
-                IO.DisplayMenu("Browse/edit product records", "(A)dd\nArrows to browse\n(Del)ete\n", Color.TextColors.MenuSelect);
+                IO.DisplayMenu("Browse / edit Products", "(Ins)ert to Add\n(Enter)to Edit\n(Del)ete to remove Record\nUse arrow keys to browse\n(Home) Main menu\n\n", Color.TextColors.MenuSelect);
                 BrowseRecords(fileProducts, ClassSelect.Product);
             }
 
@@ -250,6 +249,7 @@ namespace BakeryConsole
 
                 switch (inputKey.Key)
                 {
+                   
                     case ConsoleKey.Enter:          // *** EDIT Record *** //
 
                         if (recordsInList > 0) // & Person.CheckIfActive(peopleList[recordIndex - 1], recordIndex)) // some record is being displayed
@@ -305,10 +305,10 @@ namespace BakeryConsole
                             IO.SystemMessage("Record has been updated in file", false);
                         }
                         break;
+                    
                     case ConsoleKey.I:
                     case ConsoleKey.Insert:                                           
 
-                                                              // increase number of records
                         Console.SetCursorPosition(cursorLeft, cursorTop);
 
                         switch (classSelector)                  // *** ADD NEW RECORD *** //     
@@ -356,13 +356,13 @@ namespace BakeryConsole
 
                                 
                         }
-                                                                                   // set recordindex to last
+                                                                                   
                         UpdateTotalRecordsOnScreen(recordsInList);
                         IO.SystemMessage("Record has been written to file", false);
 
                         break;
 
-                    case ConsoleKey.Delete:         // *** DELETE Record *** //                      
+                    case ConsoleKey.Delete:                     // *** DELETE Record *** //                      
                         if (recordsInList > 0)
                         {
                             Console.SetCursorPosition(cursorLeft, cursorTop);
