@@ -112,9 +112,8 @@ namespace BakeryConsole
             {
                 RecordCounter = aProduct.RecordCounter;
                 
-                
-                Name =                              IO.GetInput(fieldNames[1], aProduct.Name, checkinputStringAlpha, lengthQuestionField, fieldProperties[1, 1], false, true, true, true, true, fieldProperties[1, 2]);      //TODO iterate through constructor with generics fields
-                ProductType =                       IO.GetInput(fieldNames[2], aProduct.ProductType, checkinputStringAlpha, lengthQuestionField, fieldProperties[2, 1], false, true, true, true, true, fieldProperties[2, 2]);
+                Name           = IO.GetInput(fieldNames[1], aProduct.Name, checkinputStringAlpha, lengthQuestionField, fieldProperties[1, 1], false, true, true, true, true, fieldProperties[1, 2]);      //TODO iterate through constructor with generics fields
+                ProductType    = IO.GetInput(fieldNames[2], aProduct.ProductType, checkinputStringAlpha, lengthQuestionField, fieldProperties[2, 1], false, true, true, true, true, fieldProperties[2, 2]);
                 ProductionDate = IO.ParseToDateTime(IO.GetInput(fieldNames[3], aProduct.ProductionDate.ToString("dd/MM/yyyy"), checkinputStringAlpha, lengthQuestionField, fieldProperties[3, 1], false, true, true, true, true, fieldProperties[3, 2]), false);
                 ExpirationDate = IO.ParseToDateTime(IO.GetInput(fieldNames[4], aProduct.ExpirationDate.ToString("dd/MM/yyyy"), checkinputStringAlpha, lengthQuestionField, fieldProperties[4, 1], false, true, true, true, true, fieldProperties[4, 2]), false);
 
