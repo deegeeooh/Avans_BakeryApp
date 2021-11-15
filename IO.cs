@@ -30,7 +30,7 @@ namespace BakeryConsole
                 Color.SetColor(Color.TextColors.Text);
                 Console.Write("\n" + "=".PadRight(80, '='));
                 Color.SetColor(Color.TextColors.Title);
-                Console.Write("Bakker Vlaaieboer & Zn.");
+                Console.Write(Program.licenseString);
                 Color.SetColor(Color.TextColors.Text);
                 Console.Write("{0:f}".PadLeft(28, ' '), DateTime.Now); Console.Write("\n");
 
@@ -228,8 +228,8 @@ namespace BakeryConsole
                             {
                                 if (inputStringbuilder.Length < lengthInputField)                                   // Insert only as long as not max inputlenght
                                 {
-                                    inputStringbuilder.Insert(indexInStringbuilder - 1, tempString);
-                                    indexInStringbuilder++;
+                                    inputStringbuilder.Insert(indexInStringbuilder - 1, tempString);            //INSERT CHARACTER
+                                    //indexInStringbuilder++;
                                 }
                                 else
                                 {
