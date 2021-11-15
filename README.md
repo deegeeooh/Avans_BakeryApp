@@ -20,3 +20,8 @@ on a C# course assignment.
 - Reflection
 
 See the version.txt for the current functionality
+
+Compiling requirements:
+
+- Newtonsoft.Json library (install via NuGet)
+- .NET 4.7.2
