@@ -6,7 +6,7 @@ namespace BakeryConsole
 {
     class RecordManager
     {
-        public int RecordCounter                       { get; set; }    // NOT static, this is a record propery for the        
+        public int RecordCounter                       { get; set; }    // NOT static, this is a record propery of the  class    
         public static int TotalRecords                 { get; set; }    // static,this a class property        
         public bool Active                             { get; set; }    // flag for record deletion/inactive
         public List<Mutation> Mutations                { get; set; }    // just as PoC; every record stores all mutations 
@@ -20,6 +20,12 @@ namespace BakeryConsole
 
         public RecordManager(bool dontDoShit) { }                               // these constructors 
         public RecordManager(RecordManager anInheritor,bool dontDoShit) { }     // just prevent calling the ()
+
+        [JsonConstructor]                                               // for json, otherwise it will use the default() constructor when deserializing which we don't want here
+        public RecordManager(Int64 JUST4JSON_DontCall)
+        {
+            //Console.WriteLine("Don't be a dick Jason dear"); Console.ReadKey();
+        }
 
         public static void CheckMutations<T>(T anInheriter, string old, string newVal, string fieldName, int existingNumberOfMutations) where T : RecordManager                   // NICE: make method generic and store mutations in separate file
         {

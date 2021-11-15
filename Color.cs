@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using Newtonsoft.Json;
 
@@ -83,6 +84,7 @@ namespace BakeryConsole
             else
             {
                 userColor = IO.PopulateList<Color>(settingsFile);
+                SetColor (TextColors.Defaults);
             }
             Console.BackgroundColor = userColor[0].BackGroundDefault;
         }
@@ -202,6 +204,10 @@ namespace BakeryConsole
                           | userColor[0].InputText         == userColor[0].TextHigh 
                           | userColor[0].InputText         == userColor[0].ForeGroundDefault 
                           | userColor[0].InputText         == userColor[0].MenuSelectDefault );
+                            //userColor[0].ErrorBackGround   = ConsoleColor.White;
+                            //userColor[0].ErrorForeGround   = ConsoleColor.Red;
+
+
 
                     IO.SystemMessage("Randomized text colors", false);
 
@@ -221,14 +227,19 @@ namespace BakeryConsole
                                     ,false);
                     break;
             }
-            
+            if (Debugger.IsAttached)
+            {
+                IO.PrintOnConsole(((int)userColor[0].BackGroundDefault).ToString(), 1, 1, Color.TextColors.Defaults);
+            }
+
             Console.BackgroundColor = userColor[0].BackGroundDefault;
             IO.SetWarningLength(Program.warningLenghtDefault);
         }
 
         public static void SetColor(TextColors textColor)                     // sets font and background color
         {
-            // PrintOnConsole(((int)userColor[0].BackGroundDefault).ToString(), 1, 1);
+            
+            
             Console.BackgroundColor = userColor[0].BackGroundDefault;
             
             switch (textColor)

@@ -26,22 +26,22 @@ namespace BakeryConsole
         public DateTime DateJoined  { get; set; }
         public DateTime DateExit    { get; set; }
         public int Salary           { get; set; }
-        public bool IsEmployee      { get; set; }
+        public bool IsEmployee      { get; set; }   // OBSOLETE
         
 
         public Employee() : base ()           // Constructor method; gets executed whenever we call '= new Employee()'
         {
-            //totalRecords++;
-            //RecordCounter = totalRecords;
+            //totalRecords++;                   }
+            //RecordCounter = totalRecords;     } from parent Person
+
             JobTitle         = IO.GetInput(fieldNames[0],                    "", checkinputStringAlpha, lengthQuestionField, fieldProperties[0, 1], false, true, true, true, true,  fieldProperties[0, 2]);
             DateJoined       = IO.ParseToDateTime(IO.GetInput(fieldNames[1], "", checkinputStringDate,  lengthQuestionField, fieldProperties[1, 1], false, true, true, false, true, fieldProperties[1, 2]), false);
             DateExit         = IO.ParseToDateTime(IO.GetInput(fieldNames[2], "", checkinputStringDate,  lengthQuestionField, fieldProperties[2, 1], false, true, true, false, true, fieldProperties[2, 2]), false);
             string getSalary = IO.GetInput(fieldNames[3], "", checkinputStringNum, lengthQuestionField, fieldProperties[3, 1], true, true, true, true, true, fieldProperties[3, 2]);
             Salary = (getSalary != "") ? Int32.Parse(getSalary) : 0;
-            IsEmployee      = true;         // OBSOLETE
-            
-            
-            //CheckMutations(this, " ", "[Created:]", "", 0);          // create a single mutation to indicate creation datestamp
+            IsEmployee      = true;                 // OBSOLETE
+
+            //CheckMutations(this, " ", "[Created:]", "", 0);          // create a single mutation to indicate creation datestamp   } from parent Person
         }
 
         public Employee(bool clearForm) : base (clearForm)
@@ -61,10 +61,10 @@ namespace BakeryConsole
             if (!displayOnly)
             {
 
-                JobTitle = IO.GetInput(fieldNames[0], anEmployee.JobTitle, checkinputStringAlpha, lengthQuestionField, fieldProperties[0, 1], false, true, true, true, true, fieldProperties[0, 2]);
-                DateJoined = IO.ParseToDateTime(IO.GetInput(fieldNames[1], anEmployee.DateJoined.ToString("dd/MM/yyyy"), checkinputStringDate, lengthQuestionField, fieldProperties[1, 1], false, true, true, false, true, fieldProperties[1, 2]), false);
-                DateExit = IO.ParseToDateTime(IO.GetInput(fieldNames[2], anEmployee.DateExit.ToString("dd/MM/yyyy"), checkinputStringDate, lengthQuestionField, fieldProperties[2, 1], false, true, true, false, true, fieldProperties[2, 2]), false);
-                Salary = Int32.Parse(IO.GetInput(fieldNames[3], anEmployee.Salary.ToString(), checkinputStringNum, lengthQuestionField, fieldProperties[3, 1], true, true, true, true, true, fieldProperties[3, 2]));
+                JobTitle    = IO.GetInput(fieldNames[0], anEmployee.JobTitle, checkinputStringAlpha, lengthQuestionField, fieldProperties[0, 1], false, true, true, true, true, fieldProperties[0, 2]);
+                DateJoined  = IO.ParseToDateTime(IO.GetInput(fieldNames[1], anEmployee.DateJoined.ToString("dd/MM/yyyy"), checkinputStringDate, lengthQuestionField, fieldProperties[1, 1], false, true, true, false, true, fieldProperties[1, 2]), false);
+                DateExit    = IO.ParseToDateTime(IO.GetInput(fieldNames[2], anEmployee.DateExit.ToString("dd/MM/yyyy"), checkinputStringDate, lengthQuestionField, fieldProperties[2, 1], false, true, true, false, true, fieldProperties[2, 2]), false);
+                Salary      = Int32.Parse(IO.GetInput(fieldNames[3], anEmployee.Salary.ToString(), checkinputStringNum, lengthQuestionField, fieldProperties[3, 1], true, true, true, true, true, fieldProperties[3, 2]));
                 // SickDays    = Int32.Parse(IO.GetInput(empFieldnames[4], anEmployee.SickDays.ToString(), checkinputStringNum, lengthQuestionField, empFieldProp[4, 1], true, true, true, true, true, empFieldProp[4, 2]));
                 IsEmployee = true;
                 
@@ -92,7 +92,7 @@ namespace BakeryConsole
         }
 
         [JsonConstructor]                                               // for json, otherwise it will use the default() constructor when deserializing which we don't want here
-        public Employee(string JUST4JSON_DontCall) : base(JUST4JSON_DontCall)
+        public Employee(Int64 JUST4JSON_DontCall) : base(JUST4JSON_DontCall)
         {
             //Console.WriteLine("Don't be a dick Jason dear"); Console.ReadKey();
         }

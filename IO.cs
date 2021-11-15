@@ -371,7 +371,13 @@ namespace BakeryConsole
                 else                                                                         // if an existing field value is passed on, print that
                 {
                     Console.Write("|");
-                    Color.SetColor(inactiveColor); Console.Write(fieldValue.PadRight(lengthInputField, ' '));
+                    if (fieldValue != "01/01/0001" & fieldValue != "01-01-0001")
+                    {
+                        Color.SetColor(inactiveColor); Console.Write(fieldValue.PadRight(lengthInputField, ' ')); 
+                    }else
+                    {
+                        Color.SetColor(inactiveColor); Console.Write("".PadRight(lengthInputField, ' ')); 
+                    }
                     Color.SetColor(Color.TextColors.DefaultForeGround); Console.Write("|");
                 }
             }

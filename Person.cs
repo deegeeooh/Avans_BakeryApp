@@ -75,16 +75,16 @@ namespace BakeryConsole
             //RecordCounter = totalRecords;                 }  the general Constructor
 
             var cursor    = Console.CursorTop;
-            LastName      = IO.GetInput(fieldNames[1], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[1, 1], false, true, true, true, true, fieldProperties[1, 2]);
-            Prefix        = IO.GetInput(fieldNames[2], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[2, 1], false, true, true, true, true, fieldProperties[2, 2]);
-            FirstName     = IO.GetInput(fieldNames[3], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[3, 1], false, true, true, true, true, fieldProperties[3, 2]);
-            Gender        = IO.GetInput(fieldNames[4], "", "MmFfXx", lengthQuestionField, fieldProperties[4, 1], true, true, true, true, true, fieldProperties[4, 2]);
-            RelationType  = IO.GetInput(fieldNames[5], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[5, 1], false, true, true, true, true, fieldProperties[5, 2]);
+            LastName      = IO.GetInput(fieldNames[1],  "", checkinputStringAlpha, lengthQuestionField, fieldProperties[1, 1], false, true, true, true, true, fieldProperties[1, 2]);
+            Prefix        = IO.GetInput(fieldNames[2],  "", checkinputStringAlpha, lengthQuestionField, fieldProperties[2, 1], false, true, true, true, true, fieldProperties[2, 2]);
+            FirstName     = IO.GetInput(fieldNames[3],  "", checkinputStringAlpha, lengthQuestionField, fieldProperties[3, 1], false, true, true, true, true, fieldProperties[3, 2]);
+            Gender        = IO.GetInput(fieldNames[4],  "", "MmFfXx", lengthQuestionField, fieldProperties[4, 1], true, true, true, true, true, fieldProperties[4, 2]);
+            RelationType  = IO.GetInput(fieldNames[5],  "", checkinputStringAlpha, lengthQuestionField, fieldProperties[5, 1], false, true, true, true, true, fieldProperties[5, 2]);
             DateOfBirth   = IO.ParseToDateTime(IO.GetInput(fieldNames[6], "", checkinputStringDate, lengthQuestionField, fieldProperties[6, 1], false, true, true, true, true, fieldProperties[6, 2]), true);
             CheckAge(DateOfBirth, cursor + 5);
-            Address       = IO.GetInput(fieldNames[7], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[7, 1], false, true, true, true, true, fieldProperties[7, 2]);
-            Zipcode       = IO.GetInput(fieldNames[8], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[8, 1], false, true, true, true, true, fieldProperties[8, 2]);
-            City          = IO.GetInput(fieldNames[9], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[9, 1], false, true, true, true, true, fieldProperties[9, 2]);
+            Address       = IO.GetInput(fieldNames[7],  "", checkinputStringAlpha, lengthQuestionField, fieldProperties[7, 1], false, true, true, true, true, fieldProperties[7, 2]);
+            Zipcode       = IO.GetInput(fieldNames[8],  "", checkinputStringAlpha, lengthQuestionField, fieldProperties[8, 1], false, true, true, true, true, fieldProperties[8, 2]);
+            City          = IO.GetInput(fieldNames[9],  "", checkinputStringAlpha, lengthQuestionField, fieldProperties[9, 1], false, true, true, true, true, fieldProperties[9, 2]);
             Country       = IO.GetInput(fieldNames[10], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[10, 1], false, true, true, true, true, fieldProperties[10, 2]);
             Telephone     = IO.GetInput(fieldNames[11], "", "0123456789+-", lengthQuestionField, fieldProperties[11, 1], false, true, true, true, true, fieldProperties[11, 2]);
             Email         = IO.GetInput(fieldNames[12], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[12, 1], false, true, true, true, true, fieldProperties[12, 2]);
@@ -181,7 +181,7 @@ namespace BakeryConsole
         }
 
         [JsonConstructor]                                               // for json, otherwise it will use the default() constructor when deserializing which we don't want here
-        public Person(string JUST4JSON_DontCall)
+        public Person(Int64 JUST4JSON_DontCall)
         {
             //Console.WriteLine("Don't be a dick Jason dear"); Console.ReadKey();
         }
@@ -217,5 +217,22 @@ namespace BakeryConsole
                     , lengthQuestionField + fieldProperties[6, 1] + 5, aCursor, Color.TextColors.Defaults);
             }
         }
+
+        private static Person SelectPersonFromList(int aCursor)
+        {
+            var peopleList = IO.PopulateList<Person>(Program.filePeople); 
+            if (peopleList.Count > 0)
+            {
+
+            }
+
+
+
+
+
+            return peopleList[0];
+        }
+
+
     }
 }
