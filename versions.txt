@@ -1,26 +1,68 @@
-Version 0.1 alpha
 
-functionality:
+[0.18]
 
-- uses classes for employee
+Address now has flexible constructors so the order in which its field blocks:
 
-- Calculate age
-- Getinput:
-    - converts single char input to string via stringbuilder
-    - displays input field with variable length
- - ParseToDateTime:
-    - converts date string to DateTime
-    
-- Displaymenu; display simple menu
-- Checkfieldlenght; 
-- Color; sets console font colour
-- PrintonConsole: display message on console position and restores cursorpos
+1. Name and ID
+2. Address fields
 
+the parents can now control the order in which the data is edited and displayed, 
+while still using the same inheritance order:
 
-Changes: 
+Recordmanager : Address : Parent
 
-- Added trim function to Getinput function
-- added several text edition options (home/end/delete etc)
-- refactored classes and methods to classes.cs and io.cs
+- First Recordmanager properties,
+- then Address name and ID gereric properties 
+- the the Parent specific properties
+- and finally the Address address field properties.
+
+Customer class has been refactored to use this, TODO Person
+
+[0.17]
+
+Customer class : Address class : RecordManager implemented
+
+added 
+- Implemented locking for all printing and cursor manipulation methods for event handler 
+	(to prevent screwing up the console window layout)
+- CTRL-C event handler 
+- Debug toggle for runtime debug methods 
+	(these will act while compiled with debug configuration attribute, as opposed and parallel 
+	to Debugger.IsAttached which is only true when debugging in VS)
+
+todo: 
+- hook up Person and Product to Address
+- change order of calls to parent classes for desired input and display flow 
+- create reference field to Customer to fill into Person class list (place holder text field Represetative atm)
+
+[0.15]
+
+- Added semi generic (workaround knowledgegap) Main.BrowseRecords method which serves as a generic hub for all classes 
+- implemented inheritance for employee from Person including all functionality 
+- Structured data classes with 3 constructors: create, display and edit which all can be called from BrowseRecords
+- Added RecordManager super class for all other classes which handles stuff using generic methods;
+- Added Product class 
+
+1. static record counter / setting RecordCounter property for all classes
+2. record activation/deletion
+3. Mutations
+
+[0.11]
+
+- working eventhandler for system messages
+- completely reworked color implementation, global color changes per text type
+- generics implemented for  JSON routines
+- refactored a lot to places where it belongs
+- cmd window optimisations
+
+[0.1]
+
+Basic clas implementation
+
+- Person
+- Employee
+- Customer
+- Product 
+JSON as file system
 
 
