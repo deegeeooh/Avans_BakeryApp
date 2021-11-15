@@ -16,10 +16,12 @@ namespace BakeryConsole
             TotalRecords++;
             RecordCounter   = TotalRecords;
             Active          = true;
+
+            CheckMutations(this, " ", "[Created:]", "", 0);             // set creation date in mutation at initial record creation
         }
 
-        public RecordManager(bool dontDoShit) { }                               // these constructors 
-        public RecordManager(RecordManager anInheritor,bool dontDoShit) { }     // just prevent calling the ()
+        public RecordManager(bool dontDoShit) { }                       // DUMMY
+        public RecordManager(RecordManager anInheritor,bool dontDoShit) { }     
 
         [JsonConstructor]                                               // for json, otherwise it will use the default() constructor when deserializing which we don't want here
         public RecordManager(Int64 JUST4JSON_DontCall)
