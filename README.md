@@ -23,5 +23,5 @@ See the version.txt for the current functionality
 
 Compiling requirements:
 
-- Newtonsoft.Json library (install via NuGet)
+- Newtonsoft.Json library (install via NuGet in Visual Studio)
 - .NET 4.7.2
