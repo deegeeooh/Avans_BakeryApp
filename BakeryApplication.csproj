@@ -138,6 +138,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Bakery.ico" />
+    <Content Include="Vlaaienboer-beige.ico" />
+    <Content Include="Vlaaienboer.ico" />
+    <Content Include="Vlaaienboer_pink.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -21,6 +21,7 @@ namespace BakeryConsole
         }
 
         public RecordManager(bool dontDoShit) { }                       // DUMMY
+
         public RecordManager(RecordManager anInheritor,bool dontDoShit) { }     
 
         [JsonConstructor]                                               // for json, otherwise it will use the default() constructor when deserializing which we don't want here
@@ -29,13 +30,13 @@ namespace BakeryConsole
             //Console.WriteLine("Don't be a dick Jason dear"); Console.ReadKey();
         }
 
-        public static void CheckMutations<T>(T anInheriter, string old, string newVal, string fieldName, int existingNumberOfMutations) where T : RecordManager                   // NICE: make method generic and store mutations in separate file
+        public static void CheckMutations<T>(T anInheritor, string old, string newVal, string fieldName, int existingNumberOfMutations) where T : RecordManager                   // NICE: make method generic and store mutations in separate file
         {
             if (old != newVal)
             {
-                if (anInheriter.Mutations == null)
+                if (anInheritor.Mutations == null)
                 {
-                    anInheriter.Mutations = new List<Mutation>();
+                    anInheritor.Mutations = new List<Mutation>();
                 }
 
                 Mutation newMutation = new Mutation(existingNumberOfMutations + 1,
@@ -46,7 +47,7 @@ namespace BakeryConsole
                                                                           //newVal.Replace(old, ""),     // TODO: old cannot be empty, throws exception
                                            newVal);
                 
-                anInheriter.Mutations.Add(newMutation);                       // needs object reference when = null;
+                anInheritor.Mutations.Add(newMutation);                       // needs object reference when = null;
             }
         }
 
@@ -65,6 +66,7 @@ namespace BakeryConsole
             }
 
         }
+
         public static void SetTotalRecords(int aRecord)
         {
             TotalRecords = aRecord;
@@ -75,9 +77,9 @@ namespace BakeryConsole
             TotalRecords = 0;
         }
 
-        public static void IfActive<T>(T anInheriter,  int onCursorColumn , int onCursorRow ) where T : RecordManager
+        public static void IfActive<T>(T anInheritor,  int onCursorColumn , int onCursorRow ) where T : RecordManager
         {
-            if (!anInheriter.Active)
+            if (!anInheritor.Active)
             {
                 IO.PrintOnConsole(" *Inactive* ", onCursorColumn, onCursorRow, Color.TextColors.Inverted);
             }
@@ -86,9 +88,6 @@ namespace BakeryConsole
                 IO.PrintOnConsole("".PadRight(12, ' '), onCursorColumn, onCursorRow, Color.TextColors.Defaults);
             }
         }
-
-
-
 
     }
 }

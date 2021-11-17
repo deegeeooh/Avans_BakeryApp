@@ -9,8 +9,8 @@ namespace BakeryConsole
 {
     class Login             // NICE: add login ID's and store users ID's in mutations
     {
-        readonly string checkInputString = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789//-@| .,_!#$%^&*";
-        private string passWord = "bakker";
+        readonly string checkInputString    = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789//-@| .,_!#$%^&*";
+        private string passWord             = "bakker";
         public static bool validPassword;
 
         public Login()
@@ -27,14 +27,9 @@ namespace BakeryConsole
             {
                 IO.SystemMessage("Invalid password", true);
                 validPassword = false;
-                
             }
 
         }
     }
 
 }
-
-
-
-

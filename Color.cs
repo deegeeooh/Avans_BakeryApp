@@ -29,7 +29,7 @@ namespace BakeryConsole
         }
 
         private static List<Color> userColor = new List<Color>();
-        private static string settingsFile = "settings.json";
+        private static string settingsFile   = "settings.json";
 
         public ConsoleColor ForeGroundDefault { get; set; }
         public ConsoleColor BackGroundDefault { get; set; }
@@ -180,7 +180,7 @@ namespace BakeryConsole
                     break;
 
 
-                case 5:     //randomize with of without including backgroundcolor
+                case 5:     //randomize with or without including backgroundcolor
 
                     var rand = new Random();
                     if    (aRndBackground) 
@@ -206,8 +206,6 @@ namespace BakeryConsole
                           | userColor[0].InputText         == userColor[0].MenuSelectDefault );
                             //userColor[0].ErrorBackGround   = ConsoleColor.White;
                             //userColor[0].ErrorForeGround   = ConsoleColor.Red;
-
-
 
                     IO.SystemMessage("Randomized text colors", false);
 

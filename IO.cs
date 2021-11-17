@@ -144,14 +144,14 @@ namespace BakeryConsole
                     Console.CursorTop = aCursorRow;
                     Console.CursorLeft = aCursorColumn;
                 }
-                catch (Exception e)
+                catch (Exception e)         // for when cursor is positioned outside console buffer
                 {
-                    SystemMessage("Exception while setting cursor {e}".PadRight(79,' '), true);
+                    SystemMessage($"Exception while setting cursor {e}".PadRight(79,' '), true);
                 }
             }
         }
 
-        public static void StoreCursorPos(out int currentCursorPosTop, out int currentCursorPosLeft)
+        public static void StoreCursorPos(out int currentCursorPosTop, out int currentCursorPosLeft)    
         {
             currentCursorPosTop  = Console.CursorTop;
             currentCursorPosLeft = Console.CursorLeft;

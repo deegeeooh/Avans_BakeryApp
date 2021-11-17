@@ -27,22 +27,11 @@ namespace BakeryConsole
         }
 
         [JsonConstructor]                                               // for json, otherwise it will use the default() constructor when deserializing which we don't want here
-        public Mutation(string JUST4JSON_DontCall)
+        public Mutation(Int64 JUST4JSON_DontCall)
         {
             //Console.WriteLine("Don't be a dick Jason dear"); Console.ReadKey();
         }
 
     }
 
-    
-
-
-
 }
-
-
-
-
-
-
-

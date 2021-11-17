@@ -33,32 +33,34 @@ namespace BakeryConsole
         private static string fileEmployees         = "employees.json";
         private static string fileProducts          = "products.json";
         public static string  licenseString         = "Royal Vlaaienboer Inc.";
-        public static string  buildVersion          = "0.18";          //  NICE: use assemblyversion attribute
+        public static string  buildVersion          = "0.18";                   //  NICE: use assemblyversion attribute
         public static int     windowHeight          = 35;
         public static int     windowWidth           = 80;
-        public static int     warningLenghtDefault  = 1000;              // displaytime in ms for system messages
+        public static int     warningLenghtDefault  = 1000;                     // displaytime in ms for system messages
 
         private static void Main()
         {
             // Control - C interrupt handling
-            Console.TreatControlCAsInput = true;                     // ConsoleCancel Eventhandler toggle;
-            Console.CancelKeyPress += new ConsoleCancelEventHandler(HandleCTRLC);  //set custom eventhandler
-
-            // init console window properties
-            // Console.SetWindowPosition(11, 9);                     //TODO: figure out SetWindowsPosition
+            
+            Console.TreatControlCAsInput            = true;                     // ConsoleCancel Eventhandler toggle;
+            Console.CancelKeyPress                  += new ConsoleCancelEventHandler(HandleCTRLC);  //set custom eventhandler
 
             // initialize variables and window
+            
             Console.SetWindowSize(windowWidth, windowHeight);
             Console.SetBufferSize(windowWidth, windowHeight);
             IO.SetWarningLength(warningLenghtDefault);
-            Console.Title = "Bakery for Console v" + buildVersion;
-            Console.CursorSize = 60;
-            Color.InitializeColors();                               // read settings.json and set color scheme
+            Console.Title                           = "Bakery for Console v" + buildVersion;
+            Console.CursorSize                      = 60;
+            
+            // read settings.json and set color scheme
+            
+            Color.InitializeColors();                                           
             Console.Clear();
 
             // Main Menu Loop
             do
-            {
+/*MAIN*/   {
                 IO.DisplayMenu("Main Menu", "(L)ogin\n(P)eople\n(E)mployees\n(C)ustomers\nPro(D)ucts\n(M)asterdata\n\n(F3-F10) change colors, (F11) reset (F12) save\n\nEnter your choice, Escape to Exit program\n\n", Color.TextColors.MenuSelect);
                 DebugMessage("Debug Mode is ON");
                 inputKey = Console.ReadKey(true);                               // 'true' | dont'display the input on the console
@@ -75,7 +77,7 @@ namespace BakeryConsole
         {
             IO.SystemMessage("Control-C is pressed, returning to main menu", false);
             args.Cancel = true;
-            return;
+            //return;
         }
 
         [Conditional("DEBUG")]                                                  // Only executed with DEBUG configuration Build && _debugEnabled
@@ -101,7 +103,7 @@ namespace BakeryConsole
             else if (inputKey.Key == ConsoleKey.P)                                                  // Person
             {
                 IO.DisplayMenu("Browse/edit People", "(Ins)ert to Add\n(Enter)to Edit\n(Del)ete to remove Record\nUse arrow keys to browse\n(Home) Main menu\n\n", Color.TextColors.MenuSelect);
-                BrowseRecords(filePeople, ClassSelect.Person);                                      //People
+                BrowseRecords(filePeople, ClassSelect.Person);
             }
             else if (inputKey.Key == ConsoleKey.E & Login.validPassword)                            // Employees
             {
@@ -119,7 +121,7 @@ namespace BakeryConsole
                 IO.DisplayMenu("Browse / edit Products", "(Ins)ert to Add\n(Enter)to Edit\n(Del)ete to remove Record\nUse arrow keys to browse\n(Home) Main menu\n\n", Color.TextColors.MenuSelect);
                 BrowseRecords(fileProducts, ClassSelect.Product);
             }
-            else if (inputKey.Key == ConsoleKey.M & Login.validPassword)                            // Master Data
+            else if (inputKey.Key == ConsoleKey.M & Login.validPassword)                            // Master Data 
             {
                 IO.DisplayMenu("Edit Master Data", "(A)dd\nArrows to browse\n(Del)ete\n", Color.TextColors.MenuSelect);
                 Console.WriteLine("  You Pressed D");
@@ -130,7 +132,7 @@ namespace BakeryConsole
             else if (inputKey.Key == ConsoleKey.F6)  { Color.CycleColors(2, false); return; }       // background
             else if (inputKey.Key == ConsoleKey.F7)  { Color.CycleColors(3, false); return; }       // Menu select color
             else if (inputKey.Key == ConsoleKey.F8)  { Color.CycleColors(4, false); return; }       // Software license nameholder Color
-            else if (inputKey.Key == ConsoleKey.F9)  { Color.CycleColors(5, true); return; }        // Random colors including background
+            else if (inputKey.Key == ConsoleKey.F9)  { Color.CycleColors(5, true ); return; }        // Random colors including background
             else if (inputKey.Key == ConsoleKey.F10) { Color.CycleColors(5, false); return; }       // Random colors excluding background
             else if (inputKey.Key == ConsoleKey.F11) { Color.SetStandardColor(); }                  // Set/Reset to standard color scheme
             
@@ -146,50 +148,16 @@ namespace BakeryConsole
             }
         }
 
-        private static void ShowAssemblyInfo()                                                      // test recursion routine
+        private static void BrowseRecords(string aFilename, Enum classSelector) // Main record handling routine /TODO: a lot of refactoring
         {
-            Console.Clear();
-
-            var assembly = Assembly.GetExecutingAssembly();
-            Console.WriteLine(assembly.FullName);
-
-            var types = assembly.GetTypes();
-            foreach (var type in types)
-            {
-                Console.WriteLine("Type: " + type.Name + " Base Type: " + type.BaseType);
-
-                var props = type.GetProperties();
-                foreach (var prop in props)
-                {
-                    Console.WriteLine("\tProperty name: " + prop.Name.PadRight(20, ' ') + "\t Property Type: " + prop.PropertyType);
-                }
-
-                var fields = type.GetFields();
-                foreach (var field in fields)
-                {
-                    Console.WriteLine("\tField: " + field.Name);
-                }
-
-                var methods = type.GetMethods();
-                foreach (var method in methods)
-                {
-                    Console.WriteLine("\t\tMethod name: " + method.Name.PadRight(20, ' '));
-                }
-                Console.ReadKey();
-            }
-            Console.ReadKey();
-        }
-
-        private static void BrowseRecords(string aFilename, Enum classSelector)                     // Main record handling routine /TODO: a lot of refactoring
-        {
-            var peopleList = new List<Person>();
+            var peopleList   = new List<Person>();
             var employeeList = new List<Employee>();
             var customerList = new List<Customer>();
-            var productList = new List<Product>();
+            var productList  = new List<Product>();
 
-            int cursorLeft = Console.CursorLeft;                                                    // store current cursorposition, left and top
-            int cursorTop = Console.CursorTop;
-            int recordIndex = 1;
+            int cursorLeft    = Console.CursorLeft;                                                 // store current cursorposition, left and top
+            int cursorTop     = Console.CursorTop;
+            int recordIndex   = 1;
             int recordsInList = 0;
 
             switch (classSelector)
@@ -491,7 +459,7 @@ namespace BakeryConsole
                                 compareString = BuildZoekString(zoekString, cursorTop);
 
                                 Person foundPerson = peopleList.Find(person =>
-                                                     person.LastName.StartsWith(compareString));
+                                                     person.Name.StartsWith(compareString));
 
                                 if (foundPerson != null)
                                 {
@@ -510,7 +478,7 @@ namespace BakeryConsole
                                 compareString = BuildZoekString(zoekString, cursorTop);
 
                                 Employee foundEmployee = employeeList.Find(employee =>
-                                                     employee.LastName.StartsWith(compareString));
+                                                     employee.Name.StartsWith(compareString));
 
                                 if (foundEmployee != null)
                                 {
@@ -599,7 +567,7 @@ namespace BakeryConsole
                 (
                     delegate (Person emp)
                     {
-                        return emp.LastName.StartsWith(zoekstring.ToString());
+                        return emp.Name.StartsWith(zoekstring.ToString());
                     }
                 );                                                                          // I hate how this syntax looks
                 if (personSearchResult != null)
@@ -617,9 +585,43 @@ namespace BakeryConsole
             return recordIndex;
         }
 
-        private static void UpdateTotalRecordsOnScreen(int numberOfRecords)                 // NICE: display inactive records as well
+        private static void UpdateTotalRecordsOnScreen(int numberOfRecords)     // NICE: display inactive records as well
         {
             IO.PrintOnConsole("[" + numberOfRecords.ToString() + "] records in file", 30, 5, Color.TextColors.MenuSelect);
         }
+        private static void ShowAssemblyInfo()                                  // test recursion routine
+        {
+            Console.Clear();
+
+            var assembly = Assembly.GetExecutingAssembly();
+            Console.WriteLine(assembly.FullName);
+
+            var types = assembly.GetTypes();
+            foreach (var type in types)
+            {
+                Console.WriteLine("Type: " + type.Name + " Base Type: " + type.BaseType);
+
+                var props = type.GetProperties();
+                foreach (var prop in props)
+                {
+                    Console.WriteLine("\tProperty name: " + prop.Name.PadRight(20, ' ') + "\t Property Type: " + prop.PropertyType);
+                }
+
+                var fields = type.GetFields();
+                foreach (var field in fields)
+                {
+                    Console.WriteLine("\tField: " + field.Name);
+                }
+
+                var methods = type.GetMethods();
+                foreach (var method in methods)
+                {
+                    Console.WriteLine("\t\tMethod name: " + method.Name.PadRight(20, ' '));
+                }
+                Console.ReadKey();
+            }
+            Console.ReadKey();
+        }
+
      }
 }

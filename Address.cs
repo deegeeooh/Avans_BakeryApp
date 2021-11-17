@@ -24,9 +24,9 @@ namespace BakeryConsole
 
         // user interface fields
 
-        public static String[] fieldNames = { "Record ID:"                  ,   // 0
+        public static String[] fieldNames = { "Record ID:"                   ,   // 0
                                                "Name:"                       ,   // 1
-                                               "Address: "                   ,   // 2
+                                               "Street address: "            ,   // 2
                                                "Zipcode: (####ZZ)"           ,   // 3
                                                "City: "                      ,   // 4
                                                "Country: "                   ,   // 5
@@ -63,11 +63,11 @@ namespace BakeryConsole
 
         public Address(bool clearForm, string aStringFor_Name, bool _First) : base(clearForm)  // Every class needs this routine to display its fields
         {
-            fieldNames[1] = aStringFor_Name;        // set derived classes specific .Name 
+            fieldNames[1] = aStringFor_Name;       // set derived classes specific .Name 
 
             int start;
             int lenght;
-/*1st*/     if (_First)                             // only handle first two fields, ID and Name
+/*1st*/     if (_First)                            // only handle first two fields, ID and Name
             {
                 start = 0;
                 lenght = 2;
@@ -165,6 +165,8 @@ namespace BakeryConsole
             }
             return b + a;
         }
-
     }
+
+
+
 }
