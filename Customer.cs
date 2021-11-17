@@ -10,7 +10,6 @@ namespace BakeryConsole
         private static string checkinputStringAlpha = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/-@|' .,_";
         private static string telephoneString       = "0123456789+-";
         private static string zipCodeString         = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-";
-        
         private static int[,] fieldProperties       = { { 0, 45, 0 },                //NICE : Use attributes instead
                                                         { 1, 45, 0 },
                                                         { 2,  1, 0 } };
@@ -20,13 +19,14 @@ namespace BakeryConsole
                                                         "Job Title:"     ,                // 1
                                                         "Customer Type:" };               // 2
 
+        private static string _AddressnamefieldName = "Company Name";               // to set fieldname of Address class' generic Name Property
         public string MainContact   { get; set; }           // placeholder, this will be replaced by Person.ID in a list 
         public string Jobtitle      { get; set; }
         public string CustomerType  { get; set; }
         //public List<Person> Representatives { get; set; }
+        
 
-
-/*1st*/ public Customer() : base("Company name")
+/*1st*/ public Customer() : base(_AddressnamefieldName)
         {
             var cursorRow = Console.CursorTop;
 
@@ -37,9 +37,8 @@ namespace BakeryConsole
 /*2nd*/     GetAddressFields(new Address());                                       // clone instances field values to this
 
         }
-                
 
-/*1st*/ public Customer( bool clearForm ) : base(clearForm, "Company Name", true)  // call Address, _1st part
+/*1st*/ public Customer( bool clearForm ) : base(clearForm, _AddressnamefieldName, true)  // call Address, _1st part
         {
             var cursor = Console.CursorTop;
             if (clearForm)
@@ -49,12 +48,10 @@ namespace BakeryConsole
                     IO.PrintBoundaries(fieldNames[i], "", lengthQuestionField, fieldProperties[i, 1], cursor, false); Console.WriteLine(); cursor++;
                 }
             }
-/*2nd*/     _ = new Address(clearForm, "Company Name", false);                     // call Address, _2nd part
+/*2nd*/     _ = new Address(clearForm, _AddressnamefieldName, false);                     // call Address, _2nd part
         }
 
-        
-
-        public Customer(Customer aCustomer, bool displayOnly) : base(aCustomer, displayOnly, "Company Name", true)    // Constructor for edit and display existing record
+        public Customer(Customer aCustomer, bool displayOnly) : base(aCustomer, displayOnly, _AddressnamefieldName, true)    // Constructor for edit and display existing record
         {
 /*1st*/     if (!displayOnly)  //EDIT
             {
@@ -69,7 +66,7 @@ namespace BakeryConsole
                 CheckMutations(aCustomer, aCustomer.Jobtitle,     this.Jobtitle,     fieldNames[1], aCustomer.Mutations.Count);
                 CheckMutations(aCustomer, aCustomer.CustomerType, this.CustomerType, fieldNames[1], aCustomer.Mutations.Count);
 
-/*2nd*/         GetAddressFields(new Address(aCustomer, displayOnly, "Company Name", false));   // clone instances field values to this
+/*2nd*/         GetAddressFields(new Address(aCustomer, displayOnly, _AddressnamefieldName, false));   // clone instances field values to this
 
                 CheckMutations(aCustomer, aCustomer.Street,       this.Street,      Address.fieldNames[2], aCustomer.Mutations.Count);
                 CheckMutations(aCustomer, aCustomer.Zipcode,      this.Zipcode,     Address.fieldNames[3], aCustomer.Mutations.Count);
@@ -77,8 +74,8 @@ namespace BakeryConsole
                 CheckMutations(aCustomer, aCustomer.Country,      this.Country,     Address.fieldNames[5], aCustomer.Mutations.Count);
                 CheckMutations(aCustomer, aCustomer.Telephone,    this.Telephone,   Address.fieldNames[6], aCustomer.Mutations.Count);
                 CheckMutations(aCustomer, aCustomer.Email,        this.Email,       Address.fieldNames[7], aCustomer.Mutations.Count);
-
             }
+
 /*1st*/     else              // DISPLAY ONLY
             {
                 var cursorColumn = Console.CursorTop;
@@ -87,11 +84,10 @@ namespace BakeryConsole
                 IO.PrintBoundaries(fieldNames[1], aCustomer.Jobtitle,     lengthQuestionField, fieldProperties[1, 1], cursorColumn, aCustomer.Active); Console.WriteLine(); cursorColumn++;
                 IO.PrintBoundaries(fieldNames[2], aCustomer.CustomerType, lengthQuestionField, fieldProperties[2, 1], cursorColumn, aCustomer.Active); Console.WriteLine(); cursorColumn++;
                 
-/*2nd*/         _ = new Address(aCustomer, displayOnly, "Company Name", false);
+/*2nd*/         _ = new Address(aCustomer, displayOnly, _AddressnamefieldName, false);
             }
 
         }
-
 
         [JsonConstructor]                                               // for json, otherwise it will use the default() constructor when deserializing which we don't want here
         public Customer(Int64 JUST4JSON_DontCall) : base (JUST4JSON_DontCall)
