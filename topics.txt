@@ -1,8 +1,0 @@
-string manipulation
-stringbuilder class
-input handling
-data validation
-JSON files
-	- storing lists of objects
-	- retrieving lists of objects
-
