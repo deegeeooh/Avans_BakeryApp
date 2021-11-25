@@ -259,7 +259,7 @@ namespace BakeryConsole
                             aList.Add((T)Activator.CreateInstance(typeof(T)));                                      // add new record 
                             recordsInList++;                                                                        // increase record counter
                             recordIndex = recordsInList;                                                            // set index to new created record
-                            RecordManager.SetTotalRecords(recordsInList);     
+                            RecordManager.SetTotalRecords(recordsInList);                                           // store number of records
                             Console.SetCursorPosition(cursorLeft, cursorTop);
                             _ = (T)Activator.CreateInstance(typeof(T), aList[recordIndex - 1], true);               // refresh record on screen
                             IO.WriteToFile(aFilename, aList, true);                                                 // write to file 

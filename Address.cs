@@ -93,7 +93,7 @@ namespace BakeryConsole
 
             if (!displayOnly)  //EDIT
             {
-/*1st*/         if (_HandleParentFirst)                         // handle ID and Name
+/*1st*/         if (_HandleParentFirst)                         // just handle ID and Name in RecordManager
                 {
                     //RecordCounter  = anAddress.RecordCounter;
                     //Name           = IO.GetInput(fieldNames[1], anAddress.Name, checkinputStringAlpha, lengthQuestionField, fieldProperties[1, 1], false, true, true, true, true, fieldProperties[1, 2]);
