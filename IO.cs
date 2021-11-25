@@ -28,7 +28,7 @@ namespace BakeryConsole
                 Console.Clear();
 
                 Color.SetColor(Color.TextColors.Text);
-                Console.Write("\n" + "=".PadRight(80, '='));
+                Console.Write("\n" + "=".PadRight(80, '=')+"");
                 Color.SetColor(Color.TextColors.Title);
                 Console.Write(Program.licenseString);
                 Color.SetColor(Color.TextColors.Text);
@@ -55,7 +55,8 @@ namespace BakeryConsole
                 Color.SetColor(Color.TextColors.Text);
                 if (Debugger.IsAttached)
                 {
-                    Console.Write("1234567890_234567890_234567890_234567890_234567890_234567890_234567890_234567890\n");
+                    Console.Write("=".PadRight(80, '=') + "\n");
+                    //Console.Write("1234567890_234567890_234567890_234567890_234567890_234567890_234567890_234567890\n");
                 }
                 else
                 {
@@ -178,10 +179,10 @@ namespace BakeryConsole
             int cursorTop = Console.CursorTop;                             
             
             StringBuilder inputStringbuilder = new StringBuilder();        // stringbuilder to append the single input characters to
-            ConsoleKeyInfo inp = new ConsoleKeyInfo();
-            int indexInStringbuilder = 1;                                   // where is the cursor in het stringbuilder
+            ConsoleKeyInfo inp               = new ConsoleKeyInfo();
+            int indexInStringbuilder         = 1;                          // where is the cursor in het stringbuilder
             string returnString;
-            bool checkedValidLength = false;
+            bool checkedValidLength          = false;
 
             // display field boundaries with padded spaces
 
@@ -204,6 +205,7 @@ namespace BakeryConsole
                     IO.PrintOnConsole((indexInStringbuilder.ToString() + " " + inputStringbuilder.ToString()).PadRight(79, ' '), 0, 0, Color.TextColors.Defaults);
                     inp = Console.ReadKey(true);                            // read 1 key, don't display the readkey input (true)
                     string tempString;
+                    
                     if (checkinputString.Contains(inp.KeyChar.ToString()) & indexInStringbuilder <= lengthInputField)         // only accept valid characters other than functions
 
                     {
@@ -249,6 +251,7 @@ namespace BakeryConsole
                         indexInStringbuilder--;
                         Checkfieldlength(lengthInputField, indexInStringbuilder - 1);
                         inputStringbuilder.Remove(indexInStringbuilder - 1, 1);
+                        
                         IO.SetCursorPosition(lengthQuestionField + 1, cursorTop);
                         PrintInputString(showInput, true, inputStringbuilder,Color.TextColors.Input);
                         IO.SetCursorPosition(lengthQuestionField + indexInStringbuilder, cursorTop);
@@ -477,14 +480,14 @@ namespace BakeryConsole
             return getaListFromJSON;
         }
 
-        public static void WriteToFile<T>(string aFilename, List<T> aListOfObjects, string aConsoleMessage) where T : class
+        public static void WriteToFile<T>(string aFilename, List<T> aListOfObjects, bool aConsoleMessage) where T : class
         {
             try
             {
                 string jsonString = JsonConvert.SerializeObject(aListOfObjects, Formatting.Indented);
                 File.WriteAllText(aFilename, jsonString);
-                aConsoleMessage = (aConsoleMessage == "") ? "Writing changes to file " : aConsoleMessage;
-                IO.SystemMessage($"{aConsoleMessage} \"{aFilename}\"", false);
+                //aConsoleMessage = (aConsoleMessage == "") ? "Writing changes to file " : aConsoleMessage;
+                if (aConsoleMessage) IO.SystemMessage($"Writing changes to file: \"{aFilename}\"", false);
                 
             }
             catch (Exception e)
