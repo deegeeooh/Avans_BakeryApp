@@ -37,23 +37,19 @@ namespace BakeryConsole
             JobTitle         = IO.GetInput(fieldNames[0],                    "", checkinputStringAlpha, lengthQuestionField, fieldProperties[0, 1], false, true, true, true, true,  fieldProperties[0, 2]);
             DateJoined       = IO.ParseToDateTime(IO.GetInput(fieldNames[1], "", checkinputStringDate,  lengthQuestionField, fieldProperties[1, 1], false, true, true, false, true, fieldProperties[1, 2]), false);
             DateExit         = IO.ParseToDateTime(IO.GetInput(fieldNames[2], "", checkinputStringDate,  lengthQuestionField, fieldProperties[2, 1], false, true, true, false, true, fieldProperties[2, 2]), false);
-            string getSalary = IO.GetInput(fieldNames[3], "", checkinputStringNum, lengthQuestionField, fieldProperties[3, 1], true, true, true, true, true, fieldProperties[3, 2]);
+            string getSalary = IO.GetInput(fieldNames[3], "",                    checkinputStringNum,   lengthQuestionField, fieldProperties[3, 1], true, true, true, true, true,   fieldProperties[3, 2]);
             Salary = (getSalary != "") ? Int32.Parse(getSalary) : 0;
             IsEmployee      = true;                 // OBSOLETE
 
             //CheckMutations(this, " ", "[Created:]", "", 0);          // create a single mutation to indicate creation datestamp   } from parent Person
         }
-
-        public Employee(bool clearForm) : base (clearForm)
+        public Employee(bool clearForm, bool _Activatordummy) : base (clearForm, _Activatordummy)     //_Dummy for calling with Activator.CreateInstance
         {
             var cursor = Console.CursorTop;
-            if (clearForm)
-            {
                 for (int i = 0; i < fieldProperties.GetLength(0); i++)
                 {
                     IO.PrintBoundaries(fieldNames[i], "", lengthQuestionField, fieldProperties[i, 1], cursor, false); Console.WriteLine(); cursor++;
                 }
-            }
         }
 
         public Employee(Employee anEmployee, bool displayOnly ) : base (anEmployee, displayOnly) //TODO: clear
@@ -61,10 +57,10 @@ namespace BakeryConsole
             if (!displayOnly)
             {
 
-                JobTitle    = IO.GetInput(fieldNames[0], anEmployee.JobTitle, checkinputStringAlpha, lengthQuestionField, fieldProperties[0, 1], false, true, true, true, true, fieldProperties[0, 2]);
+                JobTitle    = IO.GetInput(fieldNames[0],                    anEmployee.JobTitle, checkinputStringAlpha, lengthQuestionField, fieldProperties[0, 1], false, true, true, true, true, fieldProperties[0, 2]);
                 DateJoined  = IO.ParseToDateTime(IO.GetInput(fieldNames[1], anEmployee.DateJoined.ToString("dd/MM/yyyy"), checkinputStringDate, lengthQuestionField, fieldProperties[1, 1], false, true, true, false, true, fieldProperties[1, 2]), false);
                 DateExit    = IO.ParseToDateTime(IO.GetInput(fieldNames[2], anEmployee.DateExit.ToString("dd/MM/yyyy"), checkinputStringDate, lengthQuestionField, fieldProperties[2, 1], false, true, true, false, true, fieldProperties[2, 2]), false);
-                Salary      = Int32.Parse(IO.GetInput(fieldNames[3], anEmployee.Salary.ToString(), checkinputStringNum, lengthQuestionField, fieldProperties[3, 1], true, true, true, true, true, fieldProperties[3, 2]));
+                Salary      = Int32.Parse(IO.GetInput(fieldNames[3],        anEmployee.Salary.ToString(), checkinputStringNum, lengthQuestionField, fieldProperties[3, 1], true, true, true, true, true, fieldProperties[3, 2]));
                 // SickDays    = Int32.Parse(IO.GetInput(empFieldnames[4], anEmployee.SickDays.ToString(), checkinputStringNum, lengthQuestionField, empFieldProp[4, 1], true, true, true, true, true, empFieldProp[4, 2]));
                 IsEmployee = true;
                 
@@ -72,10 +68,10 @@ namespace BakeryConsole
 
                 // check which values changed and store them in the Person.Mutations list
 
-                CheckMutations(anEmployee, anEmployee.JobTitle, this.JobTitle, fieldNames[0], anEmployee.Mutations.Count);                          // we are using this with the new instanced value:
+                CheckMutations(anEmployee, anEmployee.JobTitle,              this.JobTitle, fieldNames[0], anEmployee.Mutations.Count);                          // we are using this with the new instanced value:
                 CheckMutations(anEmployee, anEmployee.DateJoined.ToString(), this.DateJoined.ToString(), fieldNames[1], anEmployee.Mutations.Count);
-                CheckMutations(anEmployee, anEmployee.DateExit.ToString(), this.DateExit.ToString(), fieldNames[2], anEmployee.Mutations.Count);
-                CheckMutations(anEmployee, anEmployee.Salary.ToString(), this.Salary.ToString(), fieldNames[3], anEmployee.Mutations.Count);
+                CheckMutations(anEmployee, anEmployee.DateExit.ToString(),   this.DateExit.ToString(), fieldNames[2], anEmployee.Mutations.Count);
+                CheckMutations(anEmployee, anEmployee.Salary.ToString(),     this.Salary.ToString(), fieldNames[3], anEmployee.Mutations.Count);
                 // CheckMutations(this, anEmployee.SickDays.ToString(), this.SickDays.ToString(), 5);
             }
             else
