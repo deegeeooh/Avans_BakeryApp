@@ -98,7 +98,7 @@ namespace BakeryConsole
 
         public static void SaveColors()
         {
-            IO.WriteToFile<Color>(settingsFile, userColor, "");
+            IO.WriteToFile<Color>(settingsFile, userColor, true);
         }
 
         public static void SetWarningColor (bool aWarning)          // swap between warning and error colors for Color.SystemMessage

@@ -9,21 +9,21 @@ namespace BakeryConsole
 {
     class Mutation              //NICE create separate mutations file
     {
-        public int RecordCounter { get; set; }
+        public int RecordCounter     { get; set; }
         public DateTime MutationDate { get; set; }
-        public string FieldName { get; set; }
-        public string OldValue { get; set; }
-        public string Changes { get; set; }
-        public string NewValue { get; set; }
+        public string FieldName      { get; set; }
+        public string OldValue       { get; set; }
+        public string Changes        { get; set; }
+        public string NewValue       { get; set; }
 
         public Mutation(int aCounter, DateTime aDate, string aFieldName, string anOldString, string aChange, string aNewString)
         {
             RecordCounter = aCounter;
-            MutationDate = aDate;
-            FieldName = aFieldName;
-            OldValue = anOldString;
-            Changes = aChange;
-            NewValue = aNewString;
+            MutationDate  = aDate;
+            FieldName     = aFieldName;
+            OldValue      = anOldString;
+            Changes       = aChange;
+            NewValue      = aNewString;
         }
 
         [JsonConstructor]                                               // for json, otherwise it will use the default() constructor when deserializing which we don't want here

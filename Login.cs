@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
-
+using System.Diagnostics;
+using Newtonsoft.Json;
 
 namespace BakeryConsole
 {
@@ -30,6 +31,13 @@ namespace BakeryConsole
             }
 
         }
+
+        [JsonConstructor]                                              
+        public Login(Int64 JUST4JSON_DontCall)
+        {
+            //Console.WriteLine("Don't be a dick Jason dear"); Console.ReadKey();
+        }
+
     }
 
 }

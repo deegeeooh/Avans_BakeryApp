@@ -41,8 +41,6 @@ namespace ReflectionTest
 
             object instance = Activator.CreateInstance(type);
 
-            
-
             Console.WriteLine("Type: " + type.Name + " Base Type: " + type.BaseType);
 
             var props = type.GetProperties();
