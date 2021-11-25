@@ -12,7 +12,7 @@ namespace BakeryConsole
         private static int    lengthQuestionField    = 30;
         private static string checkinputStringAlpha  = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789//-@| '.,_";
         private static string checkinputStringNum    = "0123456789" + NumberFormatInfo.CurrentInfo.CurrencyDecimalSeparator;             //depending on OS region settings
-        private static string _ProductfieldName  = "Product Name"; 
+        private static string _DescriptionFieldName  = "Product Name"; 
         
 
         private static int[,] fieldProperties = { { 0,   1,  1 },
@@ -44,7 +44,7 @@ namespace BakeryConsole
         public int Stock                { get; set; }
 
 
-        public Product() : base (_ProductfieldName)                                  // Main Constructor, add new Record
+        public Product() : base (_DescriptionFieldName)                                  // Main Constructor, add new Record
         {
             //totalRecords++;
             //RecordCounter  = totalRecords;
@@ -86,7 +86,7 @@ namespace BakeryConsole
             //CheckMutations (this, " ", "[Created:]", "", 0);
         }
 
-        public Product(bool clearForm, bool _Activatordummy) : base (clearForm, _ProductfieldName, true)                                   // Constructor for displaying clear input form
+        public Product(bool clearForm, bool _Activatordummy) : base (clearForm, _DescriptionFieldName, true)                                   // Constructor for displaying clear input form
         {
             var cursor = Console.CursorTop;
             //if (clearForm)
@@ -98,7 +98,7 @@ namespace BakeryConsole
             //}
         }
 
-        public Product(Product aProduct, bool displayOnly) : base (aProduct, displayOnly, _ProductfieldName, true)    // Constructor for edit and display existing record
+        public Product(Product aProduct, bool displayOnly) : base (aProduct, displayOnly, _DescriptionFieldName, true)    // Constructor for edit and display existing record
         {
             if (!displayOnly)  //EDIT
             {

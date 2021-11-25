@@ -36,14 +36,14 @@ namespace BakeryConsole
                                                   "Relation type: (Aa-Zz)"      ,   // 3
                                                   "Date of Birth: (dd/mm/yyyy)" };  // 4
        
-        private static string _AddressnamefieldName = "Last Name";               // to set fieldname of Address class' generic Name Property
+        private static string _DescriptionFieldName = "Last Name";               // to set fieldname of Address class' generic Name Property
         public string         Prefix        { get; set; }
         public string         FirstName     { get; set; }
         public string         Gender        { get; set; }
         public string         RelationType  { get; set; }              
         public DateTime       DateOfBirth   { get; set; }
 
-/*1st*/ public Person() : base (_AddressnamefieldName)                                            // Main Constructor method;
+/*1st*/ public Person() : base (_DescriptionFieldName)                                            // Main Constructor method;
         {
             var cursorRow    = Console.CursorTop;
 
@@ -58,17 +58,17 @@ namespace BakeryConsole
 /*2nd*/     GetAddressFields(new Address());                                            // get Address' fields and copy them from that instance to this one.
         }
 
-/*1st*/ public Person(bool clearForm, bool _Activatordummy) : base (clearForm, _AddressnamefieldName, true)             // clear fields after base cleared 1st part fields
+/*1st*/ public Person(bool clearForm, bool _Activatordummy) : base (clearForm, _DescriptionFieldName, true)             // clear fields after base cleared 1st part fields
         {                                                                                         // and TotalRecords etc will be increased which we only want from ()
             var cursor = Console.CursorTop;
                 for (int i = 0; i < fieldProperties.GetLength(0); i++)
                 {
                     IO.PrintBoundaries(fieldNames[i], "", lengthQuestionField, fieldProperties[i, 1], cursor, false); Console.WriteLine(); cursor++;
                 }
-            _ = new Address(clearForm, _AddressnamefieldName, false);                             // call Address to clear it's specific fields, 2nd part
+            _ = new Address(clearForm, _DescriptionFieldName, false);                             // call Address to clear it's specific fields, 2nd part
 /*2nd*/ }
 
-/*1st*/ public Person(Person aPerson, bool displayOnly) : base (aPerson, displayOnly, _AddressnamefieldName, true)   
+/*1st*/ public Person(Person aPerson, bool displayOnly) : base (aPerson, displayOnly, _DescriptionFieldName, true)   
         {
             if (!displayOnly)               //EDIT 
             {
@@ -92,7 +92,7 @@ namespace BakeryConsole
                 CheckMutations(aPerson, aPerson.RelationType,           this.RelationType,           fieldNames[3], aPerson.Mutations.Count);
                 CheckMutations(aPerson, aPerson.DateOfBirth.ToString(), this.DateOfBirth.ToString(), fieldNames[4], aPerson.Mutations.Count);
 
-/*2nd*/         GetAddressFields(new Address(aPerson, displayOnly, _AddressnamefieldName, false));
+/*2nd*/         GetAddressFields(new Address(aPerson, displayOnly, _DescriptionFieldName, false));
                 
                 CheckMutations(aPerson, aPerson.Street,                 this.Street,    Address.fieldNames[0],  aPerson.Mutations.Count);
                 CheckMutations(aPerson, aPerson.Zipcode,                this.Zipcode,   Address.fieldNames[1],  aPerson.Mutations.Count);
@@ -113,7 +113,7 @@ namespace BakeryConsole
                                                                          lengthQuestionField, fieldProperties[4, 1], cursor, aPerson.Active);     
                 DisplayAge(aPerson.DateOfBirth, cursor); Console.WriteLine(); cursor++;
 
-/*2nd*/          _ = new Address(aPerson, displayOnly, _AddressnamefieldName, false);
+/*2nd*/          _ = new Address(aPerson, displayOnly, _DescriptionFieldName, false);
             }
         }
 

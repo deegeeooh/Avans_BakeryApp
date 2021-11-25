@@ -10,7 +10,7 @@ namespace BakeryConsole
 
         // input validation string
         public static string checkinputStringAlpha  = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789//-@| '.,_";
-        private static string _SearchStringName     = "Description";
+        private static string _DescriptionFieldName = "Description";
 
         private static int[,] fieldProperties       = { { 0, 3, 1 } };
 
@@ -21,11 +21,11 @@ namespace BakeryConsole
         public string Code { get; set; }
         // public string Description { get; set; }
 
-        public EmployeeRoles() : base(_SearchStringName)
+        public EmployeeRoles() : base(_DescriptionFieldName)
         {
             Code             = IO.GetInput(fieldNames[0],  "", checkinputStringAlpha, lengthQuestionField, fieldProperties[0, 1], true, true, true, true, true, fieldProperties[0, 2]);
         }
-        public EmployeeRoles(bool clearForm, bool _Activatordummy) : base (clearForm, _SearchStringName,  true)                                   // Constructor for displaying clear input form
+        public EmployeeRoles(bool clearForm, bool _Activatordummy) : base (clearForm, _DescriptionFieldName,  true)                                   // Constructor for displaying clear input form
         {
             var cursor = Console.CursorTop;
             for (int i = 0; i < fieldProperties.GetLength(0); i++)
@@ -34,7 +34,7 @@ namespace BakeryConsole
             }
         }
 
-        public EmployeeRoles( EmployeeRoles anEmployeeRole, bool displayOnly ) : base(anEmployeeRole, displayOnly, _SearchStringName, true)
+        public EmployeeRoles( EmployeeRoles anEmployeeRole, bool displayOnly ) : base(anEmployeeRole, displayOnly, _DescriptionFieldName, true)
         {
             if (!displayOnly)            //Edit
             {

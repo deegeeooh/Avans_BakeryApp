@@ -87,13 +87,13 @@ namespace BakeryConsole
             }
         }
 
-        public Address(Address anAddress, bool displayOnly, string aStringFor_Name, bool _First) : base(anAddress, displayOnly, aStringFor_Name, _First)    // Constructor for edit and display existing record
+        public Address(Address anAddress, bool displayOnly, string aStringFor_Name, bool _HandleParentFirst) : base(anAddress, displayOnly, aStringFor_Name, _HandleParentFirst)    // Constructor for edit and display existing record
         {
             fieldNames[1] = aStringFor_Name;        // set derived classes specific .Name 
 
             if (!displayOnly)  //EDIT
             {
-/*1st*/         if (_First)                         // handle ID and Name
+/*1st*/         if (_HandleParentFirst)                         // handle ID and Name
                 {
                     //RecordCounter  = anAddress.RecordCounter;
                     //Name           = IO.GetInput(fieldNames[1], anAddress.Name, checkinputStringAlpha, lengthQuestionField, fieldProperties[1, 1], false, true, true, true, true, fieldProperties[1, 2]);
@@ -118,7 +118,7 @@ namespace BakeryConsole
             }
             else              // DISPLAY ONLY
             {
-/*1st*/         if (_First)
+/*1st*/         if (_HandleParentFirst)
                 {
                     //int cursorColumn = Console.CursorTop;
                     //IfActive(anAddress, lengthQuestionField + fieldProperties[0, 1] + 5, cursorColumn);

@@ -66,7 +66,7 @@ namespace BakeryConsole
                 //DebugMessage("Debug Mode is ON");
                 inputKey = Console.ReadKey(true);                               // 'true' : dont'display the input on the console
                 CheckMenuInput();
-                RecordManager.ResetRecordCounter();                             // Reset counter to 0 to when switching classes
+                RecordManager.SetTotalRecords(0);                             // Reset counter to 0 to when switching classes
 
             } while (inputKey.Key != ConsoleKey.Escape);
 
@@ -244,9 +244,9 @@ namespace BakeryConsole
                             {
                                 IO.SetCursorPosition(cursorLeft, cursorTop + 1);       
                                 aList[recordIndex - 1] = (T)Activator.CreateInstance(typeof(T), aList[recordIndex - 1], false);     // call editor constructor
-                                IO.WriteToFile(aFilename, aList, true);         // write to file
+                                IO.WriteToFile(aFilename, aList, true);                                             // write to file
                                 IO.SetCursorPosition(cursorLeft, cursorTop);
-                                _ = (T)Activator.CreateInstance(typeof(T), aList[recordIndex - 1], true);  // update current record on screen
+                                _ = (T)Activator.CreateInstance(typeof(T), aList[recordIndex - 1], true);           // update current record on screen
                             }
                         }
                         break;
@@ -259,6 +259,7 @@ namespace BakeryConsole
                             aList.Add((T)Activator.CreateInstance(typeof(T)));                                      // add new record 
                             recordsInList++;                                                                        // increase record counter
                             recordIndex = recordsInList;                                                            // set index to new created record
+                            RecordManager.SetTotalRecords(recordsInList);     
                             Console.SetCursorPosition(cursorLeft, cursorTop);
                             _ = (T)Activator.CreateInstance(typeof(T), aList[recordIndex - 1], true);               // refresh record on screen
                             IO.WriteToFile(aFilename, aList, true);                                                 // write to file 
@@ -301,7 +302,7 @@ namespace BakeryConsole
 
                         compareString = BuildZoekString(zoekString, cursorTop);
 
-                        int foundRecordIndex = aList.FindIndex(item => (item.SearchString + item.ID).Contains(compareString));
+                        int foundRecordIndex = aList.FindIndex(item => (item.Description + item.ID).Contains(compareString));
                         if (foundRecordIndex != -1)         // found something
                         {
                             recordIndex = foundRecordIndex + 1;
@@ -356,7 +357,7 @@ namespace BakeryConsole
                 (
                     delegate (Person emp)
                     {
-                        return emp.SearchString.StartsWith(zoekstring.ToString());
+                        return emp.Description.StartsWith(zoekstring.ToString());
                     }
                 );                                                                          // I hate how this syntax looks
                 if (personSearchResult != null)

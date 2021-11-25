@@ -16,8 +16,10 @@ namespace BakeryConsole
         public static String[] fieldNames           = { "Record ID:",               // 0
                                                         "Name:"        };           // 1
 
+        private String searchString;
+
         public string ID                                { get; set; }    // unique record ID
-        public string SearchString                      { get; set; }    // Default record search string
+        public string Description                       { get; set; }    // Default record search string
         public int RecordCounter                        { get; set; }    // NOT static, this is a record propery of the  class    
         public static int TotalRecords                  { get; set; }    // static,this a class property        
         public bool Active                              { get; set; }    // flag for record deletion/inactive
@@ -28,7 +30,7 @@ namespace BakeryConsole
             fieldNames[1]   = aStringFor_Name;
             TotalRecords++;
             RecordCounter   = TotalRecords;
-            SearchString    = IO.GetInput(fieldNames[1], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[1, 1], false, true, true, true, true, fieldProperties[1, 2]);
+            Description     = IO.GetInput(fieldNames[1], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[1, 1], false, true, true, true, true, fieldProperties[1, 2]);
             ID              = ConstructID(this);
             Active          = true;
             CheckMutations(this, " ", "[Created:]", "", 0);             // set creation date in mutation at initial record creation
@@ -54,20 +56,20 @@ namespace BakeryConsole
                 if (!displayOnly)           //EDIT
                 {
                     RecordCounter = anInheritor.RecordCounter;
-                    SearchString = IO.GetInput(fieldNames[1], anInheritor.SearchString, checkinputStringAlpha, lengthQuestionField, fieldProperties[1, 1], false, true, true, true, true, fieldProperties[1, 2]);
+                    Description = IO.GetInput(fieldNames[1], anInheritor.Description, checkinputStringAlpha, lengthQuestionField, fieldProperties[1, 1], false, true, true, true, true, fieldProperties[1, 2]);
                     ID = ConstructID(this);
                     this.Mutations = anInheritor.Mutations;
                     Active = true;
 
                     CheckMutations(anInheritor, anInheritor.ID, this.ID, fieldNames[0], anInheritor.Mutations.Count);
-                    CheckMutations(anInheritor, anInheritor.SearchString, this.SearchString, fieldNames[1], anInheritor.Mutations.Count);
+                    CheckMutations(anInheritor, anInheritor.Description, this.Description, fieldNames[1], anInheritor.Mutations.Count);
                 }
                 else               // DISPLAY ONLY
                 {
                     int cursorColumn = Console.CursorTop;
                     IfActive(anInheritor, lengthQuestionField + fieldProperties[0, 1] + 5, cursorColumn);
                     IO.PrintBoundaries(fieldNames[0], anInheritor.ID, lengthQuestionField, fieldProperties[0, 1], cursorColumn, anInheritor.Active); Console.WriteLine(); cursorColumn++;
-                    IO.PrintBoundaries(fieldNames[1], anInheritor.SearchString, lengthQuestionField, fieldProperties[1, 1], cursorColumn, anInheritor.Active); Console.WriteLine(); cursorColumn++;
+                    IO.PrintBoundaries(fieldNames[1], anInheritor.Description, lengthQuestionField, fieldProperties[1, 1], cursorColumn, anInheritor.Active); Console.WriteLine(); cursorColumn++;
 
                 }
             }
@@ -75,8 +77,7 @@ namespace BakeryConsole
 
 
         public RecordManager( bool dontDoShit ) { }                      // dummy 
-
-        public RecordManager(RecordManager anInheritor, bool dontDoShit) { }     
+        //public RecordManager(RecordManager anInheritor, bool dontDoShit) { }     
 
         [JsonConstructor]                                               // for json, otherwise it will use the default() constructor when deserializing which we don't want here
         public RecordManager(Int64 JUST4JSON_DontCall)
@@ -125,14 +126,9 @@ namespace BakeryConsole
             TotalRecords = aRecord;
         }
 
-        public static void ResetRecordCounter()
-        {
-            TotalRecords = 0;
-        }
-
         public static string RetrieveSearchString<T>( T anInheritor, int aRecordNumber ) where T : RecordManager
         {
-            string searchString = anInheritor.SearchString;
+            string searchString = anInheritor.Description;
             return searchString;
         }
         public void IfActive<T>(T anInheritor,  int onCursorColumn , int onCursorRow ) where T : RecordManager
@@ -151,13 +147,13 @@ namespace BakeryConsole
         {
             string a = RecordCounter.ToString("D5");            // make a string consisting of 5 decimals
             string b;
-            if (aRecord.SearchString.Length >= 3)
+            if (aRecord.Description.Length >= 3)
             {
-                b = aRecord.SearchString.Substring(0, 3).ToUpper();             // take first 3 chars in uppercase
+                b = aRecord.Description.Substring(0, 3).ToUpper();             // take first 3 chars in uppercase
             }                                                             // TODO: remove whitespace if exists ("de Groot")
             else
             {
-                b = aRecord.SearchString.Substring(0, aRecord.SearchString.Length)    // or build to 3 chars with added "A" chars
+                b = aRecord.Description.Substring(0, aRecord.Description.Length)    // or build to 3 chars with added "A" chars
                     .ToUpper()
                     .PadRight(3, 'A');
             }
