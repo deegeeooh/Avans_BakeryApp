@@ -9,14 +9,14 @@ using System.Threading;
 
 namespace BakeryConsole
 {
-    internal enum ClassSelect
+    internal enum ClassSelect       // OBSOLETE
     {
         Person,
         Employee,
         Customers,
         Product
     }
-
+    
     internal class Program
     {
         public static bool _debugEnabled { get; set; }
@@ -28,16 +28,23 @@ namespace BakeryConsole
         // declare variables
         private static string validation            = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 " + "\b";
         private static string compareString         = "";
-        public static string  filePeople            = "people.json";
+        public  static string filePeople            = "people.json";
         private static string fileCustomers         = "customers.json";
-        private static string fileEmployeeRoles     = "employeeRoles.json";
+        private static string fileEmployeeRoles     = "employee_roles.json";
+        private static string fileProductTypes      = "product_types.json";
+        private static string fileCustomerTypes     = "customer_types.json";
+        private static string fileRelationTypes     = "relation_types.json";
         private static string fileEmployees         = "employees.json";
         private static string fileProducts          = "products.json";
-        public static string  licenseString         = "Royal Vlaaienboer Inc.";
-        public static string  buildVersion          = "0.19";                   //  NICE: use assemblyversion attribute
-        public static int     windowHeight          = 35;
-        public static int     windowWidth           = 80;
-        public static int     warningLenghtDefault  = 1000;                     // displaytime in ms for system messages
+        private static string fileUsers             = "users.json";
+        public  static string licenseString         = "Royal Vlaaienboer Inc.";
+        public  static string buildVersion          = "0.20";                   //  NICE: use assemblyversion attribute
+        public  static int    windowHeight          = 35;
+        public  static int    windowWidth           = 80;
+        public  static int    warningLenghtDefault  = 1000;                     // displaytime in ms for system messages
+
+        private static string[] fieldNames;
+        private static int[,] fieldProperties;
 
         private static void Main()
         {
@@ -87,9 +94,7 @@ namespace BakeryConsole
         {
             //bool a = new Program()._debugEnabled;
             if (_debugEnabled) IO.SystemMessage(aString, false);
-
             Login.validPassword = true;
-
         }
 
         private static void CheckMenuInput()
@@ -108,7 +113,7 @@ namespace BakeryConsole
             }
             else if (inputKey.Key == ConsoleKey.P)                                                  // Person
             {
-                IO.DisplayMenu("Browse/edit People", "(Ins)ert to Add\n(Enter)to Edit\n(Del)ete to remove Record\nUse arrow keys to browse\n(Home) Main menu\n\n", Color.TextColors.MenuSelect);
+                IO.DisplayMenu("Browse/edit People", "(Ins)ert to Add\n(Enter)to Edit\n(Del)ete to remove Record\nUse arrow keys to browse, type to search\n(Home) Main menu\n\n", Color.TextColors.MenuSelect);
 
                 var peepsList = IO.PopulateList<Person>(filePeople);
                 HandleRecords<Person>(peepsList, filePeople);
@@ -116,7 +121,7 @@ namespace BakeryConsole
             }
             else if (inputKey.Key == ConsoleKey.E & Login.validPassword)                            // Employees
             {
-                IO.DisplayMenu("Browse/edit Employees", "(Ins)ert to Add\n(Enter)to Edit\n(Del)ete to remove Record\nUse arrow keys to browse\n(Home) Main menu\n\n", Color.TextColors.MenuSelect);
+                IO.DisplayMenu("Browse/edit Employees", "(Ins)ert to Add\n(Enter)to Edit\n(Del)ete to remove Record\nUse arrow keys to browse, type to search\n(Home) Main menu\n\n", Color.TextColors.MenuSelect);
                 
                 var empList = IO.PopulateList<Employee>(fileEmployees);
                 HandleRecords<Employee>(empList, fileEmployees);
@@ -124,7 +129,7 @@ namespace BakeryConsole
             }
             else if (inputKey.Key == ConsoleKey.C & Login.validPassword)                            // Customers
             {
-                IO.DisplayMenu("Browse / edit Customers", "(Ins)ert to Add\n(Enter)to Edit\n(Del)ete to remove Record\nUse arrow keys to browse\n(Home) Main menu\n\n", Color.TextColors.MenuSelect);
+                IO.DisplayMenu("Browse / edit Customers", "(Ins)ert to Add\n(Enter)to Edit\n(Del)ete to remove Record\nUse arrow keys to browse, type to search\n(Home) Main menu\n\n", Color.TextColors.MenuSelect);
                 
                 var customerList = IO.PopulateList<Customer>(fileCustomers);
                 HandleRecords<Customer>(customerList, fileCustomers);
@@ -132,14 +137,22 @@ namespace BakeryConsole
             }
             else if (inputKey.Key == ConsoleKey.D & Login.validPassword)                            // Products
             {
-                IO.DisplayMenu("Browse / edit Products", "(Ins)ert to Add\n(Enter)to Edit\n(Del)ete to remove Record\nUse arrow keys to browse\n(Home) Main menu\n\n", Color.TextColors.MenuSelect);
+                IO.DisplayMenu("Browse / edit Products", "(Ins)ert to Add\n(Enter)to Edit\n(Del)ete to remove Record\nUse arrow keys to browse, type to search\n(Home) Main menu\n\n", Color.TextColors.MenuSelect);
              
                 var prodList = IO.PopulateList<Product>(fileProducts);
                 HandleRecords<Product>(prodList, fileProducts);
             }
             else if (inputKey.Key == ConsoleKey.M & Login.validPassword)                            // Master Data 
             {
-                
+                do
+                {
+                    IO.DisplayMenu("Edit Master Data", "(E)mployee Roles\n(C)ustomer types\n(P)roduct types\n(R)elation Types\n(U)ser accounts\n(Home) Main menu\n", Color.TextColors.MenuSelect);
+                    inputKey = Console.ReadKey(true);                               // 'true' : dont'display the input on the console
+                    CheckMenuInputMasterData();
+                    RecordManager.SetTotalRecords(0);
+
+                } while (inputKey.Key != ConsoleKey.Home);
+
                 CheckMenuInputMasterData();
             }
 
@@ -149,8 +162,8 @@ namespace BakeryConsole
             else if (inputKey.Key == ConsoleKey.F6)  { Color.CycleColors(2, false); return; }       // background
             else if (inputKey.Key == ConsoleKey.F7)  { Color.CycleColors(3, false); return; }       // Menu select color
             else if (inputKey.Key == ConsoleKey.F8)  { Color.CycleColors(4, false); return; }       // Software license nameholder Color
-            else if (inputKey.Key == ConsoleKey.F9)  { Color.CycleColors(5, true);  return; }       // Random colors including background
-            else if (inputKey.Key == ConsoleKey.F10) { Color.CycleColors(5, false); return; }       // Random colors excluding background
+            else if (inputKey.Key == ConsoleKey.F9)  { Color.CycleColors(5, true);  return; }       // random colors including background
+            else if (inputKey.Key == ConsoleKey.F10) { Color.CycleColors(5, false); return; }       // random colors excluding background
             else if (inputKey.Key == ConsoleKey.F11) { Color.SetStandardColor(); }                  // Set/Reset to standard color scheme
 
             else if (inputKey.Key == ConsoleKey.F12) { Color.SaveColors(); }                        //
@@ -166,25 +179,80 @@ namespace BakeryConsole
         }
         private static void CheckMenuInputMasterData ()
         {
-            do
+            
+            List<GenericDataClass> _browselist = new List<GenericDataClass>();
+            IO.DisplayMenu("Browse / edit Employee Roles", "(Ins)ert to Add\n(Enter)to Edit\n(Del)ete to remove Record\nUse arrow keys to browse\n(Home) Main Menu\n(End) Previous Menu\n\n", Color.TextColors.MenuSelect);
+
+            switch (inputKey.Key)
             {
-                IO.DisplayMenu("Edit Master Data", "(E)mployee Roles\n(C)ustomer types\n(P)roduct types\n(R)elation Types\n(U)ser profiles\n(Home) Main menu\n", Color.TextColors.MenuSelect);
-                inputKey = Console.ReadKey(true);                               // 'true' : dont'display the input on the console
+               
+                case ConsoleKey.A:
+                    break;
+                case ConsoleKey.B:
+                    break;
+                case ConsoleKey.C:          // Customer Types
 
-                if (inputKey.Key == ConsoleKey.E)
-                {
-                    IO.DisplayMenu("Browse / edit Employee Roles", "(Ins)ert to Add\n(Enter)to Edit\n(Del)ete to remove Record\nUse arrow keys to browse\n(Home) Main menu\n\n", Color.TextColors.MenuSelect);
-                    var _browselist = IO.PopulateList<EmployeeRoles>(fileEmployeeRoles);
-                    HandleRecords<EmployeeRoles>(_browselist, fileEmployeeRoles);
-                }
+                    GenericDataClass.SetFieldNamesArray(fieldNames = new string[] { "Search code"," Branche code" }) ;
+                    GenericDataClass.SetFieldPropertiesArray(fieldProperties = new int[,] { { 0, 6, 1 }, { 1, 3, 0 } });
+                    GenericDataClass.SetNameFieldName("Customer type description");
+                    _browselist = IO.PopulateList<GenericDataClass>(fileCustomerTypes);
+                    HandleRecords<GenericDataClass>(_browselist, fileCustomerTypes);
 
-            } while (inputKey.Key != ConsoleKey.Home);
+                    break;
+                case ConsoleKey.D:
+                    break;
+                case ConsoleKey.E:          // Employee roles
+                    
+                    GenericDataClass.SetFieldNamesArray(fieldNames = new string[] { "Search code","Salary Scale" });
+                    GenericDataClass.SetFieldPropertiesArray(fieldProperties = new int[,] { { 0, 3, 1 }, { 1, 1, 0 } });
+                    GenericDataClass.SetNameFieldName("Employee job description");
+                    _browselist = IO.PopulateList<GenericDataClass>(fileEmployeeRoles);
+                    HandleRecords<GenericDataClass>(_browselist, fileEmployeeRoles);
+
+                    break;
+
+                case ConsoleKey.R:         // Relation type types
+                    
+                    GenericDataClass.SetFieldNamesArray(fieldNames = new string[] { "Search code" });
+                    GenericDataClass.SetFieldPropertiesArray(fieldProperties = new int[,] { { 0, 3, 1 } });
+                    GenericDataClass.SetNameFieldName("Relation Type");
+                    _browselist = IO.PopulateList<GenericDataClass>(fileRelationTypes);
+                    HandleRecords<GenericDataClass>(_browselist, fileRelationTypes);
+
+                    break;
+               
+                case ConsoleKey.P:         // Product types
+                    
+                    GenericDataClass.SetFieldNamesArray(fieldNames = new string[] { "Search code" });
+                    GenericDataClass.SetFieldPropertiesArray(fieldProperties = new int[,] { { 0, 3, 1 } });
+                    GenericDataClass.SetNameFieldName("Product Type");
+                    _browselist = IO.PopulateList<GenericDataClass>(fileProductTypes);
+                    HandleRecords<GenericDataClass>(_browselist, fileProductTypes);
+                    
+                    break;
+
+                case ConsoleKey.U:         // Product types
+                    
+                    GenericDataClass.SetFieldNamesArray(fieldNames = new string[] { "Password", "Access People", "Access Employees", "Access Customers", "Access Products", "Access Orders", "Access Master data", "Reset Password next login" });
+                    GenericDataClass.SetFieldPropertiesArray(fieldProperties = new int[,] { { 0, 40, 8 },{ 0, 1, 1 },{ 0, 1, 1 },{ 0, 1, 1 },{ 0, 1, 1 },{ 0, 1, 1 },{ 0, 1, 1 },{ 0, 1, 1 } });
+                    GenericDataClass.SetNameFieldName("User Name");
+                    _browselist = IO.PopulateList<GenericDataClass>(fileUsers);
+                    HandleRecords<GenericDataClass>(_browselist, fileUsers);
+
+                    break;
+
+                default:
+                    break;
+            }
+
         }
        
         private static Dictionary<int, T> PopulateDictionary<T>(string aFilename) where T : Address
         {
 
             var browseList = IO.PopulateList<T>(aFilename);             // reads json file and populates list of class T
+            List<int>[] searchResult;
+            
             var returnDictionary = browseList.ToDictionary(item => item.RecordCounter, item => item);
 
             return returnDictionary;   //TODO: optimaliseren 
@@ -210,14 +278,15 @@ namespace BakeryConsole
             int cursorLeft    = Console.CursorLeft;                             // store current cursorposition, left and top
             int cursorTop     = Console.CursorTop;
             int recordIndex   = 1;                                              // actual recordnumber in file being handled
-            int recordsInList = 0;                                              // total number of records in file
+            int recordsInList = aList.Count;                                    // total number of records in file
 
-            //Type myType = (typeof(T));
-            //MethodInfo[] myArrayMethodInfo =myType.GetMethods(BindingFlags.NonPublic|BindingFlags.Instance|BindingFlags.DeclaredOnly);
+            // init help variables for search selection    
+            var selectedRecordsList = aList;
+            var recordsInSelection  = recordsInList;
+            bool change = false;
                             
-            if (aList.Count > 0)          //display first record
+            if (aList.Count > 0)                                                //display first record
             {
-                recordsInList = aList.Count;                                    // get total records 
                 RecordManager.SetTotalRecords(recordsInList);                   // store total records in Recordmanager
                 _ = (T)Activator.CreateInstance(typeof(T), aList[0], true);     // display first record on screen
             }
@@ -240,30 +309,32 @@ namespace BakeryConsole
 
                         if (recordsInList > 0)                                  // some record is being displayed
                         {
-                            if (aList[recordIndex -1].Active)
+                            if (selectedRecordsList[recordIndex -1].Active)
                             {
                                 IO.SetCursorPosition(cursorLeft, cursorTop + 1);       
-                                aList[recordIndex - 1] = (T)Activator.CreateInstance(typeof(T), aList[recordIndex - 1], false);     // call editor constructor
+                                selectedRecordsList[recordIndex -1] = (T)Activator.CreateInstance(typeof(T), selectedRecordsList[recordIndex - 1], false);     // call editor constructor
+                                aList[selectedRecordsList[recordIndex - 1].RecordCounter - 1] = selectedRecordsList[recordIndex - 1];
                                 IO.WriteToFile(aFilename, aList, true);                                             // write to file
                                 IO.SetCursorPosition(cursorLeft, cursorTop);
-                                _ = (T)Activator.CreateInstance(typeof(T), aList[recordIndex - 1], true);           // update current record on screen
+                                _ = (T)Activator.CreateInstance(typeof(T), selectedRecordsList[recordIndex - 1], true);           // update current record on screen
                             }
                         }
                         break;
                     //case ConsoleKey.I:
 /*** ADD ***/       case ConsoleKey.Insert:
 
+                        selectedRecordsList = aList;                                                            // reset searchlist
                         IO.SetCursorPosition(cursorLeft, cursorTop);
-                            if (recordsInList != 0) _ = (T)Activator.CreateInstance(typeof(T), true, true);         // clear form if record on screen
-                            IO.SetCursorPosition(cursorLeft, cursorTop + 1);                    
-                            aList.Add((T)Activator.CreateInstance(typeof(T)));                                      // add new record 
-                            recordsInList++;                                                                        // increase record counter
-                            recordIndex = recordsInList;                                                            // set index to new created record
-                            RecordManager.SetTotalRecords(recordsInList);                                           // store number of records
-                            Console.SetCursorPosition(cursorLeft, cursorTop);
-                            _ = (T)Activator.CreateInstance(typeof(T), aList[recordIndex - 1], true);               // refresh record on screen
-                            IO.WriteToFile(aFilename, aList, true);                                                 // write to file 
-                            UpdateTotalRecordsOnScreen(recordsInList);                                              // update total records on screen
+                        if (recordsInList != 0) _ = (T)Activator.CreateInstance(typeof(T), true, true);         // clear form if record on screen
+                        IO.SetCursorPosition(cursorLeft, cursorTop + 1);                    
+                        aList.Add((T)Activator.CreateInstance(typeof(T)));                                      // add new record 
+                        recordsInList++; recordsInSelection++;                                                                        // increase record counter
+                        recordIndex = recordsInList;                                                            // set index to new created record
+                        RecordManager.SetTotalRecords(recordsInList);                                           // store number of records
+                        Console.SetCursorPosition(cursorLeft, cursorTop);
+                        _ = (T)Activator.CreateInstance(typeof(T), aList[recordIndex - 1], true);               // refresh record on screen
+                        IO.WriteToFile(aFilename, aList, true);                                                 // write to file 
+                        UpdateTotalRecordsOnScreen(recordsInList);                                              // update total records on screen
 
                         break;
                    
@@ -271,8 +342,9 @@ namespace BakeryConsole
                         if (recordsInList > 0)
                         {
                             IO.SetCursorPosition(cursorLeft, cursorTop);                        
-                            RecordManager.ToggleDeletionFlag<T>(aList[recordIndex - 1], recordIndex - 1);           // toggle flag
-                            _ = (T)Activator.CreateInstance(typeof(T), aList[recordIndex - 1], true);               // 
+                            RecordManager.ToggleDeletionFlag<T>(selectedRecordsList[recordIndex - 1], recordIndex - 1);           // toggle flag
+                            _ = (T)Activator.CreateInstance(typeof(T), selectedRecordsList[recordIndex - 1], true);               // refresh record on screen
+                            selectedRecordsList[selectedRecordsList[recordIndex - 1].RecordCounter - 1].Active = selectedRecordsList[recordIndex - 1].Active;
                             IO.WriteToFile(aFilename, aList, false);                                                // write
                         }
                         break;
@@ -283,31 +355,49 @@ namespace BakeryConsole
                         {
                             recordIndex--;
                             IO.SetCursorPosition(cursorLeft, cursorTop);
-                            _ = (T)Activator.CreateInstance(typeof(T), aList[recordIndex - 1], true);
+                            _ = (T)Activator.CreateInstance(typeof(T), selectedRecordsList[recordIndex - 1], true);
                         }
                         break;
 
-                    /* BROWSE */
                     case ConsoleKey.RightArrow:
                     case ConsoleKey.DownArrow:
-                        if (recordIndex < recordsInList)
+                        if (recordIndex < recordsInSelection)
                         {
                             recordIndex++;
                             IO.SetCursorPosition(cursorLeft, cursorTop);
-                            _ = (T)Activator.CreateInstance(typeof(T), aList[recordIndex - 1], true);
+                            _ = (T)Activator.CreateInstance(typeof(T), selectedRecordsList[recordIndex - 1], true);
                         }
                         break;
                     
 /* SEARCH */        default:
-
-                        compareString = BuildZoekString(zoekString, cursorTop);
-
-                        int foundRecordIndex = aList.FindIndex(item => (item.Description + item.ID).Contains(compareString));
-                        if (foundRecordIndex != -1)         // found something
+                        
+                        compareString       = BuildZoekString(zoekString, cursorTop);
+                        int foundListIndex  = aList.FindIndex(item => (item.Description + item.ID).Contains(compareString));
+                        int numberFound     = aList.Count(item => (item.Description + item.ID).Contains(compareString));
+                        
+                        if (numberFound > 0)
                         {
-                            recordIndex = foundRecordIndex + 1;
+                            change = true;
+                                                        
+                            selectedRecordsList = aList.FindAll(item => (item.Description + item.ID).Contains(compareString));
+                            
+                            recordsInSelection = selectedRecordsList.Count;
+                            
+                        }else
+                        {
+                            if (change)
+                            {
+                                selectedRecordsList = aList;
+                                change = false;
+                            }
+                        }
+                        IO.PrintOnConsole("Searching: [ " + compareString.ToString() + " ] matches: "+ numberFound.ToString().PadRight(20, ' '), 1, cursorTop - 1, Color.TextColors.Defaults);
+                        
+                        if (foundListIndex != -1)         // found something
+                        {
+                            recordIndex = 1;
                             IO.SetCursorPosition(cursorLeft, cursorTop);
-                             _ = (T)Activator.CreateInstance(typeof(T), aList[foundRecordIndex], true);
+                             _ = (T)Activator.CreateInstance(typeof(T), selectedRecordsList[0], true);         // display first found record
                         }else
                         {
                             zoekString.Clear();
@@ -319,7 +409,7 @@ namespace BakeryConsole
                 {
                     IO.PrintOnConsole("Recordindex: " + recordIndex, 0, 0, Color.TextColors.Defaults);
                 }
-            } while (inputKey.Key != ConsoleKey.Home & inputKey.Key != ConsoleKey.Q);
+            } while (inputKey.Key != ConsoleKey.Home & inputKey.Key != ConsoleKey.Q & inputKey.Key != ConsoleKey.End);
         }
 
 
@@ -338,9 +428,12 @@ namespace BakeryConsole
                 {
                     zoekstring.Append(inputKey.KeyChar.ToString());
                 }
+            }else
+            {
+                zoekstring.Clear();
             }
 
-            IO.PrintOnConsole("Searching: [ " + zoekstring.ToString() + " ]".PadRight(20, ' '), 1, cursorTop - 1, Color.TextColors.Defaults);
+            //IO.PrintOnConsole("Searching: [ " + zoekstring.ToString() + " ]".PadRight(20, ' '), 1, cursorTop - 1, Color.TextColors.Defaults);
             returnString = zoekstring.ToString();
             return returnString;
         }
