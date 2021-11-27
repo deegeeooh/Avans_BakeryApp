@@ -27,7 +27,7 @@ namespace BakeryConsole
                                                "City: "                      ,   // 2
                                                "Country: "                   ,   // 3
                                                "Telephone: "                 ,   // 4
-                                               "Email: "                     };  // 5
+                                               "Email: "                     } ;  // 5
 
         //public string ID                    { get; set; }
         //public string Name                  { get; set; }
@@ -41,10 +41,7 @@ namespace BakeryConsole
 
  /*1st*/public Address(string aStringFor_Name ) : base(aStringFor_Name)    //first part of properties to be set when instantiating new parent
         {
-            fieldNames[1] = aStringFor_Name;                // set derived classes specific string for Name 
 
-            //Name          = IO.GetInput(fieldNames[1], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[1, 1], false, true, true, true, true, fieldProperties[1, 2]);
-            //ID            = ConstructID(this);
         }
 
  /*2nd*/public Address() : base (true)                      // fill second part of Properties called from parent and call dummy in base
@@ -57,13 +54,11 @@ namespace BakeryConsole
             Email     = IO.GetInput(fieldNames[5], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[5, 1], false, true, true, true, true, fieldProperties[5, 2]);
         }
 
-        public Address(bool clearForm, string aStringFor_Name, bool _First) : base(clearForm, aStringFor_Name, _First)  // Every class needs this routine to display its fields
+        public Address(bool clearForm, string aStringFor_Name, bool _ExecuteParentConstructorOnly) : base(clearForm, aStringFor_Name, _ExecuteParentConstructorOnly)  // Every class needs this routine to display its fields
         {
-            fieldNames[1] = aStringFor_Name;       // set derived classes specific .Name 
-
             int start;
             int lenght;
-/*1st*/     if (_First)                            // only handle first two fields, ID and Name
+/*1st*/     if (_ExecuteParentConstructorOnly)                            // only handle first two fields, ID and Name
             {
                 //start = 0;
                 //lenght = 2;
@@ -87,13 +82,11 @@ namespace BakeryConsole
             }
         }
 
-        public Address(Address anAddress, bool displayOnly, string aStringFor_Name, bool _HandleParentFirst) : base(anAddress, displayOnly, aStringFor_Name, _HandleParentFirst)    // Constructor for edit and display existing record
+        public Address(Address anAddress, bool displayOnly, string aStringFor_Name, bool _ExecuteParentConstructorOnly) : base(anAddress, displayOnly, aStringFor_Name, _ExecuteParentConstructorOnly)    // Constructor for edit and display existing record
         {
-            fieldNames[1] = aStringFor_Name;        // set derived classes specific .Name 
-
             if (!displayOnly)  //EDIT
             {
-/*1st*/         if (_HandleParentFirst)                         // just handle ID and Name in RecordManager
+/*1st*/         if (_ExecuteParentConstructorOnly)                         // just handle ID and Name in RecordManager
                 {
                     //RecordCounter  = anAddress.RecordCounter;
                     //Name           = IO.GetInput(fieldNames[1], anAddress.Name, checkinputStringAlpha, lengthQuestionField, fieldProperties[1, 1], false, true, true, true, true, fieldProperties[1, 2]);
@@ -118,7 +111,7 @@ namespace BakeryConsole
             }
             else              // DISPLAY ONLY
             {
-/*1st*/         if (_HandleParentFirst)
+/*1st*/         if (_ExecuteParentConstructorOnly)
                 {
                     //int cursorColumn = Console.CursorTop;
                     //IfActive(anAddress, lengthQuestionField + fieldProperties[0, 1] + 5, cursorColumn);
