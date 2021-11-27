@@ -73,7 +73,7 @@ namespace BakeryConsole
             if (!displayOnly)               //EDIT 
             {
                 // call GetInput() with the passed values of aPerson
-                RecordCounter = aPerson.RecordCounter;
+                RecordCounter   = aPerson.RecordCounter;
 
                 Prefix          = IO.GetInput(fieldNames[0], aPerson.Prefix, checkinputStringAlpha,       lengthQuestionField, fieldProperties[0, 1], false, true, true, true, true,  fieldProperties[0, 2]);
                 FirstName       = IO.GetInput(fieldNames[1], aPerson.FirstName, checkinputStringAlpha,    lengthQuestionField, fieldProperties[1, 1], false, true, true, true, true,  fieldProperties[1, 2]);
@@ -81,7 +81,6 @@ namespace BakeryConsole
                 RelationType    = IO.GetInput(fieldNames[3], aPerson.RelationType, checkinputStringAlpha, lengthQuestionField, fieldProperties[3, 1], true, true, true, true, true,   fieldProperties[3, 2]);
                 DateOfBirth     = IO.ParseToDateTime(IO.GetInput(fieldNames[4], aPerson.DateOfBirth.ToString("dd/MM/yyyy"), 
                                                                                    checkinputStringDate,  lengthQuestionField, fieldProperties[4, 1], false, true, true, false, true, fieldProperties[4, 2]), true);
-                
                 DisplayAge (this.DateOfBirth, Console.CursorTop - 1);
 
                 this.Mutations = aPerson.Mutations;                     // copy existing mutations to this new instance
@@ -150,8 +149,6 @@ namespace BakeryConsole
             }
             return peopleList[0];
         }
-
-        
         private void GetAddressFields(Address _newInstance)
         {
             this.Street    = _newInstance.Street;

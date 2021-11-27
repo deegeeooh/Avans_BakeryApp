@@ -46,8 +46,6 @@ namespace BakeryConsole
 
         public Product() : base (_DescriptionFieldName)                                  // Main Constructor, add new Record
         {
-            //totalRecords++;
-            //RecordCounter  = totalRecords;
             
             ProductType    =                    IO.GetInput(fieldNames[0], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[0, 1], false, true, true, true, true, fieldProperties[0, 2]);
             ProductionDate = IO.ParseToDateTime(IO.GetInput(fieldNames[1], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[1, 1], false, true, true, true, true, fieldProperties[1, 2]),false);
@@ -80,22 +78,16 @@ namespace BakeryConsole
             }
 
             Stock          = Int32.Parse(IO.GetInput(fieldNames[5], "", checkinputStringNum, lengthQuestionField, fieldProperties[5, 1], false, true, true, true, true, fieldProperties[5, 2]));
-            //ID             = ConstructID(this);
-            //Active         = true;
-
-            //CheckMutations (this, " ", "[Created:]", "", 0);
+           
         }
 
         public Product(bool clearForm, bool _Activatordummy) : base (clearForm, _DescriptionFieldName, true)                                   // Constructor for displaying clear input form
         {
             var cursor = Console.CursorTop;
-            //if (clearForm)
-            //{
                 for (int i = 0; i < fieldProperties.GetLength(0); i++)
                 {
                     IO.PrintBoundaries(fieldNames[i], "", lengthQuestionField, fieldProperties[i, 1], cursor, false); Console.WriteLine(); cursor++;
                 }
-            //}
         }
 
         public Product(Product aProduct, bool displayOnly) : base (aProduct, displayOnly, _DescriptionFieldName, true)    // Constructor for edit and display existing record
@@ -103,8 +95,7 @@ namespace BakeryConsole
             if (!displayOnly)  //EDIT
             {
                 RecordCounter = aProduct.RecordCounter;
-                
-                //Name           = IO.GetInput(fieldNames[1], aProduct.Name, checkinputStringAlpha, lengthQuestionField, fieldProperties[1, 1], false, true, true, true, true, fieldProperties[1, 2]);      //TODO iterate through constructor with generics fields
+               
                 ProductType    = IO.GetInput(fieldNames[0], aProduct.ProductType, checkinputStringAlpha, lengthQuestionField, fieldProperties[0, 1], false, true, true, true, true, fieldProperties[0, 2]);
                 ProductionDate = IO.ParseToDateTime(IO.GetInput(fieldNames[1], aProduct.ProductionDate.ToString("dd/MM/yyyy"), checkinputStringAlpha, lengthQuestionField, fieldProperties[1, 1], false, true, true, true, true, fieldProperties[1, 2]), false);
                 ExpirationDate = IO.ParseToDateTime(IO.GetInput(fieldNames[2], aProduct.ExpirationDate.ToString("dd/MM/yyyy"), checkinputStringAlpha, lengthQuestionField, fieldProperties[2, 1], false, true, true, true, true, fieldProperties[2, 2]), false);
@@ -122,12 +113,9 @@ namespace BakeryConsole
                            CostPrice = (getCostPrice != "") ? float.Parse(getCostPrice) : 0;
                 
                 Stock =               Int16.Parse(IO.GetInput(fieldNames[5], aProduct.Stock.ToString(), checkinputStringNum, lengthQuestionField, fieldProperties[5, 1], false, true, true, true, true, fieldProperties[5, 2]));
-                //ID = ConstructID(this);
-                //Active = true;
                 
                 this.Mutations = aProduct.Mutations;
-
-                //CheckMutations(aProduct, aProduct.Name,                      this.Name,                      fieldNames[1], aProduct.Mutations.Count);
+                
                 CheckMutations(aProduct, aProduct.ProductType,               this.ProductType,               fieldNames[0], aProduct.Mutations.Count);
                 CheckMutations(aProduct, aProduct.ProductionDate.ToString(), this.ProductionDate.ToString(), fieldNames[1], aProduct.Mutations.Count);
                 CheckMutations(aProduct, aProduct.ExpirationDate.ToString(), this.ExpirationDate.ToString(), fieldNames[2], aProduct.Mutations.Count);
@@ -138,9 +126,7 @@ namespace BakeryConsole
             else              // display only
             {
                 var cursorColumn = Console.CursorTop;
-                //IfActive(aProduct, lengthQuestionField + fieldProperties[0, 1] + 5, cursorColumn);
-                //IO.PrintBoundaries(fieldNames[0], aProduct.ID, lengthQuestionField, fieldProperties[0, 1], cursorColumn, aProduct.Active); Console.WriteLine(); cursorColumn++;
-                //IO.PrintBoundaries(fieldNames[1], aProduct.Name, lengthQuestionField, fieldProperties[1, 1], cursorColumn, aProduct.Active); Console.WriteLine(); cursorColumn++;
+
                 IO.PrintBoundaries(fieldNames[0], aProduct.ProductType, lengthQuestionField, fieldProperties[0, 1], cursorColumn, aProduct.Active); Console.WriteLine(); cursorColumn++;
                 IO.PrintBoundaries(fieldNames[1], aProduct.ProductionDate.ToString("dd/MM/yyyy"), lengthQuestionField, fieldProperties[1, 1], cursorColumn, aProduct.Active); Console.WriteLine(); cursorColumn++;
                 IO.PrintBoundaries(fieldNames[2], aProduct.ExpirationDate.ToString("dd/MM/yyyy"), lengthQuestionField, fieldProperties[2, 1], cursorColumn, aProduct.Active); Console.WriteLine(); cursorColumn++;

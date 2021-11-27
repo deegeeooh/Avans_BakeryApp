@@ -97,7 +97,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Address.cs" />
-    <Compile Include="EmployeeRoles.cs" />
+    <Compile Include="ICodeOnlyDataClass.cs" />
+    <Compile Include="GenericDataClass.cs" />
     <Compile Include="Interface.cs" />
     <Compile Include="Mutation.cs" />
     <Compile Include="Employee.cs" />
