@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 
@@ -37,14 +38,14 @@ namespace BakeryConsole
         private static string fileEmployees         = "employees.json";
         private static string fileProducts          = "products.json";
         private static string fileUsers             = "users.json";
-        public  static string licenseString         = "Royal Vlaaienboer Inc.";
+        public  static string licenseString         = "Initech Incorporated";
         public  static string buildVersion          = "0.20";                   // NICE: use assemblyversion attribute
-        public  static int    windowHeight          = 35;
-        public  static int    windowWidth           = 80;
+        //public  static int    windowHeight          = 40;
+        //public  static int    windowWidth           = 90;
         public  static int    warningLenghtDefault  = 1000;                     // displaytime in ms for system messages
 
 
-        //init generic class variables
+        //init genericDataClass call variables
         private static string[] fieldNames;
         private static int[,] fieldProperties;
         private static int _toUpper;
@@ -53,7 +54,9 @@ namespace BakeryConsole
         private static int _inputString;
         private static int _fieldlength;
         private static int _minInputLenght;
-
+        private static string menuEdit = "(Ins)ert to Add\n(Enter)to Edit\n(Del)ete to remove Record" +
+                                         "\n(Home) Main Menu\n(End) Previous Menu\nUse (arrow) keys to browse" +
+                                         "\ntype to search and (ESC) to clear field\n";
 
         private static void Main()
         {
@@ -64,21 +67,24 @@ namespace BakeryConsole
 
             // initialize variables and window
 
-            Console.SetWindowSize(windowWidth, windowHeight);
-            Console.SetBufferSize(windowWidth, windowHeight);
+            //Console.SetWindowSize(windowWidth, windowHeight);
+            //Console.SetBufferSize(windowWidth, windowHeight);
             IO.SetWarningLength(warningLenghtDefault);
             Console.Title = "Bakery for Console v" + buildVersion;
             Console.CursorSize = 60;
 
             // read settings.json and set color scheme
 
-            Color.InitializeColors();
+            Prefs.InitializeColors();
             Console.Clear();
 
             // Main Menu Loop
             do
 /*MAIN*/    {
-                IO.DisplayMenu("Main Menu", "(L)ogin\n(P)eople\n(E)mployees\n(C)ustomers\nPro(D)ucts\n(M)asterdata\n\n(F3-F10) change colors, (F11) reset (F12) save\n\nEnter your choice, (Esc) to Exit program\n\n", Color.TextColors.MenuSelect);
+                IO.DisplayMenu("Main Menu", "(L)ogin\n(P)eople\n(E)mployees\n(C)ustomers\n" +
+                                            "Pro(D)ucts\n(M)asterdata\n\n(F3-F10) change colors, (F11) reset (F12) save\n\n" +
+                                            "Enter your choice, (Esc) to Exit program\n\n"
+                                            ,Prefs.Color.MenuSelect);
                 //DebugMessage("Debug Mode is ON");
                 inputKey = Console.ReadKey(true);                               // 'true' : dont'display the input on the console
                 CheckMenuInput();
@@ -116,13 +122,34 @@ namespace BakeryConsole
                 _debugEnabled = _debugEnabled ? false : true;   // toggle static property
             }
 
+            
+            
             if (inputKey.Key == ConsoleKey.L || !Login.validPassword & inputKey.Key != ConsoleKey.Escape)
             {
                 _ = new Login();                               // _ discard unnecessary var declaration
             }
+            
+            else if (inputKey.Key == ConsoleKey.RightArrow)
+            {
+                Prefs.SetWindowSize(1, 0);
+            }
+            else if (inputKey.Key == ConsoleKey.LeftArrow)
+            {
+                Prefs.SetWindowSize(-1, 0);
+            }
+            else if (inputKey.Key == ConsoleKey.UpArrow)
+            {
+                Prefs.SetWindowSize(0, -1);
+            }
+            else if (inputKey.Key == ConsoleKey.DownArrow)
+            {
+                Prefs.SetWindowSize(0, 1);
+            }
+            
+            
             else if (inputKey.Key == ConsoleKey.P)                                                  // Person
             {
-                IO.DisplayMenu("Browse/edit People", "(Ins)ert to Add\n(Enter)to Edit\n(Del)ete to remove Record\nUse arrow keys to browse, type to search\n(Home) Main menu\n\n", Color.TextColors.MenuSelect);
+                IO.DisplayMenu("Browse/edit People", menuEdit, Prefs.Color.MenuSelect);
 
                 var peepsList = IO.PopulateList<Person>(filePeople);
                 HandleRecords<Person>(peepsList, filePeople);
@@ -130,7 +157,7 @@ namespace BakeryConsole
             }
             else if (inputKey.Key == ConsoleKey.E & Login.validPassword)                            // Employees
             {
-                IO.DisplayMenu("Browse/edit Employees", "(Ins)ert to Add\n(Enter)to Edit\n(Del)ete to remove Record\nUse arrow keys to browse, type to search\n(Home) Main menu\n\n", Color.TextColors.MenuSelect);
+                IO.DisplayMenu("Browse/edit Employees", menuEdit, Prefs.Color.MenuSelect);
                 
                 var empList = IO.PopulateList<Employee>(fileEmployees);
                 HandleRecords<Employee>(empList, fileEmployees);
@@ -138,7 +165,7 @@ namespace BakeryConsole
             }
             else if (inputKey.Key == ConsoleKey.C & Login.validPassword)                            // Customers
             {
-                IO.DisplayMenu("Browse / edit Customers", "(Ins)ert to Add\n(Enter)to Edit\n(Del)ete to remove Record\nUse arrow keys to browse, type to search\n(Home) Main menu\n\n", Color.TextColors.MenuSelect);
+                IO.DisplayMenu("Browse / edit Customers", menuEdit, Prefs.Color.MenuSelect);
                 
                 var customerList = IO.PopulateList<Customer>(fileCustomers);
                 HandleRecords<Customer>(customerList, fileCustomers);
@@ -146,7 +173,7 @@ namespace BakeryConsole
             }
             else if (inputKey.Key == ConsoleKey.D & Login.validPassword)                            // Products
             {
-                IO.DisplayMenu("Browse / edit Products", "(Ins)ert to Add\n(Enter)to Edit\n(Del)ete to remove Record\nUse arrow keys to browse, type to search\n(Home) Main menu\n\n", Color.TextColors.MenuSelect);
+                IO.DisplayMenu("Browse / edit Products", menuEdit, Prefs.Color.MenuSelect);
              
                 var prodList = IO.PopulateList<Product>(fileProducts);
                 HandleRecords<Product>(prodList, fileProducts);
@@ -155,7 +182,7 @@ namespace BakeryConsole
             {
                 do
                 {
-                    IO.DisplayMenu("Edit Master Data", "(E)mployee Roles\n(C)ustomer types\n(P)roduct types\n(R)elation Types\n(U)ser accounts\n(Home) Main menu\n", Color.TextColors.MenuSelect);
+                    IO.DisplayMenu("Edit Master Data", "(E)mployee Roles\n(C)ustomer types\n(P)roduct types\n(R)elation Types\n(U)ser accounts\n(Home) Main menu\n", Prefs.Color.MenuSelect);
                     inputKey = Console.ReadKey(true);                               // 'true' : dont'display the input on the console
                     CheckMenuInputMasterData();
                     RecordManager.SetTotalRecords(0);
@@ -165,17 +192,17 @@ namespace BakeryConsole
                 CheckMenuInputMasterData();
             }
 
-            else if (inputKey.Key == ConsoleKey.F3)  { Color.CycleColors(6, false); return; }       // input text color
-            else if (inputKey.Key == ConsoleKey.F4)  { Color.CycleColors(0, false); return; }       // highlighted text color
-            else if (inputKey.Key == ConsoleKey.F5)  { Color.CycleColors(1, false); return; }       // normal text
-            else if (inputKey.Key == ConsoleKey.F6)  { Color.CycleColors(2, false); return; }       // background
-            else if (inputKey.Key == ConsoleKey.F7)  { Color.CycleColors(3, false); return; }       // Menu select color
-            else if (inputKey.Key == ConsoleKey.F8)  { Color.CycleColors(4, false); return; }       // Software license nameholder Color
-            else if (inputKey.Key == ConsoleKey.F9)  { Color.CycleColors(5, true);  return; }       // random colors including background
-            else if (inputKey.Key == ConsoleKey.F10) { Color.CycleColors(5, false); return; }       // random colors excluding background
-            else if (inputKey.Key == ConsoleKey.F11) { Color.SetStandardColor(); }                  // Set/Reset to standard color scheme
+            else if (inputKey.Key == ConsoleKey.F3)  { Prefs.CycleColors(0, false); return; }       // input text color
+            else if (inputKey.Key == ConsoleKey.F4)  { Prefs.CycleColors(1, false); return; }       // highlighted text color
+            else if (inputKey.Key == ConsoleKey.F5)  { Prefs.CycleColors(2, false); return; }       // normal text
+            else if (inputKey.Key == ConsoleKey.F6)  { Prefs.CycleColors(3, false); return; }       // background
+            else if (inputKey.Key == ConsoleKey.F7)  { Prefs.CycleColors(4, false); return; }       // Menu select color
+            else if (inputKey.Key == ConsoleKey.F8)  { Prefs.CycleColors(5, false); return; }       // Software license nameholder Color
+            else if (inputKey.Key == ConsoleKey.F9)  { Prefs.CycleColors(6, true);  return; }       // random colors including background
+            else if (inputKey.Key == ConsoleKey.F10) { Prefs.CycleColors(6, false); return; }       // random colors excluding background
+            else if (inputKey.Key == ConsoleKey.F11) { Prefs.SetStandardColor(); }                  // Set/Reset to standard color scheme
 
-            else if (inputKey.Key == ConsoleKey.F12) { Color.SaveColors(); }                        //
+            else if (inputKey.Key == ConsoleKey.F12) { Prefs.SaveColors(); }                        //
 
             else if (inputKey.Key == ConsoleKey.A)                                                  // Assembly info via recursion (test routine)
             {
@@ -188,9 +215,7 @@ namespace BakeryConsole
         }
         private static void CheckMenuInputMasterData ()
         {
-            
-            List<GenericDataClass> _browselist = new List<GenericDataClass>();
-            
+            List<GenericDataClass> _browselist;
 
             switch (inputKey.Key)
             {
@@ -200,8 +225,8 @@ namespace BakeryConsole
                 case ConsoleKey.B:
                     break;
                 case ConsoleKey.C:          // Customer Types
-
-                    GenericDataClass.SetFieldNamesArray(fieldNames = new string[] { "Search code"," Branche code" }) ;
+                    IO.DisplayMenu("Browse / edit Customer Types", menuEdit, Prefs.Color.MenuSelect);
+                    GenericDataClass.SetFieldNamesArray(fieldNames = new string[] { "Search code","Branche code" }) ;
                     GenericDataClass.SetFieldPropertiesArray(fieldProperties = new int[,] 
                           { { 0, _fieldlength = 6, _minInputLenght = 0, _inputString = 0, _showInput = 1, _toUpper = 1, _trim = 1 }, 
                             { 1, _fieldlength = 3, _minInputLenght = 0, _inputString = 1, _showInput = 1, _toUpper = 0, _trim = 1 } } );
@@ -214,7 +239,7 @@ namespace BakeryConsole
                 case ConsoleKey.D:
                     break;
                 case ConsoleKey.E:          // Employee roles
-                    IO.DisplayMenu("Browse / edit Employee Roles", "(Ins)ert to Add\n(Enter)to Edit\n(Del)ete to remove Record\n(Home) Main Menu\n(End) Previous Menu\nUse (arrow) keys to browse\ntype to search and (ESC) to clear field\n", Color.TextColors.MenuSelect);
+                    IO.DisplayMenu("Browse / edit Employee Roles", menuEdit, Prefs.Color.MenuSelect);
                     GenericDataClass.SetFieldNamesArray(fieldNames = new string[] { "Search code","Salary Scale" });
                     GenericDataClass.SetFieldPropertiesArray(fieldProperties = new int[,] 
                           { { 0, _fieldlength = 6, _minInputLenght = 3, _inputString = 0, _showInput = 1, _toUpper = 1, _trim = 1 }, 
@@ -227,7 +252,7 @@ namespace BakeryConsole
                     break;
 
                 case ConsoleKey.R:         // Relation type types
-                    
+                    IO.DisplayMenu("Browse / edit Relation Types", menuEdit, Prefs.Color.MenuSelect);
                     GenericDataClass.SetFieldNamesArray(fieldNames = new string[] { "Search code" });
                     GenericDataClass.SetFieldPropertiesArray(fieldProperties = new int[,]
                           { { 0, _fieldlength = 6, _minInputLenght = 1, _inputString = 0, _showInput = 1, _toUpper = 0, _trim = 1 } } ); 
@@ -239,7 +264,7 @@ namespace BakeryConsole
                     break;
                
                 case ConsoleKey.P:         // Product types
-                    
+                    IO.DisplayMenu("Browse / edit Product Types", menuEdit, Prefs.Color.MenuSelect);
                     GenericDataClass.SetFieldNamesArray(fieldNames = new string[] { "Search code", "Default Expiration (days)","Minimum Stock", "Maximum Stock" });
                     GenericDataClass.SetFieldPropertiesArray(fieldProperties = new int[,]
                           { { 0, _fieldlength = 6, _minInputLenght = 0, _inputString = 0, _showInput = 1, _toUpper = 1, _trim = 1 }, 
@@ -254,7 +279,7 @@ namespace BakeryConsole
                     break;
 
                 case ConsoleKey.U:         // User Acccounts
-                    
+                    IO.DisplayMenu("Browse / edit User Accounts", menuEdit, Prefs.Color.MenuSelect);
                     GenericDataClass.SetFieldNamesArray(fieldNames = new string[] { "Password", "Access People", "Access Employees", "Access Customers", "Access Products", "Access Orders", "Access Master data", "Reset Password next login" });
                     GenericDataClass.SetFieldPropertiesArray(fieldProperties = new int[,]
                           { { 0, _fieldlength = 40, _minInputLenght = 8, _inputString = 4, _showInput = 1, _toUpper = 0, _trim = 0 },
@@ -380,6 +405,7 @@ namespace BakeryConsole
                             aList[selectedRecordsList[recordIndex-1].RecordCounter - 1].Active = selectedRecordsList[recordIndex - 1].Active;
                             //selectedRecordsList[selectedRecordsList[recordIndex - 1].RecordCounter - 1].Active = selectedRecordsList[recordIndex - 1].Active;
                             IO.WriteToFile(aFilename, aList, false);                                                // write
+                            Thread.Sleep(500);
                         }
                         break;
                     
@@ -425,7 +451,7 @@ namespace BakeryConsole
                                 change = false;
                             }
                         }
-                        IO.PrintOnConsole("Searching: [ " + compareString.ToString() + " ] matches: "+ numberFound.ToString().PadRight(20, ' '), 1, cursorTop - 1, Color.TextColors.Defaults);
+                        IO.PrintOnConsole("Searching: [ " + compareString.ToString() + " ] matches: "+ numberFound.ToString().PadRight(20, ' '), 1, cursorTop - 1, Prefs.Color.Defaults);
                         
                         if (foundListIndex != -1)         // found something
                         {
@@ -441,7 +467,7 @@ namespace BakeryConsole
 
                 if (Debugger.IsAttached)
                 {
-                    IO.PrintOnConsole("Recordindex: " + recordIndex, 0, 0, Color.TextColors.Defaults);
+                    IO.PrintOnConsole("Recordindex: " + recordIndex, 0, 0, Prefs.Color.Defaults);
                 }
             } while (inputKey.Key != ConsoleKey.Home & inputKey.Key != ConsoleKey.Q & inputKey.Key != ConsoleKey.End);
         }
@@ -475,7 +501,7 @@ namespace BakeryConsole
         private static int SearchStringInList(List<Person> peopleList, int cursorLeft, int cursorTop, int recordIndex, StringBuilder zoekstring)
         {
             zoekstring.Append(inputKey.KeyChar.ToString());
-            IO.PrintOnConsole("Searching: [ " + zoekstring.ToString() + " ]".PadRight(20, ' '), 1, cursorTop - 1, Color.TextColors.Defaults);
+            IO.PrintOnConsole("Searching: [ " + zoekstring.ToString() + " ]".PadRight(20, ' '), 1, cursorTop - 1, Prefs.Color.Defaults);
 
             if (zoekstring.ToString().Contains(inputKey.KeyChar.ToString()))
 
@@ -504,7 +530,7 @@ namespace BakeryConsole
 
         private static void UpdateTotalRecordsOnScreen(int numberOfRecords)     // NICE: display inactive records as well
         {
-            IO.PrintOnConsole("[" + numberOfRecords.ToString() + "] records in file", 30, 5, Color.TextColors.MenuSelect);
+            IO.PrintOnConsole("[" + numberOfRecords.ToString() + "] records in file", 30, 5, Prefs.Color.MenuSelect);
         }
         private static void ShowAssemblyInfo()                                  // test recursion routine
         {
@@ -541,4 +567,18 @@ namespace BakeryConsole
         }
 
      }
+    class ExternTest
+    {
+        [System.Runtime.InteropServices.DllImport("User32.dll", CharSet=CharSet.Unicode)]
+        public static extern int MessageBox(IntPtr h, string m, string c, int type);
+        
+        public static int Messagebox()
+        {
+            string myString;
+            Console.Write("Enter your message: ");
+            myString = Console.ReadLine();
+            return MessageBox((IntPtr)0, myString, "My Message Box", 0);
+        }
+    }
+
 }

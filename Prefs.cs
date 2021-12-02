@@ -11,10 +11,10 @@ namespace BakeryConsole
     ///  Totally unnecessary but nicely working color stuff
     /// </summary>
 
-    internal class Color
+    internal class Prefs
     {
 
-        public enum TextColors                              // this enum is for setting a color with Color()
+        public enum Color                              // this enum is for setting a color with Color()
         {                                           
             Input,
             MenuSelect,
@@ -28,8 +28,10 @@ namespace BakeryConsole
             Defaults
         }
 
-        private static List<Color> userColor = new List<Color>();
+        private static List<Prefs> userColor = new List<Prefs>();
         private static string settingsFile   = "settings.json";
+        private static int minWinHeight      = 36;
+        private static int minWinWidth       = 80;
 
         public ConsoleColor ForeGroundDefault { get; set; }
         public ConsoleColor BackGroundDefault { get; set; }
@@ -43,9 +45,11 @@ namespace BakeryConsole
         public ConsoleColor ErrorBackGround   { get; set; }
         public ConsoleColor SystemForeGround  { get; set; }
         public ConsoleColor SystemBackGround  { get; set; }
+        public int WindowHeight               { get; set; }   
+        public int WindowWidth                { get; set; }
+        
 
-
-        public Color(bool setStandard)               // set or reset to standard colors
+        public Prefs(bool setStandard)               // set or reset to standard colors and windowsize
         {
             ForeGroundDefault = ConsoleColor.Gray;
             BackGroundDefault = ConsoleColor.DarkBlue;
@@ -59,15 +63,17 @@ namespace BakeryConsole
             ErrorBackGround   = ConsoleColor.White;
             SystemForeGround  = ConsoleColor.White;
             SystemBackGround  = ConsoleColor.DarkBlue;
+            WindowHeight      = 36;                     // minimum values
+            WindowWidth       = 80;
         }
 
-        public Color()                               // reserved for future color sets
+        public Prefs()                               // reserved for future color sets
         {
 
         }
 
         [JsonConstructor]
-        public Color(string JUST4JSON_DontCall)
+        public Prefs(string JUST4JSON_DontCall)
         {
             //Console.WriteLine("Don't be a dick Jason dear"); Console.ReadKey();
         }
@@ -76,30 +82,62 @@ namespace BakeryConsole
         {
             if (!File.Exists(settingsFile))             // set standard colors and create file
             {
-                userColor.Add(new Color(true));
+                userColor.Add(new Prefs(true));         // call constructor to set standards
                 SetStandardColor();
                 SaveColors();
                 IO.SystemMessage("Setting standard colors and creating settings file", false);
             }
             else
             {
-                userColor = IO.PopulateList<Color>(settingsFile);
-                SetColor (TextColors.Defaults);
+                userColor = IO.PopulateList<Prefs>(settingsFile);
+                SetColor (Color.Defaults);
             }
             Console.BackgroundColor = userColor[0].BackGroundDefault;
-        }
+            ResizeConsoleWindow();
+        }   
 
         public static void SetStandardColor()                           // for setting and resetting default color scheme
         {
-            userColor[0] = new Color(true);
+            userColor[0] = new Prefs(true);
+
             Console.BackgroundColor = userColor[0].BackGroundDefault;   // set backgroudcolor for Console.Clear();
             IO.SystemMessage("Reset text colors to default settings", false);
         }
 
         public static void SaveColors()
         {
-            IO.WriteToFile<Color>(settingsFile, userColor, true);
+            IO.WriteToFile<Prefs>(settingsFile, userColor, true);
         }
+
+        public static int GetWindowHeight()
+        {
+            return userColor[0].WindowHeight;
+        }
+
+        public static int GetWindowWidth()
+        {
+            return userColor[0].WindowWidth;
+        }
+
+
+        public static void SetWindowSize(int aWidth, int aHeight)
+        {
+            if (userColor[0].WindowWidth  +  aWidth  >= minWinWidth & 
+                userColor[0].WindowWidth  +  aWidth  <= Console.LargestWindowWidth) 
+                userColor[0].WindowWidth  += aWidth;
+
+            if (userColor[0].WindowHeight +  aHeight >= minWinHeight &
+                userColor[0].WindowHeight +  aHeight <= Console.LargestWindowHeight) 
+                userColor[0].WindowHeight += aHeight;
+        }
+
+
+        public static void ResizeConsoleWindow()
+        {
+             Console.SetWindowSize(userColor[0].WindowWidth,userColor[0].WindowHeight);
+             Console.SetBufferSize(userColor[0].WindowWidth,userColor[0].WindowHeight);
+        }
+
 
         public static void SetWarningColor (bool aWarning)          // swap between warning and error colors for Color.SystemMessage
         {
@@ -121,22 +159,34 @@ namespace BakeryConsole
             int newColor;
             switch (aChoice)
             {
-                case 0:     //Text High
-                                       
+                case 0:     // input text color
+                    
+                    newColor = (int)userColor[0].InputText;
+                    newColor = PickNextValidColor();
+                    userColor[0].InputText = (ConsoleColor)newColor;
+                    IO.SystemMessage("Set Input text color to " + (userColor[0].InputText.GetType()
+                                    .GetEnumName(userColor[0].InputText)
+                                    .ToString())
+                                    ,false);
+                    break;
+                
+                
+                case 1:     //Text High
+
                     newColor = (int)userColor[0].TextHigh;                      // get the int value of enum ConsoleColor Usercolor[0].TextHigh;
-                    newColor++; if (newColor == 16) { newColor = 0; }           // increase with 1 until 16, then reset to 0 (Usercolor has 0-15 value)
+                    newColor = PickNextValidColor();
                     userColor[0].TextHigh = (ConsoleColor)newColor;             // set userColor[0] to new value;
-                    IO.SystemMessage("Set Text_High color to "+ 
-                       ( userColor[0].TextHigh.GetType()                        // get the name of the enum constant
+                    IO.SystemMessage("Set Text_High color to " +
+                       (userColor[0].TextHigh.GetType()                        // get the name of the enum constant
                         .GetEnumName(userColor[0].TextHigh)
                         .ToString()), false);
                     break;
 
 
-                case 1:     //foreground
+                case 2:     //foreground
 
                     newColor = (int)userColor[0].ForeGroundDefault;
-                    newColor++; if (newColor == 16) { newColor = 0; }
+                    newColor = PickNextValidColor();
                     userColor[0].ForeGroundDefault = (ConsoleColor)newColor;
                     IO.SystemMessage("Set Foreground color to " + 
                       ( userColor[0].ForeGroundDefault.GetType()
@@ -144,10 +194,10 @@ namespace BakeryConsole
                        .ToString()), false);
                     break;
 
-                case 2:     //background
+                case 3:     //background
 
                     newColor = (int)userColor[0].BackGroundDefault;
-                    newColor++; if (newColor == 16) { newColor = 0; }
+                    newColor = PickNextValidColor();
                     userColor[0].BackGroundDefault = (ConsoleColor)newColor;
                     Console.BackgroundColor = userColor[0].BackGroundDefault;   // set backgroundcolor here before Console.Clear() in main loop
                     IO.SystemMessage("Set Background color to " + 
@@ -156,10 +206,10 @@ namespace BakeryConsole
                        .ToString()), false );
                     break;
 
-                case 3:     //menu select 
+                case 4:     //menu select 
 
                     newColor = (int)userColor[0].MenuSelectDefault;
-                    newColor++; if (newColor == 16) { newColor = 0; }
+                    newColor = PickNextValidColor();
                     userColor[0].MenuSelectDefault = (ConsoleColor)newColor;
                     IO.SystemMessage("Set Menu Select color to " + 
                        ( userColor[0].MenuSelectDefault.GetType()
@@ -167,10 +217,10 @@ namespace BakeryConsole
                         .ToString()), false );
                     break;
 
-                case 4:     // title / license 
+                case 5:     // title / license 
 
                     newColor = (int)userColor[0].Title;
-                    newColor++; if (newColor == 16) { newColor = 0; }
+                    newColor = PickNextValidColor();
                     userColor[0].Title = (ConsoleColor)newColor;
                     IO.SystemMessage("Set License text color to " + 
                        ( userColor[0].Title.GetType()
@@ -179,8 +229,7 @@ namespace BakeryConsole
 
                     break;
 
-
-                case 5:     //randomize with or without including backgroundcolor
+                case 6:     //randomize with or without including backgroundcolor
 
                     var rand = new Random();
                     if    (aRndBackground) 
@@ -211,30 +260,27 @@ namespace BakeryConsole
 
                     break;
 
-                case 6:     // input text color
-                    
-                    newColor = (int)userColor[0].InputText;
-                    newColor++; 
-                    if (newColor == 16 ) 
-                       { newColor = 0; }
-                    userColor[0].InputText = (ConsoleColor)newColor;
-                    
-                    IO.SystemMessage("Set Input text color to " + (userColor[0].InputText.GetType()
-                                    .GetEnumName(userColor[0].InputText)
-                                    .ToString())
-                                    ,false);
-                    break;
+               
             }
             if (Debugger.IsAttached)
             {
-                IO.PrintOnConsole(((int)userColor[0].BackGroundDefault).ToString(), 1, 1, Color.TextColors.Defaults);
+                IO.PrintOnConsole(((int)userColor[0].BackGroundDefault).ToString(), 1, 1, Prefs.Color.Defaults);
             }
 
             Console.BackgroundColor = userColor[0].BackGroundDefault;
             IO.SetWarningLength(Program.warningLenghtDefault);
+
+            int PickNextValidColor()
+            {
+                newColor++;
+                if (newColor == 16) { newColor = 0; }                                   // increase with 1 until 16, then reset to 0 (Usercolor has 0-15 value)
+                if (newColor == (int)userColor[0].BackGroundDefault) { newColor++; }    // not same as current background?
+
+                return newColor;
+            }
         }
 
-        public static void SetColor(TextColors textColor)                     // sets font and background color
+        public static void SetColor(Color textColor)                     // sets font and background color
         {
             
             
@@ -242,36 +288,36 @@ namespace BakeryConsole
             
             switch (textColor)
             {
-                case TextColors.Input:
+                case Color.Input:
 
                     Console.ForegroundColor = userColor[0].InputText;
                     break;
 
-                case TextColors.MenuSelect:
+                case Color.MenuSelect:
 
                     Console.ForegroundColor = userColor[0].MenuSelectDefault;
                     break;
 
-                case TextColors.SystemMessage:
+                case Color.SystemMessage:
                     Console.ForegroundColor = userColor[0].SystemForeGround;
                     Console.BackgroundColor = userColor[0].SystemBackGround;
                     break;
 
-                case TextColors.Text:
+                case Color.Text:
 
                     Console.ForegroundColor = userColor[0].TextHigh;
                     break;
 
-                case TextColors.DefaultForeGround:                                        // Standard foreground color
+                case Color.DefaultForeGround:                                        // Standard foreground color
 
                     Console.ForegroundColor = userColor[0].ForeGroundDefault;
                     break;
                     
-                case TextColors.DefaultBackGround:
+                case Color.DefaultBackGround:
                     Console.BackgroundColor = userColor[0].BackGroundDefault;
                     break;
 
-                case TextColors.Inactive:
+                case Color.Inactive:
                     if (userColor[0].BackGroundDefault != ConsoleColor.DarkGray)
                     {
                         Console.ForegroundColor = ConsoleColor.DarkGray;
@@ -282,16 +328,16 @@ namespace BakeryConsole
                     }
                     break;
 
-                case TextColors.Title:
+                case Color.Title:
                     Console.ForegroundColor = userColor[0].Title;
                     break;
 
-                case TextColors.Inverted:
+                case Color.Inverted:
                     Console.ForegroundColor = userColor[0].BackGroundDefault;
                     Console.BackgroundColor = userColor[0].ForeGroundDefault;
                     break;
 
-                case TextColors.Defaults:
+                case Color.Defaults:
                     Console.ForegroundColor = userColor[0].ForeGroundDefault;
                     Console.BackgroundColor = userColor[0].BackGroundDefault;
 
