@@ -22,15 +22,12 @@ namespace BakeryConsole
 
         // user interface fields
 
-        public static String[] fieldNames =  { "Street address: "            ,   // 0
-                                               "Zipcode: (####ZZ)"           ,   // 1
-                                               "City: "                      ,   // 2
-                                               "Country: "                   ,   // 3
-                                               "Telephone: "                 ,   // 4
-                                               "Email: "                     } ;  // 5
-
-        //public string ID                    { get; set; }
-        //public string Name                  { get; set; }
+        public static new String[] fieldNames = { "Street address: "            ,   // 0
+                                                  "Zipcode: (####ZZ)"           ,   // 1
+                                                  "City: "                      ,   // 2
+                                                  "Country: "                   ,   // 3
+                                                  "Telephone: "                 ,   // 4
+                                                  "Email: "                     } ;  // 5
         public string Street                { get; set; }
         public string Zipcode               { get; set; }
         public string City                  { get; set; }
@@ -137,25 +134,6 @@ namespace BakeryConsole
         {
             //Console.WriteLine("Don't be a dick Jason dear"); Console.ReadKey();
         }
-
-        //private string ConstructID(Address anAddress)
-        //{
-        //    string a = anAddress.RecordCounter.ToString("D5");            // make a string consisting of 5 decimals
-        //    string b;
-        //    if (anAddress.Name.Length >= 3)
-        //    {
-        //        b = anAddress.Name.Substring(0, 3).ToUpper();             // take first 3 chars in uppercase
-        //    }                                                             // TODO: remove whitespace if exists ("de Groot")
-        //    else
-        //    {
-        //        b = anAddress.Name.Substring(0, anAddress.Name.Length)    // or build to 3 chars with added "A" chars
-        //            .ToUpper()
-        //            .PadRight(3, 'A');
-        //    }
-        //    return b + a;
-        //}
     }
-
-
 
 }

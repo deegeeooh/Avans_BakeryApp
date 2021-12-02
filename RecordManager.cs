@@ -23,8 +23,6 @@ namespace BakeryConsole
         public static int TotalRecords  { get; set; }                  // static,this a class property        
         public bool Active              { get; set; }                  // flag for record deletion/inactive
         public List<Mutation> Mutations { get; set; }                  // just as PoC; every record stores all mutations 
-               
-
 
         /// <summary>
         /// Constructor for creating new objects
@@ -74,6 +72,7 @@ namespace BakeryConsole
                 }
                 else               // DISPLAY ONLY
                 {
+                    fieldNames[1]   = aStringFor_Name;
                     int cursorColumn = Console.CursorTop;
                     IfActive(anInheritor, lengthQuestionField + fieldProperties[0, 1] + 5, cursorColumn);
                     IO.PrintBoundaries(fieldNames[0], anInheritor.ID, lengthQuestionField, fieldProperties[0, 1], cursorColumn, anInheritor.Active); Console.WriteLine(); cursorColumn++;
@@ -143,11 +142,11 @@ namespace BakeryConsole
         {
             if (!anInheritor.Active)
             {
-                IO.PrintOnConsole(" *Inactive* ", onCursorColumn, onCursorRow, Color.TextColors.Inverted);
+                IO.PrintOnConsole(" *Inactive* ", onCursorColumn, onCursorRow, Prefs.Color.Inverted);
             }
             else
             {
-                IO.PrintOnConsole("".PadRight(12, ' '), onCursorColumn, onCursorRow, Color.TextColors.Defaults);
+                IO.PrintOnConsole("".PadRight(12, ' '), onCursorColumn, onCursorRow, Prefs.Color.Defaults);
             }
         }
 

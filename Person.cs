@@ -128,12 +128,12 @@ namespace BakeryConsole
             if (aDatetime.ToString("ddMMyyyy") != "01010001")
             {
                 IO.PrintOnConsole("(Age: " + (IO.CalculateAge(aDatetime).ToString()) + ")   "
-                    , lengthQuestionField + fieldProperties[4, 1] + 5, aCursor, Color.TextColors.Defaults);
+                    , lengthQuestionField + fieldProperties[4, 1] + 5, aCursor, Prefs.Color.Defaults);
             }
             else
             {
                 IO.PrintOnConsole("            "
-                    , lengthQuestionField + fieldProperties[4, 1] + 5, aCursor, Color.TextColors.Defaults);
+                    , lengthQuestionField + fieldProperties[4, 1] + 5, aCursor, Prefs.Color.Defaults);
             }
         }
 
