@@ -38,13 +38,22 @@ namespace BakeryConsole
         private static string fileProducts          = "products.json";
         private static string fileUsers             = "users.json";
         public  static string licenseString         = "Royal Vlaaienboer Inc.";
-        public  static string buildVersion          = "0.20";                   //  NICE: use assemblyversion attribute
+        public  static string buildVersion          = "0.20";                   // NICE: use assemblyversion attribute
         public  static int    windowHeight          = 35;
         public  static int    windowWidth           = 80;
         public  static int    warningLenghtDefault  = 1000;                     // displaytime in ms for system messages
 
+
+        //init generic class variables
         private static string[] fieldNames;
         private static int[,] fieldProperties;
+        private static int _toUpper;
+        private static int _showInput;
+        private static int _trim;
+        private static int _inputString;
+        private static int _fieldlength;
+        private static int _minInputLenght;
+
 
         private static void Main()
         {
@@ -69,7 +78,7 @@ namespace BakeryConsole
             // Main Menu Loop
             do
 /*MAIN*/    {
-                IO.DisplayMenu("Main Menu", "(L)ogin\n(P)eople\n(E)mployees\n(C)ustomers\nPro(D)ucts\n(M)asterdata\n\n(F3-F10) change colors, (F11) reset (F12) save\n\nEnter your choice, Escape to Exit program\n\n", Color.TextColors.MenuSelect);
+                IO.DisplayMenu("Main Menu", "(L)ogin\n(P)eople\n(E)mployees\n(C)ustomers\nPro(D)ucts\n(M)asterdata\n\n(F3-F10) change colors, (F11) reset (F12) save\n\nEnter your choice, (Esc) to Exit program\n\n", Color.TextColors.MenuSelect);
                 //DebugMessage("Debug Mode is ON");
                 inputKey = Console.ReadKey(true);                               // 'true' : dont'display the input on the console
                 CheckMenuInput();
@@ -181,7 +190,7 @@ namespace BakeryConsole
         {
             
             List<GenericDataClass> _browselist = new List<GenericDataClass>();
-            IO.DisplayMenu("Browse / edit Employee Roles", "(Ins)ert to Add\n(Enter)to Edit\n(Del)ete to remove Record\nUse arrow keys to browse\n(Home) Main Menu\n(End) Previous Menu\n\n", Color.TextColors.MenuSelect);
+            
 
             switch (inputKey.Key)
             {
@@ -193,7 +202,10 @@ namespace BakeryConsole
                 case ConsoleKey.C:          // Customer Types
 
                     GenericDataClass.SetFieldNamesArray(fieldNames = new string[] { "Search code"," Branche code" }) ;
-                    GenericDataClass.SetFieldPropertiesArray(fieldProperties = new int[,] { { 0, 6, 1 }, { 1, 3, 0 } });
+                    GenericDataClass.SetFieldPropertiesArray(fieldProperties = new int[,] 
+                          { { 0, _fieldlength = 6, _minInputLenght = 0, _inputString = 0, _showInput = 1, _toUpper = 1, _trim = 1 }, 
+                            { 1, _fieldlength = 3, _minInputLenght = 0, _inputString = 1, _showInput = 1, _toUpper = 0, _trim = 1 } } );
+                    
                     GenericDataClass.SetNameFieldName("Customer type description");
                     _browselist = IO.PopulateList<GenericDataClass>(fileCustomerTypes);
                     HandleRecords<GenericDataClass>(_browselist, fileCustomerTypes);
@@ -202,9 +214,12 @@ namespace BakeryConsole
                 case ConsoleKey.D:
                     break;
                 case ConsoleKey.E:          // Employee roles
-                    
+                    IO.DisplayMenu("Browse / edit Employee Roles", "(Ins)ert to Add\n(Enter)to Edit\n(Del)ete to remove Record\n(Home) Main Menu\n(End) Previous Menu\nUse (arrow) keys to browse\ntype to search and (ESC) to clear field\n", Color.TextColors.MenuSelect);
                     GenericDataClass.SetFieldNamesArray(fieldNames = new string[] { "Search code","Salary Scale" });
-                    GenericDataClass.SetFieldPropertiesArray(fieldProperties = new int[,] { { 0, 3, 1 }, { 1, 1, 0 } });
+                    GenericDataClass.SetFieldPropertiesArray(fieldProperties = new int[,] 
+                          { { 0, _fieldlength = 6, _minInputLenght = 3, _inputString = 0, _showInput = 1, _toUpper = 1, _trim = 1 }, 
+                            { 1, _fieldlength = 2, _minInputLenght = 0, _inputString = 2, _showInput = 1, _toUpper = 0, _trim = 1 } } );
+                  
                     GenericDataClass.SetNameFieldName("Employee job description");
                     _browselist = IO.PopulateList<GenericDataClass>(fileEmployeeRoles);
                     HandleRecords<GenericDataClass>(_browselist, fileEmployeeRoles);
@@ -214,7 +229,9 @@ namespace BakeryConsole
                 case ConsoleKey.R:         // Relation type types
                     
                     GenericDataClass.SetFieldNamesArray(fieldNames = new string[] { "Search code" });
-                    GenericDataClass.SetFieldPropertiesArray(fieldProperties = new int[,] { { 0, 3, 1 } });
+                    GenericDataClass.SetFieldPropertiesArray(fieldProperties = new int[,]
+                          { { 0, _fieldlength = 6, _minInputLenght = 1, _inputString = 0, _showInput = 1, _toUpper = 0, _trim = 1 } } ); 
+           
                     GenericDataClass.SetNameFieldName("Relation Type");
                     _browselist = IO.PopulateList<GenericDataClass>(fileRelationTypes);
                     HandleRecords<GenericDataClass>(_browselist, fileRelationTypes);
@@ -223,18 +240,32 @@ namespace BakeryConsole
                
                 case ConsoleKey.P:         // Product types
                     
-                    GenericDataClass.SetFieldNamesArray(fieldNames = new string[] { "Search code" });
-                    GenericDataClass.SetFieldPropertiesArray(fieldProperties = new int[,] { { 0, 3, 1 } });
+                    GenericDataClass.SetFieldNamesArray(fieldNames = new string[] { "Search code", "Default Expiration (days)","Minimum Stock", "Maximum Stock" });
+                    GenericDataClass.SetFieldPropertiesArray(fieldProperties = new int[,]
+                          { { 0, _fieldlength = 6, _minInputLenght = 0, _inputString = 0, _showInput = 1, _toUpper = 1, _trim = 1 }, 
+                            { 0, _fieldlength = 3, _minInputLenght = 1, _inputString = 2, _showInput = 1, _toUpper = 0, _trim = 1 },
+                            { 0, _fieldlength = 6, _minInputLenght = 1, _inputString = 2, _showInput = 1, _toUpper = 0, _trim = 1 },
+                            { 0, _fieldlength = 6, _minInputLenght = 1, _inputString = 2, _showInput = 1, _toUpper = 0, _trim = 1 }} ); 
+
                     GenericDataClass.SetNameFieldName("Product Type");
                     _browselist = IO.PopulateList<GenericDataClass>(fileProductTypes);
                     HandleRecords<GenericDataClass>(_browselist, fileProductTypes);
                     
                     break;
 
-                case ConsoleKey.U:         // Product types
+                case ConsoleKey.U:         // User Acccounts
                     
                     GenericDataClass.SetFieldNamesArray(fieldNames = new string[] { "Password", "Access People", "Access Employees", "Access Customers", "Access Products", "Access Orders", "Access Master data", "Reset Password next login" });
-                    GenericDataClass.SetFieldPropertiesArray(fieldProperties = new int[,] { { 0, 40, 8 },{ 0, 1, 1 },{ 0, 1, 1 },{ 0, 1, 1 },{ 0, 1, 1 },{ 0, 1, 1 },{ 0, 1, 1 },{ 0, 1, 1 } });
+                    GenericDataClass.SetFieldPropertiesArray(fieldProperties = new int[,]
+                          { { 0, _fieldlength = 40, _minInputLenght = 8, _inputString = 4, _showInput = 1, _toUpper = 0, _trim = 0 },
+                            { 1, _fieldlength = 1,  _minInputLenght = 1, _inputString = 3, _showInput = 1, _toUpper = 1, _trim = 0 },
+                            { 2, _fieldlength = 1,  _minInputLenght = 1, _inputString = 3, _showInput = 1, _toUpper = 1, _trim = 0 },
+                            { 3, _fieldlength = 1,  _minInputLenght = 1, _inputString = 3, _showInput = 1, _toUpper = 1, _trim = 0 },
+                            { 4, _fieldlength = 1,  _minInputLenght = 1, _inputString = 3, _showInput = 1, _toUpper = 1, _trim = 0 },
+                            { 5, _fieldlength = 1,  _minInputLenght = 1, _inputString = 3, _showInput = 1, _toUpper = 1, _trim = 0 },
+                            { 6, _fieldlength = 1,  _minInputLenght = 1, _inputString = 3, _showInput = 1, _toUpper = 1, _trim = 0 },
+                            { 7, _fieldlength = 1,  _minInputLenght = 1, _inputString = 3, _showInput = 1, _toUpper = 1, _trim = 0 } } );
+                   
                     GenericDataClass.SetNameFieldName("User Name");
                     _browselist = IO.PopulateList<GenericDataClass>(fileUsers);
                     HandleRecords<GenericDataClass>(_browselist, fileUsers);
@@ -242,6 +273,7 @@ namespace BakeryConsole
                     break;
 
                 default:
+
                     break;
             }
 
@@ -340,16 +372,18 @@ namespace BakeryConsole
                    
  /*** DELETE ***/   case ConsoleKey.Delete:
                         if (recordsInList > 0)
+                           
                         {
                             IO.SetCursorPosition(cursorLeft, cursorTop);                        
                             RecordManager.ToggleDeletionFlag<T>(selectedRecordsList[recordIndex - 1], recordIndex - 1);           // toggle flag
                             _ = (T)Activator.CreateInstance(typeof(T), selectedRecordsList[recordIndex - 1], true);               // refresh record on screen
-                            selectedRecordsList[selectedRecordsList[recordIndex - 1].RecordCounter - 1].Active = selectedRecordsList[recordIndex - 1].Active;
+                            aList[selectedRecordsList[recordIndex-1].RecordCounter - 1].Active = selectedRecordsList[recordIndex - 1].Active;
+                            //selectedRecordsList[selectedRecordsList[recordIndex - 1].RecordCounter - 1].Active = selectedRecordsList[recordIndex - 1].Active;
                             IO.WriteToFile(aFilename, aList, false);                                                // write
                         }
                         break;
                     
-/* BROWSE */        case ConsoleKey.LeftArrow:
+/*** BROWSE ***/    case ConsoleKey.LeftArrow:
                     case ConsoleKey.UpArrow:
                         if (recordIndex > 1)
                         {
@@ -369,7 +403,7 @@ namespace BakeryConsole
                         }
                         break;
                     
-/* SEARCH */        default:
+/*** SEARCH ***/    default:
                         
                         compareString       = BuildZoekString(zoekString, cursorTop);
                         int foundListIndex  = aList.FindIndex(item => (item.Description + item.ID).Contains(compareString));
