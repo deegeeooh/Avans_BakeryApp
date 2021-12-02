@@ -9,7 +9,7 @@ namespace BakeryConsole
     {
         public static int lengthQuestionField = 30;
 
-        // input validation strings
+        // input validation strings  TODO: move to a class
         public static string checkinputStringAlpha = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789//-@| '.,_";
         public static string checkinputStringDate =  "0123456789/-";
         public static string checkinputStringNum =   "0123456789";
@@ -37,10 +37,11 @@ namespace BakeryConsole
                                                   "Date of Birth: (dd/mm/yyyy)" };  // 4
        
         private static string _DescriptionFieldName = "Last Name";               // to set fieldname of Address class' generic Name Property
+        
         public string         Prefix        { get; set; }
         public string         FirstName     { get; set; }
         public string         Gender        { get; set; }
-        public string         RelationType  { get; set; }              
+        public string         RelationType  { get; set; }
         public DateTime       DateOfBirth   { get; set; }
 
 /*1st*/ public Person() : base (_DescriptionFieldName)                                            // Main Constructor method;
@@ -83,7 +84,7 @@ namespace BakeryConsole
                                                                                    checkinputStringDate,  lengthQuestionField, fieldProperties[4, 1], false, true, true, false, true, fieldProperties[4, 2]), true);
                 DisplayAge (this.DateOfBirth, Console.CursorTop - 1);
 
-                this.Mutations = aPerson.Mutations;                     // copy existing mutations to this new instance
+                this.Mutations  = aPerson.Mutations;                     // copy existing mutations to this new instance
                 
                 CheckMutations(aPerson, aPerson.Prefix,                 this.Prefix,                 fieldNames[0], aPerson.Mutations.Count);
                 CheckMutations(aPerson, aPerson.FirstName,              this.FirstName,              fieldNames[1], aPerson.Mutations.Count);

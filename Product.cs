@@ -143,23 +143,6 @@ namespace BakeryConsole
         {
             //Console.WriteLine("Don't be a dick Jason dear"); Console.ReadKey();
         }
-        
-        //private string ConstructID(Product aProduct)
-        //{
-        //    string a = aProduct.RecordCounter.ToString("D5");            // make a string consisting of 5 decimals
-        //    string b;
-        //    if (aProduct.Name.Length >= 3)
-        //    {
-        //        b = aProduct.Name.Substring(0, 3).ToUpper();             // take first 3 chars in uppercase
-        //    }                                                            // TODO: remove whitespace if exists ("de Groot")
-        //    else
-        //    {
-        //        b = aProduct.Name.Substring(0, aProduct.Name.Length)     // or build to 3 chars with added "A" chars
-        //            .ToUpper()
-        //            .PadRight(3, 'A');
-        //    }
-        //    return b + a;
-        //}
 
     }
 }

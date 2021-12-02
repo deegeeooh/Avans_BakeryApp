@@ -310,7 +310,7 @@ namespace BakeryConsole
                 }
                 else
                 {
-                    SystemMessage("Field cannot be empty", true);
+                    SystemMessage($"Field has to be {minInputLength} characters long", true);
                 }
             } while (!checkedValidLength);
 
