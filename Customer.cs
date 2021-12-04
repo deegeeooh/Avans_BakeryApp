@@ -30,9 +30,9 @@ namespace BakeryConsole
         {
             var cursorRow = Console.CursorTop;
 
-            MainContact  = IO.GetInput(fieldNames[0], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[0, 1], false, true, true, true, true, fieldProperties[0, 2]);
-            Jobtitle     = IO.GetInput(fieldNames[1], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[1, 1], false, true, true, true, true, fieldProperties[1, 2]);
-            CustomerType = IO.GetInput(fieldNames[2], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[2, 1], false, true, true, true, true, fieldProperties[2, 2]);
+            MainContact  = IO.GetInput(fieldNames[0], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[0, 1], false, true, true, true, true, fieldProperties[0, 2], 1);
+            Jobtitle     = IO.GetInput(fieldNames[1], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[1, 1], false, true, true, true, true, fieldProperties[1, 2], 1);
+            CustomerType = IO.GetInput(fieldNames[2], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[2, 1], false, true, true, true, true, fieldProperties[2, 2], 1);
             
 /*2nd*/     GetAddressFields(new Address());                                       // clone instances field values to this
 
@@ -45,7 +45,7 @@ namespace BakeryConsole
             {
                 for (int i = 0; i < fieldProperties.GetLength(0); i++)
                 {
-                    IO.PrintBoundaries(fieldNames[i], "", lengthQuestionField, fieldProperties[i, 1], cursor, false); Console.WriteLine(); cursor++;
+                    IO.PrintBoundaries(fieldNames[i], "", lengthQuestionField, fieldProperties[i, 1], cursor, 1, false); Console.WriteLine(); cursor++;
                 }
             }
 /*2nd*/     _ = new Address(clearForm, _DescriptionFieldName, false);                     // call Address, _2nd part
@@ -56,9 +56,9 @@ namespace BakeryConsole
 /*1st*/     if (!displayOnly)  //EDIT
             {
                 RecordCounter   = aCustomer.RecordCounter;
-                MainContact     = IO.GetInput(fieldNames[0], aCustomer.MainContact,  checkinputStringAlpha, lengthQuestionField, fieldProperties[0, 1], false, true, true, true, true, fieldProperties[0, 2]);
-                Jobtitle        = IO.GetInput(fieldNames[1], aCustomer.Jobtitle,     checkinputStringAlpha, lengthQuestionField, fieldProperties[1, 1], false, true, true, true, true, fieldProperties[1, 2]);
-                CustomerType    = IO.GetInput(fieldNames[2], aCustomer.CustomerType, checkinputStringAlpha, lengthQuestionField, fieldProperties[2, 1], false, true, true, true, true, fieldProperties[2, 2]);
+                MainContact     = IO.GetInput(fieldNames[0], aCustomer.MainContact,  checkinputStringAlpha, lengthQuestionField, fieldProperties[0, 1], false, true, true, true, true, fieldProperties[0, 2], 1);
+                Jobtitle        = IO.GetInput(fieldNames[1], aCustomer.Jobtitle,     checkinputStringAlpha, lengthQuestionField, fieldProperties[1, 1], false, true, true, true, true, fieldProperties[1, 2], 1);
+                CustomerType    = IO.GetInput(fieldNames[2], aCustomer.CustomerType, checkinputStringAlpha, lengthQuestionField, fieldProperties[2, 1], false, true, true, true, true, fieldProperties[2, 2], 1);
                 
                 this.Mutations  = aCustomer.Mutations;
                 
@@ -78,11 +78,11 @@ namespace BakeryConsole
 
 /*1st*/     else              // DISPLAY ONLY
             {
-                var cursorColumn = Console.CursorTop;
+                var cursorRow = Console.CursorTop;
 
-                IO.PrintBoundaries(fieldNames[0], aCustomer.MainContact,  lengthQuestionField, fieldProperties[0, 1], cursorColumn, aCustomer.Active); Console.WriteLine(); cursorColumn++;
-                IO.PrintBoundaries(fieldNames[1], aCustomer.Jobtitle,     lengthQuestionField, fieldProperties[1, 1], cursorColumn, aCustomer.Active); Console.WriteLine(); cursorColumn++;
-                IO.PrintBoundaries(fieldNames[2], aCustomer.CustomerType, lengthQuestionField, fieldProperties[2, 1], cursorColumn, aCustomer.Active); Console.WriteLine(); cursorColumn++;
+                IO.PrintBoundaries(fieldNames[0], aCustomer.MainContact,  lengthQuestionField, fieldProperties[0, 1], cursorRow, 1, aCustomer.Active); Console.WriteLine(); cursorRow++;
+                IO.PrintBoundaries(fieldNames[1], aCustomer.Jobtitle,     lengthQuestionField, fieldProperties[1, 1], cursorRow, 1, aCustomer.Active); Console.WriteLine(); cursorRow++;
+                IO.PrintBoundaries(fieldNames[2], aCustomer.CustomerType, lengthQuestionField, fieldProperties[2, 1], cursorRow, 1, aCustomer.Active); Console.WriteLine(); cursorRow++;
                 
 /*2nd*/         _ = new Address(aCustomer, displayOnly, _DescriptionFieldName, false);
             }

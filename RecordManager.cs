@@ -33,7 +33,7 @@ namespace BakeryConsole
             fieldNames[1]   = (aStringFor_Name == "") ? "Name" : aStringFor_Name;       
             TotalRecords++;
             RecordCounter   = TotalRecords;
-            Description     = IO.GetInput(fieldNames[1], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[1, 1], false, true, true, true, true, fieldProperties[1, 2]);
+            Description     = IO.GetInput(fieldNames[1], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[1, 1], false, true, true, true, true, fieldProperties[1, 2], 1);
             ID              = ConstructID(this);
             Active          = true;
 
@@ -49,7 +49,7 @@ namespace BakeryConsole
 
                 for (int i = 0; i < fieldProperties.GetLength(0); i++)
                 {
-                    IO.PrintBoundaries(fieldNames[i], "", lengthQuestionField, fieldProperties[i, 1], cursor, false); Console.WriteLine(); cursor++;
+                    IO.PrintBoundaries(fieldNames[i], "", lengthQuestionField, fieldProperties[i, 1], cursor, 1, false); Console.WriteLine(); cursor++;
                 }
             }
         }
@@ -62,7 +62,7 @@ namespace BakeryConsole
                 {
                     fieldNames[1]   = aStringFor_Name;
                     RecordCounter   = anInheritor.RecordCounter;
-                    Description     = IO.GetInput(fieldNames[1], anInheritor.Description, checkinputStringAlpha, lengthQuestionField, fieldProperties[1, 1], false, true, true, true, true, fieldProperties[1, 2]);
+                    Description     = IO.GetInput(fieldNames[1], anInheritor.Description, checkinputStringAlpha, lengthQuestionField, fieldProperties[1, 1], false, true, true, true, true, fieldProperties[1, 2], 1);
                     ID              = ConstructID(this);
                     this.Mutations  = anInheritor.Mutations;
                     Active = true;
@@ -75,8 +75,8 @@ namespace BakeryConsole
                     fieldNames[1]   = aStringFor_Name;
                     int cursorColumn = Console.CursorTop;
                     IfActive(anInheritor, lengthQuestionField + fieldProperties[0, 1] + 5, cursorColumn);
-                    IO.PrintBoundaries(fieldNames[0], anInheritor.ID, lengthQuestionField, fieldProperties[0, 1], cursorColumn, anInheritor.Active); Console.WriteLine(); cursorColumn++;
-                    IO.PrintBoundaries(fieldNames[1], anInheritor.Description, lengthQuestionField, fieldProperties[1, 1], cursorColumn, anInheritor.Active); Console.WriteLine(); cursorColumn++;
+                    IO.PrintBoundaries(fieldNames[0], anInheritor.ID,          lengthQuestionField, fieldProperties[0, 1], cursorColumn, 1, anInheritor.Active); Console.WriteLine(); cursorColumn++;
+                    IO.PrintBoundaries(fieldNames[1], anInheritor.Description, lengthQuestionField, fieldProperties[1, 1], cursorColumn, 1, anInheritor.Active); Console.WriteLine(); cursorColumn++;
 
                 }
             }
@@ -167,14 +167,8 @@ namespace BakeryConsole
             return b + a;
         }
 
-        //public static Dictionary<int,RecordManager> BuildDictionary (RecordManager anInheritor)     
-        //{
+        
 
 
-
-
-        //}
-
-     
     }
 }

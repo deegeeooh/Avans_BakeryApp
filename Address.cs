@@ -43,12 +43,12 @@ namespace BakeryConsole
 
  /*2nd*/public Address() : base (true)                      // fill second part of Properties called from parent and call dummy in base
         {                                           
-            Street    = IO.GetInput(fieldNames[0], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[0, 1], false, true, true, true, true, fieldProperties[0, 2]);
-            Zipcode   = IO.GetInput(fieldNames[1], "", zipCodeString, lengthQuestionField,         fieldProperties[1, 1], false, true, true, true, true, fieldProperties[1, 2]);
-            City      = IO.GetInput(fieldNames[2], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[2, 1], false, true, true, true, true, fieldProperties[2, 2]);
-            Country   = IO.GetInput(fieldNames[3], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[3, 1], false, true, true, true, true, fieldProperties[3, 2]);
-            Telephone = IO.GetInput(fieldNames[4], "", telephoneString, lengthQuestionField,       fieldProperties[4, 1], false, true, true, true, true, fieldProperties[4, 2]);
-            Email     = IO.GetInput(fieldNames[5], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[5, 1], false, true, true, true, true, fieldProperties[5, 2]);
+            Street    = IO.GetInput(fieldNames[0], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[0, 1], false, true, true, true, true, fieldProperties[0, 2], 1);
+            Zipcode   = IO.GetInput(fieldNames[1], "", zipCodeString, lengthQuestionField,         fieldProperties[1, 1], false, true, true, true, true, fieldProperties[1, 2], 1);
+            City      = IO.GetInput(fieldNames[2], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[2, 1], false, true, true, true, true, fieldProperties[2, 2], 1);
+            Country   = IO.GetInput(fieldNames[3], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[3, 1], false, true, true, true, true, fieldProperties[3, 2], 1);
+            Telephone = IO.GetInput(fieldNames[4], "", telephoneString, lengthQuestionField,       fieldProperties[4, 1], false, true, true, true, true, fieldProperties[4, 2], 1);
+            Email     = IO.GetInput(fieldNames[5], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[5, 1], false, true, true, true, true, fieldProperties[5, 2], 1);
         }
 
         public Address(bool clearForm, string aStringFor_Name, bool _ExecuteParentConstructorOnly) : base(clearForm, aStringFor_Name, _ExecuteParentConstructorOnly)  // Every class needs this routine to display its fields
@@ -74,7 +74,7 @@ namespace BakeryConsole
                 var cursor = Console.CursorTop;
                     for (int i = start; i < lenght; i++)
                     {
-                        IO.PrintBoundaries(fieldNames[i], "", lengthQuestionField, fieldProperties[i, 1], cursor, false); Console.WriteLine(); cursor++;
+                        IO.PrintBoundaries(fieldNames[i], "", lengthQuestionField, fieldProperties[i, 1], cursor, 1, false); Console.WriteLine(); cursor++;
                     }
             }
         }
@@ -96,12 +96,12 @@ namespace BakeryConsole
 
 /*2nd*/         }else          
                 {
-                    Street    = IO.GetInput(fieldNames[0], anAddress.Street, checkinputStringAlpha,  lengthQuestionField, fieldProperties[0, 1], false, true, true, true, true, fieldProperties[0, 2]);
-                    Zipcode   = IO.GetInput(fieldNames[1], anAddress.Zipcode, zipCodeString,         lengthQuestionField, fieldProperties[1, 1], false, true, true, true, true, fieldProperties[1, 2]);
-                    City      = IO.GetInput(fieldNames[2], anAddress.City, checkinputStringAlpha,    lengthQuestionField, fieldProperties[2, 1], false, true, true, true, true, fieldProperties[2, 2]);
-                    Country   = IO.GetInput(fieldNames[3], anAddress.Country, checkinputStringAlpha, lengthQuestionField, fieldProperties[3, 1], false, true, true, true, true, fieldProperties[3, 2]);
-                    Telephone = IO.GetInput(fieldNames[4], anAddress.Telephone, telephoneString,     lengthQuestionField, fieldProperties[4, 1], false, true, true, true, true, fieldProperties[4, 2]);
-                    Email     = IO.GetInput(fieldNames[5], anAddress.Email, checkinputStringAlpha,   lengthQuestionField, fieldProperties[5, 1], false, true, true, true, true, fieldProperties[5, 2]);
+                    Street    = IO.GetInput(fieldNames[0], anAddress.Street, checkinputStringAlpha,  lengthQuestionField, fieldProperties[0, 1], false, true, true, true, true, fieldProperties[0, 2], 1);
+                    Zipcode   = IO.GetInput(fieldNames[1], anAddress.Zipcode, zipCodeString,         lengthQuestionField, fieldProperties[1, 1], false, true, true, true, true, fieldProperties[1, 2], 1);
+                    City      = IO.GetInput(fieldNames[2], anAddress.City, checkinputStringAlpha,    lengthQuestionField, fieldProperties[2, 1], false, true, true, true, true, fieldProperties[2, 2], 1);
+                    Country   = IO.GetInput(fieldNames[3], anAddress.Country, checkinputStringAlpha, lengthQuestionField, fieldProperties[3, 1], false, true, true, true, true, fieldProperties[3, 2], 1);
+                    Telephone = IO.GetInput(fieldNames[4], anAddress.Telephone, telephoneString,     lengthQuestionField, fieldProperties[4, 1], false, true, true, true, true, fieldProperties[4, 2], 1);
+                    Email     = IO.GetInput(fieldNames[5], anAddress.Email, checkinputStringAlpha,   lengthQuestionField, fieldProperties[5, 1], false, true, true, true, true, fieldProperties[5, 2], 1);
                 
                    // we check mutations in parent class here, because we are in a new instance here, not the parents'
                 }
@@ -118,12 +118,12 @@ namespace BakeryConsole
 /*2nd*/         }else
                 {
                     int cursorColumn = Console.CursorTop;
-                IO.PrintBoundaries(fieldNames[0], anAddress.Street,     lengthQuestionField, fieldProperties[0, 1], cursorColumn, anAddress.Active); Console.WriteLine(); cursorColumn++;
-                IO.PrintBoundaries(fieldNames[1], anAddress.Zipcode,    lengthQuestionField, fieldProperties[1, 1], cursorColumn, anAddress.Active); Console.WriteLine(); cursorColumn++;
-                IO.PrintBoundaries(fieldNames[2], anAddress.City,       lengthQuestionField, fieldProperties[2, 1], cursorColumn, anAddress.Active); Console.WriteLine(); cursorColumn++;
-                IO.PrintBoundaries(fieldNames[3], anAddress.Country,    lengthQuestionField, fieldProperties[3, 1], cursorColumn, anAddress.Active); Console.WriteLine(); cursorColumn++;
-                IO.PrintBoundaries(fieldNames[4], anAddress.Telephone,  lengthQuestionField, fieldProperties[4, 1], cursorColumn, anAddress.Active); Console.WriteLine(); cursorColumn++;
-                IO.PrintBoundaries(fieldNames[5], anAddress.Email,      lengthQuestionField, fieldProperties[5, 1], cursorColumn, anAddress.Active); Console.WriteLine(); cursorColumn++;
+                IO.PrintBoundaries(fieldNames[0], anAddress.Street,     lengthQuestionField, fieldProperties[0, 1], cursorColumn, 1, anAddress.Active); Console.WriteLine(); cursorColumn++;
+                IO.PrintBoundaries(fieldNames[1], anAddress.Zipcode,    lengthQuestionField, fieldProperties[1, 1], cursorColumn, 1, anAddress.Active); Console.WriteLine(); cursorColumn++;
+                IO.PrintBoundaries(fieldNames[2], anAddress.City,       lengthQuestionField, fieldProperties[2, 1], cursorColumn, 1, anAddress.Active); Console.WriteLine(); cursorColumn++;
+                IO.PrintBoundaries(fieldNames[3], anAddress.Country,    lengthQuestionField, fieldProperties[3, 1], cursorColumn, 1, anAddress.Active); Console.WriteLine(); cursorColumn++;
+                IO.PrintBoundaries(fieldNames[4], anAddress.Telephone,  lengthQuestionField, fieldProperties[4, 1], cursorColumn, 1, anAddress.Active); Console.WriteLine(); cursorColumn++;
+                IO.PrintBoundaries(fieldNames[5], anAddress.Email,      lengthQuestionField, fieldProperties[5, 1], cursorColumn, 1, anAddress.Active); Console.WriteLine(); cursorColumn++;
                 }
             }
         }

@@ -37,9 +37,9 @@ namespace BakeryConsole
 
         public GenericDataClass(string[] fieldnames, int[,] fieldProperties, string descriptionFieldName) : base(true)
         {
-                _DescriptionFieldName = descriptionFieldName;
-                FieldNames = fieldnames;        
-                FieldProperties = fieldProperties;
+                _DescriptionFieldName   = descriptionFieldName;
+                FieldNames              = fieldnames;        
+                FieldProperties         = fieldProperties;
         }
 
         public GenericDataClass() : base(_DescriptionFieldName)
@@ -52,7 +52,7 @@ namespace BakeryConsole
             for (int i = 0; i < fieldProperties.GetLength(0); i++)
             {
                 Checkbooleans(i);
-                StrVal[i] = IO.GetInput(fieldNames[i], "", checkinputStringAlpha[fieldProperties[i, 3]], lengthQuestionField, fieldProperties[i, 1], _toUpper, true, _showInput, _trim, true, fieldProperties[i, 2]);
+                StrVal[i] = IO.GetInput(fieldNames[i], "", checkinputStringAlpha[fieldProperties[i, 3]], lengthQuestionField, fieldProperties[i, 1], _toUpper, true, _showInput, _trim, true, fieldProperties[i, 2], 1);
             }
 
             //Code             = IO.GetInput(fieldNames[0],  "", checkinputStringAlpha, lengthQuestionField, fieldProperties[0, 1], false, true, true, true, true, fieldProperties[0, 2]);
@@ -62,7 +62,7 @@ namespace BakeryConsole
             var cursor = Console.CursorTop;
             for (int i = 0; i < fieldProperties.GetLength(0); i++)
             {
-                IO.PrintBoundaries(fieldNames[i], "", lengthQuestionField, fieldProperties[i, 1], cursor, false); Console.WriteLine(); cursor++;
+                IO.PrintBoundaries(fieldNames[i], "", lengthQuestionField, fieldProperties[i, 1], cursor, 1, false); Console.WriteLine(); cursor++;
             }
         }
 
@@ -75,22 +75,22 @@ namespace BakeryConsole
                 for (int i = 0; i < fieldProperties.GetLength(0); i++)
                 {
                     Checkbooleans(i);
-                    StrVal[i] = IO.GetInput(fieldNames[i],  anObject.StrVal[i], checkinputStringAlpha[fieldProperties[i,3]], lengthQuestionField, fieldProperties[i, 1], _toUpper, true, _showInput, _trim, true, fieldProperties[i, 2]);
+                    StrVal[i] = IO.GetInput(fieldNames[i],  anObject.StrVal[i], checkinputStringAlpha[fieldProperties[i,3]], lengthQuestionField, fieldProperties[i, 1], _toUpper, true, _showInput, _trim, true, fieldProperties[i, 2], 1);
                     CheckMutations(anObject, anObject.StrVal[i], this.StrVal[i], fieldNames[i], anObject.Mutations.Count);
                 }
                  //CheckMutations(anEmployeeRole, anEmployeeRole.Code, this.Code, fieldNames[0], anEmployeeRole.Mutations.Count);
             }
             else                        // Display Only
             {
-                int cursorColumn = Console.CursorTop;
+                int cursorRow = Console.CursorTop;
                 for (int i = 0; i < fieldProperties.GetLength(0); i++)
                 {
                     if (fieldProperties[i,3] == 1 |fieldProperties[i,3] == 2)              // numeric field, align to right of field
                     {
-                        IO.PrintBoundaries(fieldNames[i], anObject.StrVal[i].PadLeft(fieldProperties[i,1],' '), lengthQuestionField, fieldProperties[i, 1], cursorColumn, anObject.Active); Console.WriteLine(); cursorColumn++;
+                        IO.PrintBoundaries(fieldNames[i], anObject.StrVal[i].PadLeft(fieldProperties[i,1],' '), lengthQuestionField, fieldProperties[i, 1], cursorRow, 1, anObject.Active); Console.WriteLine(); cursorRow++;
                     }else
                     {
-                        IO.PrintBoundaries(fieldNames[i], anObject.StrVal[i], lengthQuestionField, fieldProperties[i, 1], cursorColumn, anObject.Active); Console.WriteLine(); cursorColumn++;
+                        IO.PrintBoundaries(fieldNames[i], anObject.StrVal[i], lengthQuestionField, fieldProperties[i, 1], cursorRow, 1, anObject.Active); Console.WriteLine(); cursorRow++;
                     }
                 }
             }

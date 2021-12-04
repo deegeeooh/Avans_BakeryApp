@@ -47,18 +47,18 @@ namespace BakeryConsole
         public Product() : base (_DescriptionFieldName)                                  // Main Constructor, add new Record
         {
             
-            ProductType    =                    IO.GetInput(fieldNames[0], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[0, 1], false, true, true, true, true, fieldProperties[0, 2]);
-            ProductionDate = IO.ParseToDateTime(IO.GetInput(fieldNames[1], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[1, 1], false, true, true, true, true, fieldProperties[1, 2]),false);
-            ExpirationDate = IO.ParseToDateTime(IO.GetInput(fieldNames[2], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[2, 1], false, true, true, true, true, fieldProperties[2, 2]), false);
+            ProductType    =                    IO.GetInput(fieldNames[0], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[0, 1], false, true, true, true, true, fieldProperties[0, 2], 1);
+            ProductionDate = IO.ParseToDateTime(IO.GetInput(fieldNames[1], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[1, 1], false, true, true, true, true, fieldProperties[1, 2], 1),false);
+            ExpirationDate = IO.ParseToDateTime(IO.GetInput(fieldNames[2], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[2, 1], false, true, true, true, true, fieldProperties[2, 2], 1), false);
             
             while (ExpirationDate != null & ExpirationDate.CompareTo(ProductionDate) <= 0)
                 
             {
                 IO.SetCursorPosition(0, Console.CursorTop - 1);
                 IO.SystemMessage("Expiration date should be after Production date", false);
-                ExpirationDate = IO.ParseToDateTime(IO.GetInput(fieldNames[2], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[2, 1], false, true, true, true, true, fieldProperties[2, 2]), false);
+                ExpirationDate = IO.ParseToDateTime(IO.GetInput(fieldNames[2], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[2, 1], false, true, true, true, true, fieldProperties[2, 2], 1), false);
             }
-            string getSalesPrice = IO.GetInput(fieldNames[3], "", checkinputStringNum, lengthQuestionField, fieldProperties[3, 1], false, true, true, true, true, fieldProperties[3, 2]);
+            string getSalesPrice = IO.GetInput(fieldNames[3], "", checkinputStringNum, lengthQuestionField, fieldProperties[3, 1], false, true, true, true, true, fieldProperties[3, 2], 1);
             if (getSalesPrice != "")
             {
                 SalesPrice = float.Parse(getSalesPrice);
@@ -67,7 +67,7 @@ namespace BakeryConsole
             {
                 SalesPrice = 0;
             }
-            string getCostPrice = IO.GetInput(fieldNames[4], "", checkinputStringNum, lengthQuestionField, fieldProperties[4, 1], false, true, true, true, true, fieldProperties[4, 2]);
+            string getCostPrice = IO.GetInput(fieldNames[4], "", checkinputStringNum, lengthQuestionField, fieldProperties[4, 1], false, true, true, true, true, fieldProperties[4, 2], 1);
             if (getCostPrice != "")
             {
                 CostPrice = float.Parse(getCostPrice);
@@ -77,7 +77,7 @@ namespace BakeryConsole
                 CostPrice = 0;
             }
 
-            Stock          = Int32.Parse(IO.GetInput(fieldNames[5], "", checkinputStringNum, lengthQuestionField, fieldProperties[5, 1], false, true, true, true, true, fieldProperties[5, 2]));
+            Stock          = Int32.Parse(IO.GetInput(fieldNames[5], "", checkinputStringNum, lengthQuestionField, fieldProperties[5, 1], false, true, true, true, true, fieldProperties[5, 2], 1));
            
         }
 
@@ -86,7 +86,7 @@ namespace BakeryConsole
             var cursor = Console.CursorTop;
                 for (int i = 0; i < fieldProperties.GetLength(0); i++)
                 {
-                    IO.PrintBoundaries(fieldNames[i], "", lengthQuestionField, fieldProperties[i, 1], cursor, false); Console.WriteLine(); cursor++;
+                    IO.PrintBoundaries(fieldNames[i], "", lengthQuestionField, fieldProperties[i, 1], cursor, 1, false); Console.WriteLine(); cursor++;
                 }
         }
 
@@ -96,23 +96,23 @@ namespace BakeryConsole
             {
                 RecordCounter = aProduct.RecordCounter;
                
-                ProductType    = IO.GetInput(fieldNames[0], aProduct.ProductType, checkinputStringAlpha, lengthQuestionField, fieldProperties[0, 1], false, true, true, true, true, fieldProperties[0, 2]);
-                ProductionDate = IO.ParseToDateTime(IO.GetInput(fieldNames[1], aProduct.ProductionDate.ToString("dd/MM/yyyy"), checkinputStringAlpha, lengthQuestionField, fieldProperties[1, 1], false, true, true, true, true, fieldProperties[1, 2]), false);
-                ExpirationDate = IO.ParseToDateTime(IO.GetInput(fieldNames[2], aProduct.ExpirationDate.ToString("dd/MM/yyyy"), checkinputStringAlpha, lengthQuestionField, fieldProperties[2, 1], false, true, true, true, true, fieldProperties[2, 2]), false);
+                ProductType    = IO.GetInput(fieldNames[0], aProduct.ProductType, checkinputStringAlpha, lengthQuestionField, fieldProperties[0, 1], false, true, true, true, true, fieldProperties[0, 2], 1);
+                ProductionDate = IO.ParseToDateTime(IO.GetInput(fieldNames[1], aProduct.ProductionDate.ToString("dd/MM/yyyy"), checkinputStringAlpha, lengthQuestionField, fieldProperties[1, 1], false, true, true, true, true, fieldProperties[1, 2], 1), false);
+                ExpirationDate = IO.ParseToDateTime(IO.GetInput(fieldNames[2], aProduct.ExpirationDate.ToString("dd/MM/yyyy"), checkinputStringAlpha, lengthQuestionField, fieldProperties[2, 1], false, true, true, true, true, fieldProperties[2, 2], 1), false);
 
                 while (ExpirationDate != null & ExpirationDate.CompareTo(ProductionDate) <= 0)
                 {
                     IO.SetCursorPosition(0, Console.CursorTop - 1);
                     IO.SystemMessage("Expiration date should be after Production date", false);
-                    ExpirationDate = IO.ParseToDateTime(IO.GetInput(fieldNames[2], aProduct.ExpirationDate.ToString("dd/MM/yyyy"), checkinputStringAlpha, lengthQuestionField, fieldProperties[2, 1], false, true, true, true, true, fieldProperties[2, 2]), false);
+                    ExpirationDate = IO.ParseToDateTime(IO.GetInput(fieldNames[2], aProduct.ExpirationDate.ToString("dd/MM/yyyy"), checkinputStringAlpha, lengthQuestionField, fieldProperties[2, 1], false, true, true, true, true, fieldProperties[2, 2], 1), false);
                 }
-                string getSalesPrice = IO.GetInput(fieldNames[3], aProduct.SalesPrice.ToString(format: "F2"), checkinputStringNum, lengthQuestionField, fieldProperties[3, 1], false, true, true, true, true, fieldProperties[3, 2]);
+                string getSalesPrice = IO.GetInput(fieldNames[3], aProduct.SalesPrice.ToString(format: "F2"), checkinputStringNum, lengthQuestionField, fieldProperties[3, 1], false, true, true, true, true, fieldProperties[3, 2], 1);
                           SalesPrice = (getSalesPrice!="") ? float.Parse(getSalesPrice) : 0;
 
-                string getCostPrice  = IO.GetInput(fieldNames[4], aProduct.CostPrice.ToString(format: "F2"), checkinputStringNum, lengthQuestionField, fieldProperties[4, 1], false, true, true, true, true, fieldProperties[4, 2]);
+                string getCostPrice  = IO.GetInput(fieldNames[4], aProduct.CostPrice.ToString(format: "F2"), checkinputStringNum, lengthQuestionField, fieldProperties[4, 1], false, true, true, true, true, fieldProperties[4, 2], 1);
                            CostPrice = (getCostPrice != "") ? float.Parse(getCostPrice) : 0;
                 
-                Stock =               Int16.Parse(IO.GetInput(fieldNames[5], aProduct.Stock.ToString(), checkinputStringNum, lengthQuestionField, fieldProperties[5, 1], false, true, true, true, true, fieldProperties[5, 2]));
+                Stock =               Int16.Parse(IO.GetInput(fieldNames[5], aProduct.Stock.ToString(), checkinputStringNum, lengthQuestionField, fieldProperties[5, 1], false, true, true, true, true, fieldProperties[5, 2], 1));
                 
                 this.Mutations = aProduct.Mutations;
                 
@@ -127,12 +127,12 @@ namespace BakeryConsole
             {
                 var cursorColumn = Console.CursorTop;
 
-                IO.PrintBoundaries(fieldNames[0], aProduct.ProductType, lengthQuestionField, fieldProperties[0, 1], cursorColumn, aProduct.Active); Console.WriteLine(); cursorColumn++;
-                IO.PrintBoundaries(fieldNames[1], aProduct.ProductionDate.ToString("dd/MM/yyyy"), lengthQuestionField, fieldProperties[1, 1], cursorColumn, aProduct.Active); Console.WriteLine(); cursorColumn++;
-                IO.PrintBoundaries(fieldNames[2], aProduct.ExpirationDate.ToString("dd/MM/yyyy"), lengthQuestionField, fieldProperties[2, 1], cursorColumn, aProduct.Active); Console.WriteLine(); cursorColumn++;
-                IO.PrintBoundaries(fieldNames[3], aProduct.SalesPrice.ToString("F2").PadLeft(fieldProperties[3 ,1],' ') , lengthQuestionField, fieldProperties[3, 1], cursorColumn, aProduct.Active); Console.WriteLine(); cursorColumn++;
-                IO.PrintBoundaries(fieldNames[4], aProduct.CostPrice.ToString("F2").PadLeft(fieldProperties[4, 1], ' '), lengthQuestionField, fieldProperties[4, 1], cursorColumn, aProduct.Active); Console.WriteLine(); cursorColumn++;
-                IO.PrintBoundaries(fieldNames[5], aProduct.Stock.ToString().PadLeft(fieldProperties[5, 1], ' '), lengthQuestionField, fieldProperties[5, 1], cursorColumn, aProduct.Active); Console.WriteLine(); cursorColumn++;
+                IO.PrintBoundaries(fieldNames[0], aProduct.ProductType, lengthQuestionField, fieldProperties[0, 1], cursorColumn, 1, aProduct.Active); Console.WriteLine(); cursorColumn++;
+                IO.PrintBoundaries(fieldNames[1], aProduct.ProductionDate.ToString("dd/MM/yyyy"), lengthQuestionField, fieldProperties[1, 1], cursorColumn, 1, aProduct.Active); Console.WriteLine(); cursorColumn++;
+                IO.PrintBoundaries(fieldNames[2], aProduct.ExpirationDate.ToString("dd/MM/yyyy"), lengthQuestionField, fieldProperties[2, 1], cursorColumn, 1, aProduct.Active); Console.WriteLine(); cursorColumn++;
+                IO.PrintBoundaries(fieldNames[3], aProduct.SalesPrice.ToString("F2").PadLeft(fieldProperties[3 ,1],' ') , lengthQuestionField, fieldProperties[3, 1], cursorColumn, 1, aProduct.Active); Console.WriteLine(); cursorColumn++;
+                IO.PrintBoundaries(fieldNames[4], aProduct.CostPrice.ToString("F2").PadLeft(fieldProperties[4, 1], ' '), lengthQuestionField, fieldProperties[4, 1], cursorColumn, 1, aProduct.Active); Console.WriteLine(); cursorColumn++;
+                IO.PrintBoundaries(fieldNames[5], aProduct.Stock.ToString().PadLeft(fieldProperties[5, 1], ' '), lengthQuestionField, fieldProperties[5, 1], cursorColumn, 1, aProduct.Active); Console.WriteLine(); cursorColumn++;
             
             }
             

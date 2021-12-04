@@ -48,12 +48,12 @@ namespace BakeryConsole
         {
             var cursorRow    = Console.CursorTop;
 
-            Prefix        = IO.GetInput(fieldNames[0],  "", checkinputStringAlpha, lengthQuestionField, fieldProperties[0, 1], false, true, true, true, true, fieldProperties[0, 2]);
-            FirstName     = IO.GetInput(fieldNames[1],  "", checkinputStringAlpha, lengthQuestionField, fieldProperties[1, 1], false, true, true, true, true, fieldProperties[1, 2]);
-            Gender        = IO.GetInput(fieldNames[2],  "", "MmFfXx",              lengthQuestionField, fieldProperties[2, 1], true, true, true, true, true,  fieldProperties[2, 2]);
-            RelationType  = IO.GetInput(fieldNames[3],  "", checkinputStringAlpha, lengthQuestionField, fieldProperties[3, 1], false, true, true, true, true, fieldProperties[3, 2]);
+            Prefix        = IO.GetInput(fieldNames[0],  "", checkinputStringAlpha, lengthQuestionField, fieldProperties[0, 1], false, true, true, true, true, fieldProperties[0, 2], 1);
+            FirstName     = IO.GetInput(fieldNames[1],  "", checkinputStringAlpha, lengthQuestionField, fieldProperties[1, 1], false, true, true, true, true, fieldProperties[1, 2], 1);
+            Gender        = IO.GetInput(fieldNames[2],  "", "MmFfXx",              lengthQuestionField, fieldProperties[2, 1], true, true, true, true, true,  fieldProperties[2, 2], 1);
+            RelationType  = IO.GetInput(fieldNames[3],  "", checkinputStringAlpha, lengthQuestionField, fieldProperties[3, 1], false, true, true, true, true, fieldProperties[3, 2], 1);
             DateOfBirth   = IO.ParseToDateTime(IO.GetInput(fieldNames[4], 
-                                                        "", checkinputStringDate,  lengthQuestionField, fieldProperties[4, 1], false, true, true, true, true, fieldProperties[4, 2]), true);
+                                                        "", checkinputStringDate,  lengthQuestionField, fieldProperties[4, 1], false, true, true, true, true, fieldProperties[4, 2], 1), true);
             DisplayAge(this.DateOfBirth, cursorRow + 4);
 
 /*2nd*/     GetAddressFields(new Address());                                            // get Address' fields and copy them from that instance to this one.
@@ -64,7 +64,7 @@ namespace BakeryConsole
             var cursor = Console.CursorTop;
                 for (int i = 0; i < fieldProperties.GetLength(0); i++)
                 {
-                    IO.PrintBoundaries(fieldNames[i], "", lengthQuestionField, fieldProperties[i, 1], cursor, false); Console.WriteLine(); cursor++;
+                    IO.PrintBoundaries(fieldNames[i], "", lengthQuestionField, fieldProperties[i, 1], cursor, 1, false); Console.WriteLine(); cursor++;
                 }
             _ = new Address(clearForm, _DescriptionFieldName, false);                             // call Address to clear it's specific fields, 2nd part
 /*2nd*/ }
@@ -76,12 +76,12 @@ namespace BakeryConsole
                 // call GetInput() with the passed values of aPerson
                 RecordCounter   = aPerson.RecordCounter;
 
-                Prefix          = IO.GetInput(fieldNames[0], aPerson.Prefix, checkinputStringAlpha,       lengthQuestionField, fieldProperties[0, 1], false, true, true, true, true,  fieldProperties[0, 2]);
-                FirstName       = IO.GetInput(fieldNames[1], aPerson.FirstName, checkinputStringAlpha,    lengthQuestionField, fieldProperties[1, 1], false, true, true, true, true,  fieldProperties[1, 2]);
-                Gender          = IO.GetInput(fieldNames[2], aPerson.Gender, "mMfFxX",                    lengthQuestionField, fieldProperties[2, 1], true, true, true, true, true,   fieldProperties[2, 2]);
-                RelationType    = IO.GetInput(fieldNames[3], aPerson.RelationType, checkinputStringAlpha, lengthQuestionField, fieldProperties[3, 1], true, true, true, true, true,   fieldProperties[3, 2]);
+                Prefix          = IO.GetInput(fieldNames[0], aPerson.Prefix, checkinputStringAlpha,       lengthQuestionField, fieldProperties[0, 1], false, true, true, true, true,  fieldProperties[0, 2], 1);
+                FirstName       = IO.GetInput(fieldNames[1], aPerson.FirstName, checkinputStringAlpha,    lengthQuestionField, fieldProperties[1, 1], false, true, true, true, true,  fieldProperties[1, 2], 1);
+                Gender          = IO.GetInput(fieldNames[2], aPerson.Gender, "mMfFxX",                    lengthQuestionField, fieldProperties[2, 1], true, true, true, true, true,   fieldProperties[2, 2], 1);
+                RelationType    = IO.GetInput(fieldNames[3], aPerson.RelationType, checkinputStringAlpha, lengthQuestionField, fieldProperties[3, 1], true, true, true, true, true,   fieldProperties[3, 2], 1);
                 DateOfBirth     = IO.ParseToDateTime(IO.GetInput(fieldNames[4], aPerson.DateOfBirth.ToString("dd/MM/yyyy"), 
-                                                                                   checkinputStringDate,  lengthQuestionField, fieldProperties[4, 1], false, true, true, false, true, fieldProperties[4, 2]), true);
+                                                                                   checkinputStringDate,  lengthQuestionField, fieldProperties[4, 1], false, true, true, false, true, fieldProperties[4, 2], 1), true);
                 DisplayAge (this.DateOfBirth, Console.CursorTop - 1);
 
                 this.Mutations  = aPerson.Mutations;                     // copy existing mutations to this new instance
@@ -105,12 +105,12 @@ namespace BakeryConsole
             {
                 var cursor = Console.CursorTop;
                
-                IO.PrintBoundaries(fieldNames[0],  aPerson.Prefix,       lengthQuestionField, fieldProperties[0, 1], cursor, aPerson.Active); Console.WriteLine(); cursor++;
-                IO.PrintBoundaries(fieldNames[1],  aPerson.FirstName,    lengthQuestionField, fieldProperties[1, 1], cursor, aPerson.Active); Console.WriteLine(); cursor++;
-                IO.PrintBoundaries(fieldNames[2],  aPerson.Gender,       lengthQuestionField, fieldProperties[2, 1], cursor, aPerson.Active); Console.WriteLine(); cursor++;
-                IO.PrintBoundaries(fieldNames[3],  aPerson.RelationType, lengthQuestionField, fieldProperties[3, 1], cursor, aPerson.Active); Console.WriteLine(); cursor++;
+                IO.PrintBoundaries(fieldNames[0],  aPerson.Prefix,       lengthQuestionField, fieldProperties[0, 1], cursor, 1, aPerson.Active); Console.WriteLine(); cursor++;
+                IO.PrintBoundaries(fieldNames[1],  aPerson.FirstName,    lengthQuestionField, fieldProperties[1, 1], cursor, 1, aPerson.Active); Console.WriteLine(); cursor++;
+                IO.PrintBoundaries(fieldNames[2],  aPerson.Gender,       lengthQuestionField, fieldProperties[2, 1], cursor, 1, aPerson.Active); Console.WriteLine(); cursor++;
+                IO.PrintBoundaries(fieldNames[3],  aPerson.RelationType, lengthQuestionField, fieldProperties[3, 1], cursor, 1, aPerson.Active); Console.WriteLine(); cursor++;
                 IO.PrintBoundaries(fieldNames[4],  aPerson.DateOfBirth.ToString("dd/MM/yyyy"), 
-                                                                         lengthQuestionField, fieldProperties[4, 1], cursor, aPerson.Active);     
+                                                                         lengthQuestionField, fieldProperties[4, 1], cursor, 1, aPerson.Active);     
                 DisplayAge(aPerson.DateOfBirth, cursor); Console.WriteLine(); cursor++;
 
 /*2nd*/          _ = new Address(aPerson, displayOnly, _DescriptionFieldName, false);
@@ -143,7 +143,7 @@ namespace BakeryConsole
             IO.SystemMessage("In SelectPersonFromList", false);
 
 
-            var peopleList = IO.PopulateList<Person>(Program.filePeople);
+            var peopleList = JSON.PopulateList<Person>(Program.filePeople);
             if (peopleList.Count > 0)
             {
 
