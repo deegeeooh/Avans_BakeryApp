@@ -16,7 +16,8 @@ namespace BakeryConsole
 
         public Login()
         {
-            string passWordInput = IO.GetInput("Enter password: ", "", checkInputString, 18, 40,false, true, false, false, true, 0);
+            
+            string passWordInput = IO.GetInput("Enter password: ", "", checkInputString, 18, 40,false, true, false, false, true, 0, 1);
 
             if (passWordInput == passWord)
             {

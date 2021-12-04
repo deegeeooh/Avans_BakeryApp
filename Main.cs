@@ -38,13 +38,10 @@ namespace BakeryConsole
         private static string fileEmployees         = "employees.json";
         private static string fileProducts          = "products.json";
         private static string fileUsers             = "users.json";
-        public  static string licenseString         = "Initech Incorporated";
+        public  static string licenseString         = "INITECH Inc.";
         public  static string buildVersion          = "0.20";                   // NICE: use assemblyversion attribute
-        //public  static int    windowHeight          = 40;
-        //public  static int    windowWidth           = 90;
         public  static int    warningLenghtDefault  = 1000;                     // displaytime in ms for system messages
-
-
+        
         //init genericDataClass call variables
         private static string[] fieldNames;
         private static int[,] fieldProperties;
@@ -66,23 +63,46 @@ namespace BakeryConsole
             Console.CancelKeyPress += new ConsoleCancelEventHandler(HandleCTRLC);  //set custom eventhandler
 
             // initialize variables and window
-
-            //Console.SetWindowSize(windowWidth, windowHeight);
-            //Console.SetBufferSize(windowWidth, windowHeight);
-            IO.SetWarningLength(warningLenghtDefault);
+            
+            
             Console.Title = "Bakery for Console v" + buildVersion;
             Console.CursorSize = 60;
 
             // read settings.json and set color scheme
 
             Prefs.InitializeColors();
+            Prefs.SetConsoleWindowProperties();
+            IO.SetWarningLength(warningLenghtDefault);
             Console.Clear();
+
+
+            var testTable = IO.ConstrucStandardTable("1234567890" ,30,5,20,true);
+
+            ////var testTable = IO.ConstrucStandardTable(new string[,] { {"Test","Name" },
+            //                                         {"","Sex"},
+            //                                         {"","Age"},
+            //                                         {"","Nationality" } },10,10,10,true);
+
+            IO.DisplayTable(testTable, 2, 0);
+
+
+            //IO.DrawWindow(new Window("<new title", 1, 2, true, "Header", 20, 5), 1, 1, Prefs.Color.Text, Prefs.Color.Input);
+
+            //IO.DrawWindow("<123456>",1, 1,  1, "header0",20, 5, 1, 1,Prefs.Color.Text,Prefs.Color.Text);
+            //IO.DrawWindow("<123456>",0, 2,  1, "header1",20, 5, 1, 22,Prefs.Color.Text,Prefs.Color.Text);
+            //IO.DrawWindow("<123456>",1, 3,  1, "",20, 5, 1, 42,Prefs.Color.Text,Prefs.Color.Text);
+            //IO.DrawWindow("<123456>",1, 4,  1, "header3",20, 5, 1, 63,Prefs.Color.Text,Prefs.Color.Text);
+            //IO.DrawWindow("<123456>",1, 5,  1, "header4",20, 5, 1, 85,Prefs.Color.Text,Prefs.Color.Text);
+            //IO.DrawWindow("<123456>",1, 5,  true, 20, 30, 1, 106,Prefs.Color.Text,Prefs.Color.Text);
+            
+            Console.ReadKey();
+
 
             // Main Menu Loop
             do
 /*MAIN*/    {
                 IO.DisplayMenu("Main Menu", "(L)ogin\n(P)eople\n(E)mployees\n(C)ustomers\n" +
-                                            "Pro(D)ucts\n(M)asterdata\n\n(F3-F10) change colors, (F11) reset (F12) save\n\n" +
+                                            "Pro(D)ucts\n(M)asterdata\n\n(F3-F10) change colors, (F11) reset (F12) save\n(arrow keys) resize window\n\n" +
                                             "Enter your choice, (Esc) to Exit program\n\n"
                                             ,Prefs.Color.MenuSelect);
                 //DebugMessage("Debug Mode is ON");
@@ -131,19 +151,19 @@ namespace BakeryConsole
             
             else if (inputKey.Key == ConsoleKey.RightArrow)
             {
-                Prefs.SetWindowSize(1, 0);
+                Prefs.SetWindowSize(8, 0);
             }
             else if (inputKey.Key == ConsoleKey.LeftArrow)
             {
-                Prefs.SetWindowSize(-1, 0);
+                Prefs.SetWindowSize(-8, 0);
             }
             else if (inputKey.Key == ConsoleKey.UpArrow)
             {
-                Prefs.SetWindowSize(0, -1);
+                Prefs.SetWindowSize(0, -4);
             }
             else if (inputKey.Key == ConsoleKey.DownArrow)
             {
-                Prefs.SetWindowSize(0, 1);
+                Prefs.SetWindowSize(0, 4);
             }
             
             
@@ -151,7 +171,7 @@ namespace BakeryConsole
             {
                 IO.DisplayMenu("Browse/edit People", menuEdit, Prefs.Color.MenuSelect);
 
-                var peepsList = IO.PopulateList<Person>(filePeople);
+                var peepsList = JSON.PopulateList<Person>(filePeople);
                 HandleRecords<Person>(peepsList, filePeople);
                 
             }
@@ -159,15 +179,15 @@ namespace BakeryConsole
             {
                 IO.DisplayMenu("Browse/edit Employees", menuEdit, Prefs.Color.MenuSelect);
                 
-                var empList = IO.PopulateList<Employee>(fileEmployees);
+                var empList = JSON.PopulateList<Employee>(fileEmployees);
                 HandleRecords<Employee>(empList, fileEmployees);
                 
             }
             else if (inputKey.Key == ConsoleKey.C & Login.validPassword)                            // Customers
             {
-                IO.DisplayMenu("Browse / edit Customers", menuEdit, Prefs.Color.MenuSelect);
+                IO.DisplayMenu("Browse / edit Companies", menuEdit, Prefs.Color.MenuSelect);
                 
-                var customerList = IO.PopulateList<Customer>(fileCustomers);
+                var customerList = JSON.PopulateList<Customer>(fileCustomers);
                 HandleRecords<Customer>(customerList, fileCustomers);
                 
             }
@@ -175,14 +195,14 @@ namespace BakeryConsole
             {
                 IO.DisplayMenu("Browse / edit Products", menuEdit, Prefs.Color.MenuSelect);
              
-                var prodList = IO.PopulateList<Product>(fileProducts);
+                var prodList = JSON.PopulateList<Product>(fileProducts);
                 HandleRecords<Product>(prodList, fileProducts);
             }
             else if (inputKey.Key == ConsoleKey.M & Login.validPassword)                            // Master Data 
             {
                 do
                 {
-                    IO.DisplayMenu("Edit Master Data", "(E)mployee Roles\n(C)ustomer types\n(P)roduct types\n(R)elation Types\n(U)ser accounts\n(Home) Main menu\n", Prefs.Color.MenuSelect);
+                    IO.DisplayMenu("Edit Master Data", "(E)mployee Roles\n(C)ompany types\n(P)roduct types\n(R)elation Types\n(U)ser accounts\n(Home) Main menu\n", Prefs.Color.MenuSelect);
                     inputKey = Console.ReadKey(true);                               // 'true' : dont'display the input on the console
                     CheckMenuInputMasterData();
                     RecordManager.SetTotalRecords(0);
@@ -232,7 +252,7 @@ namespace BakeryConsole
                             { 1, _fieldlength = 3, _minInputLenght = 0, _inputString = 1, _showInput = 1, _toUpper = 0, _trim = 1 } } );
                     
                     GenericDataClass.SetNameFieldName("Customer type description");
-                    _browselist = IO.PopulateList<GenericDataClass>(fileCustomerTypes);
+                    _browselist = JSON.PopulateList<GenericDataClass>(fileCustomerTypes);
                     HandleRecords<GenericDataClass>(_browselist, fileCustomerTypes);
 
                     break;
@@ -246,7 +266,7 @@ namespace BakeryConsole
                             { 1, _fieldlength = 2, _minInputLenght = 0, _inputString = 2, _showInput = 1, _toUpper = 0, _trim = 1 } } );
                   
                     GenericDataClass.SetNameFieldName("Employee job description");
-                    _browselist = IO.PopulateList<GenericDataClass>(fileEmployeeRoles);
+                    _browselist = JSON.PopulateList<GenericDataClass>(fileEmployeeRoles);
                     HandleRecords<GenericDataClass>(_browselist, fileEmployeeRoles);
 
                     break;
@@ -258,7 +278,7 @@ namespace BakeryConsole
                           { { 0, _fieldlength = 6, _minInputLenght = 1, _inputString = 0, _showInput = 1, _toUpper = 0, _trim = 1 } } ); 
            
                     GenericDataClass.SetNameFieldName("Relation Type");
-                    _browselist = IO.PopulateList<GenericDataClass>(fileRelationTypes);
+                    _browselist = JSON.PopulateList<GenericDataClass>(fileRelationTypes);
                     HandleRecords<GenericDataClass>(_browselist, fileRelationTypes);
 
                     break;
@@ -273,7 +293,7 @@ namespace BakeryConsole
                             { 0, _fieldlength = 6, _minInputLenght = 1, _inputString = 2, _showInput = 1, _toUpper = 0, _trim = 1 }} ); 
 
                     GenericDataClass.SetNameFieldName("Product Type");
-                    _browselist = IO.PopulateList<GenericDataClass>(fileProductTypes);
+                    _browselist = JSON.PopulateList<GenericDataClass>(fileProductTypes);
                     HandleRecords<GenericDataClass>(_browselist, fileProductTypes);
                     
                     break;
@@ -292,7 +312,7 @@ namespace BakeryConsole
                             { 7, _fieldlength = 1,  _minInputLenght = 1, _inputString = 3, _showInput = 1, _toUpper = 1, _trim = 0 } } );
                    
                     GenericDataClass.SetNameFieldName("User Name");
-                    _browselist = IO.PopulateList<GenericDataClass>(fileUsers);
+                    _browselist = JSON.PopulateList<GenericDataClass>(fileUsers);
                     HandleRecords<GenericDataClass>(_browselist, fileUsers);
 
                     break;
@@ -307,7 +327,7 @@ namespace BakeryConsole
         private static Dictionary<int, T> PopulateDictionary<T>(string aFilename) where T : Address
         {
 
-            var browseList = IO.PopulateList<T>(aFilename);             // reads json file and populates list of class T
+            var browseList = JSON.PopulateList<T>(aFilename);             // reads json file and populates list of class T
             List<int>[] searchResult;
             
             var returnDictionary = browseList.ToDictionary(item => item.RecordCounter, item => item);
@@ -371,7 +391,7 @@ namespace BakeryConsole
                                 IO.SetCursorPosition(cursorLeft, cursorTop + 1);       
                                 selectedRecordsList[recordIndex -1] = (T)Activator.CreateInstance(typeof(T), selectedRecordsList[recordIndex - 1], false);     // call editor constructor
                                 aList[selectedRecordsList[recordIndex - 1].RecordCounter - 1] = selectedRecordsList[recordIndex - 1];
-                                IO.WriteToFile(aFilename, aList, true);                                             // write to file
+                                JSON.WriteToFile(aFilename, aList, true);                                             // write to file
                                 IO.SetCursorPosition(cursorLeft, cursorTop);
                                 _ = (T)Activator.CreateInstance(typeof(T), selectedRecordsList[recordIndex - 1], true);           // update current record on screen
                             }
@@ -390,7 +410,7 @@ namespace BakeryConsole
                         RecordManager.SetTotalRecords(recordsInList);                                           // store number of records
                         Console.SetCursorPosition(cursorLeft, cursorTop);
                         _ = (T)Activator.CreateInstance(typeof(T), aList[recordIndex - 1], true);               // refresh record on screen
-                        IO.WriteToFile(aFilename, aList, true);                                                 // write to file 
+                        JSON.WriteToFile(aFilename, aList, true);                                                 // write to file 
                         UpdateTotalRecordsOnScreen(recordsInList);                                              // update total records on screen
 
                         break;
@@ -404,7 +424,7 @@ namespace BakeryConsole
                             _ = (T)Activator.CreateInstance(typeof(T), selectedRecordsList[recordIndex - 1], true);               // refresh record on screen
                             aList[selectedRecordsList[recordIndex-1].RecordCounter - 1].Active = selectedRecordsList[recordIndex - 1].Active;
                             //selectedRecordsList[selectedRecordsList[recordIndex - 1].RecordCounter - 1].Active = selectedRecordsList[recordIndex - 1].Active;
-                            IO.WriteToFile(aFilename, aList, false);                                                // write
+                            JSON.WriteToFile(aFilename, aList, false);                                                // write
                             Thread.Sleep(500);
                         }
                         break;
@@ -530,7 +550,7 @@ namespace BakeryConsole
 
         private static void UpdateTotalRecordsOnScreen(int numberOfRecords)     // NICE: display inactive records as well
         {
-            IO.PrintOnConsole("[" + numberOfRecords.ToString() + "] records in file", 30, 5, Prefs.Color.MenuSelect);
+            IO.PrintOnConsole("[" + numberOfRecords.ToString() + "] records in file", 30, 6, Prefs.Color.MenuSelect);
         }
         private static void ShowAssemblyInfo()                                  // test recursion routine
         {
