@@ -54,7 +54,8 @@ namespace BakeryConsole
                 {
                     Prefs.ChangeWindowSize(totalWidth - currentWindowWidth, 0);
                     Prefs.ResizeConsoleWindow();
-                }else
+                }
+                else if (totalWidth > currentWindowWidth)
                 {
                     throw new Exception("Table width is greater than current Window Width");
                 }
@@ -153,7 +154,7 @@ namespace BakeryConsole
             }
         }
 
-        public static void PrintOnConsole(string aString, int left, int top, Prefs.Color aColor)  
+        public static void PrintOnConsole(string aString, int column, int row, Prefs.Color aColor)  
         {
             lock (ConsoleLock)
             {
@@ -163,7 +164,7 @@ namespace BakeryConsole
                 {
                     if (Console.CursorTop <= Prefs.GetWindowHeight() - 1)
                     {
-                        Console.SetCursorPosition(left, top);
+                        Console.SetCursorPosition(column, row);
                         Console.Write(aString);
                     }
                     Console.SetCursorPosition(currentCursorPosLeft, currentCursorPosTop);

@@ -15,7 +15,7 @@ namespace BakeryConsole
         private static int[,] fieldProperties = { { 0,  3,  1 },
                                                   { 1, 10, 10 },
                                                   { 2, 10,  0 },
-                                                  { 3,  10, 0 } };
+                                                  { 3, 10,  0 } };
 
         private static String[] fieldNames =      { "Job Title:",                                  //0
                                                     "Date joined:",                                //1

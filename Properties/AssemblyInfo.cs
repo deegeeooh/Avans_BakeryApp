@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("prototype Console Application demonstrating class inheritance and Console UI")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("DeGo Consulting")]
-[assembly: AssemblyProduct("Collections Excercise")]
+[assembly: AssemblyProduct("")]
 [assembly: AssemblyCopyright("Copyright ©  2021 DeGo")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.0.18.0")]
-[assembly: AssemblyFileVersion("0.0.18.0")]
+[assembly: AssemblyVersion("0.0.21.0")]
+[assembly: AssemblyFileVersion("0.0.21.0")]

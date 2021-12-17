@@ -41,9 +41,7 @@ namespace BakeryConsole
             {
                 string jsonString = JsonConvert.SerializeObject(aListOfObjects, Formatting.Indented);
                 File.WriteAllText(aFilename, jsonString);
-                //aConsoleMessage = (aConsoleMessage == "") ? "Writing changes to file " : aConsoleMessage;
                 if (aConsoleMessage) IO.SystemMessage($"Writing changes to file: \"{aFilename}\"", false);
-                
             }
             catch (Exception e)
             {

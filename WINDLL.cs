@@ -5,12 +5,13 @@ namespace BakeryConsole
 {
     internal class WINDLL
     {
-        public const int SC_CLOSE       = 0xF060;
-        public const int SC_MINIMIZE    = 0xF020;
-        public const int SC_MAXIMIZE    = 0xF030;
-        public const int SC_SIZE        = 0xF000;
+        private const int SC_CLOSE       = 0xF060;
+        private const int SC_MINIMIZE    = 0xF020;
+        private const int SC_MAXIMIZE    = 0xF030;
+        private const int SC_SIZE        = 0xF000;
         /// <summary>
         ///  calls to disable resizing and closing/minimizing console window
+        ///  
         /// </summary>
 
         private const int MF_BYCOMMAND  = 0x00000000;

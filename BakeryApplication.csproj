@@ -100,6 +100,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Address.cs" />
+    <Compile Include="DisplayPerson.cs" />
     <Compile Include="GenericDataClass.cs" />
     <Compile Include="JSON.cs" />
     <Compile Include="Mutation.cs" />
@@ -118,7 +119,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="RecordManager.cs" />
-    <Compile Include="scramble.cs" />
     <Compile Include="Table.cs" />
     <Compile Include="WINDLL.cs" />
     <Compile Include="Box.cs" />

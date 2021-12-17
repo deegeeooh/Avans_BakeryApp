@@ -117,17 +117,16 @@ namespace BakeryConsole
         {
             return userPrefs[0].WindowWidth;
         }
-
-
-        public static void SetWindowSize(int aWidth, int aHeight)
+        
+        public static void ChangeWindowSize(int aWidth, int aHeight)
         {
             if (userPrefs[0].WindowWidth  +  aWidth  >= minWinWidth & 
                 userPrefs[0].WindowWidth  +  aWidth  <= Console.LargestWindowWidth) 
-                userPrefs[0].WindowWidth  = aWidth;
+                userPrefs[0].WindowWidth  += aWidth;
 
             if (userPrefs[0].WindowHeight +  aHeight >= minWinHeight &
                 userPrefs[0].WindowHeight +  aHeight <= Console.LargestWindowHeight) 
-                userPrefs[0].WindowHeight = aHeight;
+                userPrefs[0].WindowHeight += aHeight;
         }
 
 
@@ -138,9 +137,6 @@ namespace BakeryConsole
              //Console.SetBufferSize(Console.LargestWindowWidth, Console.LargestWindowHeight);
              Console.SetBufferSize(userPrefs[0].WindowWidth,userPrefs[0].WindowHeight);
         }
-
-        
-
 
         public static void SetWarningColor (bool aWarning)          // swap between warning and error colors for Color.SystemMessage
         {
@@ -172,7 +168,6 @@ namespace BakeryConsole
                                     .ToString())
                                     ,false);
                     break;
-                
                 
                 case 1:     //Text High
 

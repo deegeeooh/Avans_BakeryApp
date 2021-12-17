@@ -39,7 +39,7 @@ namespace BakeryConsole
         private static string fileProducts          = "products.json";
         private static string fileUsers             = "users.json";
         public  static string licenseString         = "INITECH Inc.";
-        public  static string buildVersion          = "0.20";                   // NICE: use assemblyversion attribute
+        public  static string buildVersion          = "0.21";                   // NICE: use assemblyversion attribute
         public  static int    warningLenghtDefault  = 1000;                     // displaytime in ms for system messages
         
         //init genericDataClass call variables
@@ -52,7 +52,7 @@ namespace BakeryConsole
         private static int _fieldlength;
         private static int _minInputLenght;
         private static string menuEdit = "(Ins)ert to Add\n(Enter)to Edit\n(Del)ete to remove Record" +
-                                         "\n(Home) Main Menu\n(End) Previous Menu\nUse (arrow) keys to browse" +
+                                         "\n(Home) Main Menu, (End) Previous Menu\nUse (arrow) keys to browse" +
                                          "\ntype to search and (ESC) to clear field\n";
 
         private static void Main()
@@ -76,26 +76,27 @@ namespace BakeryConsole
             Console.Clear();
 
 
-            var testTable = IO.ConstrucStandardTable("1234567890" ,30,5,20,true);
-
-            ////var testTable = IO.ConstrucStandardTable(new string[,] { {"Test","Name" },
-            //                                         {"","Sex"},
-            //                                         {"","Age"},
-            //                                         {"","Nationality" } },10,10,10,true);
-
-            IO.DisplayTable(testTable, 2, 0);
-
-
-            //IO.DrawWindow(new Window("<new title", 1, 2, true, "Header", 20, 5), 1, 1, Prefs.Color.Text, Prefs.Color.Input);
-
-            //IO.DrawWindow("<123456>",1, 1,  1, "header0",20, 5, 1, 1,Prefs.Color.Text,Prefs.Color.Text);
-            //IO.DrawWindow("<123456>",0, 2,  1, "header1",20, 5, 1, 22,Prefs.Color.Text,Prefs.Color.Text);
-            //IO.DrawWindow("<123456>",1, 3,  1, "",20, 5, 1, 42,Prefs.Color.Text,Prefs.Color.Text);
-            //IO.DrawWindow("<123456>",1, 4,  1, "header3",20, 5, 1, 63,Prefs.Color.Text,Prefs.Color.Text);
-            //IO.DrawWindow("<123456>",1, 5,  1, "header4",20, 5, 1, 85,Prefs.Color.Text,Prefs.Color.Text);
-            //IO.DrawWindow("<123456>",1, 5,  true, 20, 30, 1, 106,Prefs.Color.Text,Prefs.Color.Text);
+            //var stdTable = Table.ConstrucStdTable ("",true,"",7,10,15);
+            //IO.DisplayTable(stdTable, 2, 0, true);
+            //Console.ReadKey();
             
-            Console.ReadKey();
+
+            //var testTable = Table.ConstructVarTable (new string[] {"Column 1", "Col 2","Col 3", "Pepijn","Column 5","Colum nummer zes"},
+            //                                         new int[] {0, 0, 1, 1, 2, 2},
+            //                                         true,
+            //                                         new string[] {"Name","Address","Code","Telephone","email","Woonplaats"},
+            //                                         new int[] {0, 0, 1, 1, 2, 2},
+            //                                         new int[] {25, 20, 15, 10, 5, 30},
+            //                                         25);
+
+            
+            //IO.DisplayTable(testTable, 2, 0, true);
+
+            //Console.ReadKey(true);
+            
+            //Box.DrawWindow(new Box("[ 123456789 ]", 1, 1, true, "Header title", 1, 25, 15), 1, 1, Prefs.Color.Input, Prefs.Color.MenuSelect);
+            
+            //Console.ReadKey();
 
 
             // Main Menu Loop
@@ -142,30 +143,31 @@ namespace BakeryConsole
                 _debugEnabled = _debugEnabled ? false : true;   // toggle static property
             }
 
-            
-            
+
+
             if (inputKey.Key == ConsoleKey.L || !Login.validPassword & inputKey.Key != ConsoleKey.Escape)
             {
                 _ = new Login();                               // _ discard unnecessary var declaration
-            }
-            
-            else if (inputKey.Key == ConsoleKey.RightArrow)
+            } else if (inputKey.Key == ConsoleKey.RightArrow)
             {
-                Prefs.SetWindowSize(8, 0);
-            }
-            else if (inputKey.Key == ConsoleKey.LeftArrow)
+                Prefs.ChangeWindowSize(8, 0);
+            } else if (inputKey.Key == ConsoleKey.LeftArrow)
             {
-                Prefs.SetWindowSize(-8, 0);
-            }
-            else if (inputKey.Key == ConsoleKey.UpArrow)
+                Prefs.ChangeWindowSize(-8, 0);
+            } else if (inputKey.Key == ConsoleKey.UpArrow)
             {
-                Prefs.SetWindowSize(0, -4);
-            }
-            else if (inputKey.Key == ConsoleKey.DownArrow)
+                Prefs.ChangeWindowSize(0, -4);
+            } else if (inputKey.Key == ConsoleKey.DownArrow)
             {
-                Prefs.SetWindowSize(0, 4);
+                Prefs.ChangeWindowSize(0, 4);
+            } else if (inputKey.Key == ConsoleKey.PageDown)
+            {
+                Prefs.ChangeWindowSize(8, 4);
             }
-            
+            else if (inputKey.Key == ConsoleKey.PageUp)
+            {
+                Prefs.ChangeWindowSize(-8, -4);
+            }
             
             else if (inputKey.Key == ConsoleKey.P)                                                  // Person
             {
@@ -173,32 +175,28 @@ namespace BakeryConsole
 
                 var peepsList = JSON.PopulateList<Person>(filePeople);
                 HandleRecords<Person>(peepsList, filePeople);
-                
-            }
-            else if (inputKey.Key == ConsoleKey.E & Login.validPassword)                            // Employees
+
+            } else if (inputKey.Key == ConsoleKey.E & Login.validPassword)                            // Employees
             {
                 IO.DisplayMenu("Browse/edit Employees", menuEdit, Prefs.Color.MenuSelect);
-                
+
                 var empList = JSON.PopulateList<Employee>(fileEmployees);
                 HandleRecords<Employee>(empList, fileEmployees);
-                
-            }
-            else if (inputKey.Key == ConsoleKey.C & Login.validPassword)                            // Customers
+
+            } else if (inputKey.Key == ConsoleKey.C & Login.validPassword)                            // Customers
             {
                 IO.DisplayMenu("Browse / edit Companies", menuEdit, Prefs.Color.MenuSelect);
-                
+
                 var customerList = JSON.PopulateList<Customer>(fileCustomers);
                 HandleRecords<Customer>(customerList, fileCustomers);
-                
-            }
-            else if (inputKey.Key == ConsoleKey.D & Login.validPassword)                            // Products
+
+            } else if (inputKey.Key == ConsoleKey.D & Login.validPassword)                            // Products
             {
                 IO.DisplayMenu("Browse / edit Products", menuEdit, Prefs.Color.MenuSelect);
-             
+
                 var prodList = JSON.PopulateList<Product>(fileProducts);
                 HandleRecords<Product>(prodList, fileProducts);
-            }
-            else if (inputKey.Key == ConsoleKey.M & Login.validPassword)                            // Master Data 
+            } else if (inputKey.Key == ConsoleKey.M & Login.validPassword)                            // Master Data 
             {
                 do
                 {
@@ -210,25 +208,22 @@ namespace BakeryConsole
                 } while (inputKey.Key != ConsoleKey.Home);
 
                 CheckMenuInputMasterData();
-            }
+            } else if (inputKey.Key == ConsoleKey.F3) { Prefs.CycleColors(0, false); return; }       // input text color
+              else if (inputKey.Key == ConsoleKey.F4) { Prefs.CycleColors(1, false); return; }       // highlighted text color
+              else if (inputKey.Key == ConsoleKey.F5) { Prefs.CycleColors(2, false); return; }       // normal text
+              else if (inputKey.Key == ConsoleKey.F6) { Prefs.CycleColors(3, false); return; }       // background
+              else if (inputKey.Key == ConsoleKey.F7) { Prefs.CycleColors(4, false); return; }       // Menu select color
+              else if (inputKey.Key == ConsoleKey.F8) { Prefs.CycleColors(5, false); return; }       // Software license nameholder Color
+              else if (inputKey.Key == ConsoleKey.F9) { Prefs.CycleColors(6, true); return; }       // random colors including background
+              else if (inputKey.Key == ConsoleKey.F10) { Prefs.CycleColors(6, false); return; }       // random colors excluding background
+              else if (inputKey.Key == ConsoleKey.F11) { Prefs.SetStandardColor(); }                  // Set/Reset to standard color scheme
 
-            else if (inputKey.Key == ConsoleKey.F3)  { Prefs.CycleColors(0, false); return; }       // input text color
-            else if (inputKey.Key == ConsoleKey.F4)  { Prefs.CycleColors(1, false); return; }       // highlighted text color
-            else if (inputKey.Key == ConsoleKey.F5)  { Prefs.CycleColors(2, false); return; }       // normal text
-            else if (inputKey.Key == ConsoleKey.F6)  { Prefs.CycleColors(3, false); return; }       // background
-            else if (inputKey.Key == ConsoleKey.F7)  { Prefs.CycleColors(4, false); return; }       // Menu select color
-            else if (inputKey.Key == ConsoleKey.F8)  { Prefs.CycleColors(5, false); return; }       // Software license nameholder Color
-            else if (inputKey.Key == ConsoleKey.F9)  { Prefs.CycleColors(6, true);  return; }       // random colors including background
-            else if (inputKey.Key == ConsoleKey.F10) { Prefs.CycleColors(6, false); return; }       // random colors excluding background
-            else if (inputKey.Key == ConsoleKey.F11) { Prefs.SetStandardColor(); }                  // Set/Reset to standard color scheme
+              else if (inputKey.Key == ConsoleKey.F12) { Prefs.SaveColors(); }                        //
 
-            else if (inputKey.Key == ConsoleKey.F12) { Prefs.SaveColors(); }                        //
-
-            else if (inputKey.Key == ConsoleKey.A)                                                  // Assembly info via recursion (test routine)
+              else if (inputKey.Key == ConsoleKey.A)                                                  // Assembly info via recursion (test routine)
             {
                 ShowAssemblyInfo();
-            }
-            else if (inputKey.Key == ConsoleKey.Escape)                                             // exit program
+            } else if (inputKey.Key == ConsoleKey.Escape)                                             // exit program
             {
                 return;
             }
@@ -324,13 +319,13 @@ namespace BakeryConsole
 
         }
        
-        private static Dictionary<int, T> PopulateDictionary<T>(string aFilename) where T : Address
+        public static Dictionary<string, string> PopulateDictionary<T>(string aFilename) where T : RecordManager
         {
 
             var browseList = JSON.PopulateList<T>(aFilename);             // reads json file and populates list of class T
             List<int>[] searchResult;
             
-            var returnDictionary = browseList.ToDictionary(item => item.RecordCounter, item => item);
+            var returnDictionary = browseList.ToDictionary(item => item.ID, item => item.Description);
 
             return returnDictionary;   //TODO: optimaliseren 
         }
@@ -359,7 +354,7 @@ namespace BakeryConsole
 
             // init help variables for search selection    
             var selectedRecordsList = aList;
-            var recordsInSelection  = recordsInList;
+            var numberOfRecordsSelected  = recordsInList;
             bool change = false;
                             
             if (aList.Count > 0)                                                //display first record
@@ -405,7 +400,7 @@ namespace BakeryConsole
                         if (recordsInList != 0) _ = (T)Activator.CreateInstance(typeof(T), true, true);         // clear form if record on screen
                         IO.SetCursorPosition(cursorLeft, cursorTop + 1);                    
                         aList.Add((T)Activator.CreateInstance(typeof(T)));                                      // add new record 
-                        recordsInList++; recordsInSelection++;                                                                        // increase record counter
+                        recordsInList++; numberOfRecordsSelected++;                                                                        // increase record counter
                         recordIndex = recordsInList;                                                            // set index to new created record
                         RecordManager.SetTotalRecords(recordsInList);                                           // store number of records
                         Console.SetCursorPosition(cursorLeft, cursorTop);
@@ -441,7 +436,7 @@ namespace BakeryConsole
 
                     case ConsoleKey.RightArrow:
                     case ConsoleKey.DownArrow:
-                        if (recordIndex < recordsInSelection)
+                        if (recordIndex < numberOfRecordsSelected)
                         {
                             recordIndex++;
                             IO.SetCursorPosition(cursorLeft, cursorTop);
@@ -461,7 +456,7 @@ namespace BakeryConsole
                                                         
                             selectedRecordsList = aList.FindAll(item => (item.Description + item.ID).Contains(compareString));
                             
-                            recordsInSelection = selectedRecordsList.Count;
+                            numberOfRecordsSelected = selectedRecordsList.Count;
                             
                         }else
                         {
@@ -471,7 +466,7 @@ namespace BakeryConsole
                                 change = false;
                             }
                         }
-                        IO.PrintOnConsole("Searching: [ " + compareString.ToString() + " ] matches: "+ numberFound.ToString().PadRight(20, ' '), 1, cursorTop - 1, Prefs.Color.Defaults);
+                        IO.PrintOnConsole("Searching: [ " + compareString.ToString() + " ] matches: "+ numberFound.ToString().PadRight(20, ' '), 1, cursorTop - 1, Prefs.Color.Input);
                         
                         if (foundListIndex != -1)         // found something
                         {
@@ -487,7 +482,7 @@ namespace BakeryConsole
 
                 if (Debugger.IsAttached)
                 {
-                    IO.PrintOnConsole("Recordindex: " + recordIndex, 0, 0, Prefs.Color.Defaults);
+                    IO.PrintOnConsole("Recordindex: " + recordIndex, 40, 0, Prefs.Color.Defaults);
                 }
             } while (inputKey.Key != ConsoleKey.Home & inputKey.Key != ConsoleKey.Q & inputKey.Key != ConsoleKey.End);
         }

@@ -28,7 +28,7 @@ namespace BakeryConsole
                 {
                     if (i == 0)
                     {
-                        boxList.Add(new Box("", 1, 3, headerRow, "", 1, width, height));
+                        boxList.Add(new Box(title, 0, 3, headerRow, "", 1, width, height));
                     } else if (i == numberOfColumns - 1)
                     {
                         boxList.Add(new Box("", 1, 5, headerRow, "", 1, width, height));
@@ -53,6 +53,9 @@ namespace BakeryConsole
         /// <param name="height"></param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
+        
+        
+        
         public static Table ConstructVarTable(string[] title, int[] titlePos, bool headerRow, string[] header, int[] headerPos, int[] width, int height)
         {
             List<Box> boxList   = new List<Box>();
