@@ -99,28 +99,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Address.cs" />
-    <Compile Include="GenericDataClass.cs" />
-    <Compile Include="JSON.cs" />
-    <Compile Include="Mutation.cs" />
-    <Compile Include="Employee.cs" />
-    <Compile Include="Product.cs" />
-    <Compile Include="Login.cs" />
-    <Compile Include="Customer.cs" />
-    <Compile Include="Person.cs" />
-    <Compile Include="IO.cs" />
-    <Compile Include="Main.cs" />
+    <Compile Include="Scripts\Address.cs" />
+    <Compile Include="Scripts\GenericDataClass.cs" />
+    <Compile Include="Scripts\JSON.cs" />
+    <Compile Include="Scripts\Mutation.cs" />
+    <Compile Include="Scripts\Employee.cs" />
+    <Compile Include="Scripts\Product.cs" />
+    <Compile Include="Scripts\Login.cs" />
+    <Compile Include="Scripts\Customer.cs" />
+    <Compile Include="Scripts\Person.cs" />
+    <Compile Include="Scripts\IO.cs" />
+    <Compile Include="Scripts\Main.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Prefs.cs" />
+    <Compile Include="Scripts\Prefs.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="RecordManager.cs" />
-    <Compile Include="Table.cs" />
-    <Compile Include="WINDLL.cs" />
-    <Compile Include="Box.cs" />
+    <Compile Include="Scripts\RecordManager.cs" />
+    <Compile Include="Scripts\Table.cs" />
+    <Compile Include="Scripts\WINDLL.cs" />
+    <Compile Include="Scripts\Box.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
