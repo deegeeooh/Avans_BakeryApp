@@ -144,5 +144,13 @@ namespace BakeryConsole
             //Console.WriteLine("Don't be a dick Jason dear"); Console.ReadKey();
         }
 
+        public override string ConstructSearchString()
+        {
+            string searchString = this.ID +
+                                  this.Description +
+                                  this.ProductionDate;
+            return searchString;
+        }
+
     }
 }

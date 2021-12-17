@@ -93,6 +93,19 @@ namespace BakeryConsole
             //Console.WriteLine("Don't be a dick Jason dear"); Console.ReadKey();
         }
 
+        public override string ConstructSearchString()
+        {
+            string searchString = base.ConstructSearchString() +
+                                  this.Prefix +
+                                  this.FirstName +
+                                  this.DateOfBirth.ToString("dd/MM/yyyy") +
+                                  this.JobTitle +
+                                  this.DateJoined.ToString("dd/MM/yyyy") +
+                                  this.DateExit.ToString("dd/MM/yyyy");
+            return searchString;
+        }
+
+
 
     }
 }

@@ -134,6 +134,21 @@ namespace BakeryConsole
         {
             //Console.WriteLine("Don't be a dick Jason dear"); Console.ReadKey();
         }
+        public override string ConstructSearchString()
+        {
+        string searchString =   base.ConstructSearchString() +
+                                this.Street +
+                                this.Zipcode +
+                                this.City +
+                                this.Country +
+                                this.Telephone +
+                                this.Email ;
+        return searchString;
+        }
+
+
+
+
     }
 
 }

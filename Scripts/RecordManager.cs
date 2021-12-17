@@ -133,14 +133,21 @@ namespace BakeryConsole
             TotalRecords = aRecord;
         }
 
-        public static string RetrieveSearchString<T>( T anInheritor, int aRecordNumber ) where T : RecordManager
+        public static string GetSearchString<T>(T anInheritor) where T : RecordManager
         {
-            string searchString = anInheritor.Description;
+            string searchString = anInheritor.ConstructSearchString();
             return searchString;
         }
+
+        public virtual string ConstructSearchString()
+        {
+            string searchString = this.ID + this.Description;
+            return searchString;
+        }
+        
         public void IfActive<T>( T anInheritor, int onCursorColumn, int onCursorRow ) where T : RecordManager
         {
-            if (!anInheritor.Active)
+            if (!anInheritor.Active) 
             {
                 IO.PrintOnConsole(" *Inactive* ", onCursorColumn, onCursorRow, Prefs.Color.Inverted);
             }

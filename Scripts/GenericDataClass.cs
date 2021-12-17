@@ -38,16 +38,16 @@ namespace BakeryConsole
         public GenericDataClass(string[] fieldnames, int[,] fieldProperties, string descriptionFieldName) : base(true)
         {
                 _DescriptionFieldName   = descriptionFieldName;
-                FieldNames              = fieldnames;        
-                FieldProperties         = fieldProperties;
+                //FieldNames              = fieldnames;        
+                //FieldProperties         = fieldProperties;
         }
 
         public GenericDataClass() : base(_DescriptionFieldName)
         {
 
             StrVal          = new string[fieldProperties.GetLength(0)];      //instantiate StrVal with number of entries
-            FieldProperties = fieldProperties;                             // to store arrays in file
-            FieldNames      = fieldNames;    
+            //FieldProperties = fieldProperties;                             // to store arrays in file
+            //FieldNames      = fieldNames;    
 
             for (int i = 0; i < fieldProperties.GetLength(0); i++)
             {
@@ -71,8 +71,8 @@ namespace BakeryConsole
             if (!displayOnly)            //Edit
             {
                 StrVal = new string[fieldProperties.GetLength(0)]; 
-                FieldNames              = fieldNames;        
-                FieldProperties         = fieldProperties;
+                //FieldNames              = fieldNames;        
+                //FieldProperties         = fieldProperties;
                 for (int i = 0; i < fieldProperties.GetLength(0); i++)
                 {
                     Checkbooleans(i);
@@ -84,6 +84,8 @@ namespace BakeryConsole
             else                        // Display Only
             {
                 int cursorRow = Console.CursorTop;
+                //FieldNames              = fieldNames;        
+                //FieldProperties         = fieldProperties;
                 for (int i = 0; i < fieldProperties.GetLength(0); i++)
                 {
                     if (fieldProperties[i,3] == 1 |fieldProperties[i,3] == 2)              // numeric field, align to right of field
@@ -128,6 +130,20 @@ namespace BakeryConsole
         {
             fieldProperties = _fieldProperties;
         }
+        public override string ConstructSearchString()
+        {
+            string searchString = "";
+
+            for (int i = 0; i < StrVal.Length; i++)
+            {
+                searchString += StrVal[i].ToString();
+            }
+            
+            searchString += base.ConstructSearchString();
+            return searchString;
+        }
+
+
 
     }
 }

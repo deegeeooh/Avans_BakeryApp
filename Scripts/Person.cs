@@ -159,6 +159,15 @@ namespace BakeryConsole
             this.Telephone = _newInstance.Telephone;
             this.Email     = _newInstance.Email;
         }
+        public override string ConstructSearchString()
+        {
+            string searchString = base.ConstructSearchString() + 
+                                  this.Prefix +
+                                  this.FirstName +
+                                  this.DateOfBirth.ToString("dd/MM/yyyy");
+            return searchString;
+        }
+
 
 
     }
