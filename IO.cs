@@ -14,8 +14,8 @@ namespace BakeryConsole
 
         private static int warningLength;             // length in ms of system message events
 
-        private static int currentWindowWidth = Prefs.GetWindowWidth();
-        private static int currentWindowHeight = Prefs.GetWindowHeight();
+        private static int currentWindowWidth; //= Prefs.GetWindowWidth();
+        private static int currentWindowHeight;// = Prefs.GetWindowHeight();
 
         static string topLeft;
         static string topRight;
@@ -27,17 +27,7 @@ namespace BakeryConsole
         static string headerLeft;
         static string headerRight;
         static string headerHor;
-
-
-
-
-        //static string mString = "╔═".PadRight (currentWindowWidth - 2, '═')+"═╗";
-        //static string mString2 = "│".PadRight (currentWindowWidth - 1, ' ')+"│";
-        //static string mString3 = "╚=".PadRight(currentWindowWidth - 2, '═')+"=╝";
-        //static string mString4 = "└─".PadRight(currentWindowWidth - 2, '─')+"─┘";
-        //static string mString5 = "├".PadRight (currentWindowWidth - 1, '─')+"┤";
-        //static string mString6 = "└".PadRight (currentWindowWidth - 1, '─')+"┘";
-        //static string mString7 = "─".PadRight (currentWindowWidth - 1, '─')+"─";
+        
         public static void SetWarningLength(int aValueInMs)
         {
             warningLength = aValueInMs;
@@ -48,256 +38,42 @@ namespace BakeryConsole
             currentWindowWidth = aWidth;
             currentWindowHeight = aHeight;
         }
-        public static Table ConstrucStandardTable(string titles, int numberOfColumns, int width, int height, bool HeaderRow)
-        {
-            List<Window> windowsList = new List<Window>();
 
-            for (int i = 0; i < numberOfColumns; i++)
-            {
-                if (i == 0)
-                {
-                    windowsList.Add(new Window(titles, 1, 3, true, "", width, height));
-                } else if (i == numberOfColumns - 1)
-                {
-                    windowsList.Add(new Window("", 1, 5, true, "", width, height));
-                } else
-                {
-                    windowsList.Add(new Window("", 1, 4, true, "", width, height));
-                }
-            }
-            return new Table(windowsList);
-        }
-
-        //public static Table ConstrucStandardTable(string[,] titles, int numberOfColumns, int width, int height, bool HeaderRow)
-        //{
-        //    List<Window> windowsList = new List<Window>();
-
-        //    for (int i = 0; i < numberOfColumns; i++)
-        //    {
-        //        if (i == 0)
-        //        {
-        //            windowsList.Add(new Window(titles[i, 0], 1, 3, true, titles[i, 1], width, height));
-        //        } else if (i == numberOfColumns - 1)
-        //        {
-        //            windowsList.Add(new Window(titles[i, 0], 1, 5, true, titles[i, 1], width, height));
-        //        } else
-        //        {
-        //            windowsList.Add(new Window(titles[i, 0], 1, 4, true, titles[i, 1], width, height));
-        //        }
-        //    }
-        //    return new Table(windowsList);
-        //}
-
-        public static void DisplayTable(Table aTable, int cursorRow, int cursorColumn)
+        public static void DisplayTable(Table aTable, int cursorRow, int cursorColumn, bool resizeWindow)
         {
             int totalWidth = 0;
-            foreach (var item in aTable.Columns)
+            foreach (Box box in aTable.Columns)
             {
-                totalWidth = totalWidth + item.Width;   
+                totalWidth = totalWidth + box.Width;   
             }
 
             if (totalWidth <= Console.LargestWindowWidth)
             {
-                if (totalWidth > currentWindowWidth)
+                
+                if (totalWidth > currentWindowWidth & resizeWindow )
                 {
-                    Prefs.SetWindowSize(totalWidth, currentWindowHeight);
+                    Prefs.ChangeWindowSize(totalWidth - currentWindowWidth, 0);
                     Prefs.ResizeConsoleWindow();
+                }else
+                {
+                    throw new Exception("Table width is greater than current Window Width");
                 }
+                               
                 
                 int nextCursorPosition = 0;
                 for (int i = 0; i < aTable.Columns.Count; i++)
                 {
-                    DrawWindow(aTable.Columns[i], cursorRow, cursorColumn + nextCursorPosition, Prefs.Color.Text, Prefs.Color.Text);
+                    Box.DrawWindow(aTable.Columns[i], cursorRow, cursorColumn + nextCursorPosition, Prefs.Color.Text, Prefs.Color.Text);
                     nextCursorPosition += aTable.Columns[i].Width - 1;
                 }
             }
-           
         }
-
-    
-
-        public static void DrawWindow( Window aWindow,
-                                         int cursorRow,
-                                         int cursorCol,
-                                         Prefs.Color titleColor,
-                                         Prefs.Color windowColor )
-        
-        {
-            var OrgCursorCol = Console.CursorLeft;
-            var OrgCursorRow = Console.CursorTop;
-
-            switch (aWindow.Type)
-            {
-             //         0                     2                   3                 4                   5
-             //╔═════<title >═════╗ ╔<123456>══════════╗╔═════<123456>═════╦═════<123456>═════╦═════<123456>═════╗
-             //║     headerTitle  ║ │                  ││                  │                  │                  │
-             //╠══════════════════╣ ├──────────────────┤├──────────────────┼──────────────────┼──────────────────┤
-             //║                  ║ │                  ││                  │                  │                  │
-             //║                  ║ │                  ││                  │                  │                  │
-             //╚══════════════════╝ └──────────────────┘└──────────────────┴──────────────────┴──────────────────┘
-
-                case 0:
-                    topLeft = "╔";
-                    topRight = "╗";
-                    bottomLeft = "╚";
-                    bottomRight = "╝";
-                    horizontalTop = "═";
-                    horizontalBot = "═";
-                    vertical = "║";
-                    headerLeft = "╠";
-                    headerRight = "╣";
-                    headerHor = "═";
-                    break;
-
-                case 1:
-                    topLeft = "┌";
-                    topRight = "┐";
-                    bottomLeft = "└";
-                    bottomRight = "┘";
-                    horizontalTop = "─";
-                    horizontalBot = "─";
-                    vertical = "│";
-                    headerLeft = "├";
-                    headerRight = "┤";
-                    headerHor = "─";
-                    break;
-
-                case 2:
-                    topLeft = "╔";
-                    topRight = "╗";
-                    bottomLeft = "└";
-                    bottomRight = "┘";
-                    horizontalTop = "═";
-                    horizontalBot = "─";
-                    vertical = "│";
-                    headerLeft = "├";
-                    headerRight = "┤";
-                    headerHor = "─";
-
-                    break;
-                case 3:
-                    topLeft = "╔";                  //
-                    topRight = "╦";                 //
-                    bottomLeft = "└";               //
-                    bottomRight = "┴";              //
-                    horizontalTop = "═";            //
-                    horizontalBot = "─";            //
-                    vertical = "│";                 //
-                    headerLeft = "├";               //
-                    headerRight = "┼";              //
-                    headerHor = "─";
-
-                    break;
-                case 4:
-                    topLeft = "╦";
-                    topRight = "╦";
-                    bottomLeft = "┴";
-                    bottomRight = "┴";
-                    horizontalTop = "═";
-                    horizontalBot = "─";
-                    vertical = "│";
-                    headerLeft = "┼";               //
-                    headerRight = "┼";              //
-                    headerHor = "─";
-
-                    break;
-
-                case 5:
-                    topLeft = "╦";
-                    topRight = "╗";
-                    bottomLeft = "┴";
-                    bottomRight = "┘";
-                    horizontalTop = "═";
-                    horizontalBot = "─";
-                    vertical = "│";
-                    headerLeft = "┼";               //
-                    headerRight = "┤";              //
-                    headerHor = "─";
-
-                    break;
-
-                default:
-                    break;
-            }
-            lock (ConsoleLock)
-
-            {
-                try 
-                {
-                 
-                    SetCursorPosition (cursorCol, cursorRow);
-                    Prefs.SetColor(windowColor);
-                    //var titlePos;
-                    if (aWindow.Title.Length > 0 & aWindow.Title.Length < aWindow.Width)
-                    {
-                        Console.Write(topLeft + (new StringBuilder().Insert(0, horizontalTop, aWindow.Width-2).ToString())+ topRight);
-                        switch (aWindow.TitlePosition)
-                        {   case 0:     //left
-                                aWindow.TitlePosition = 1;
-                                break;
-                            case 1:     //middle
-                                aWindow.TitlePosition = (aWindow.Width / 2) - (aWindow.Title.Length / 2);
-                                break;
-                            case 2:     //right
-                                aWindow.TitlePosition = aWindow.Width - aWindow.Title.Length - 1;
-                                break;
-                            default:
-                                break;
-                        }
-                                               
-                        SetCursorPosition(cursorCol + aWindow.TitlePosition, cursorRow);
-                        Prefs.SetColor(titleColor);
-                        Console.Write(aWindow.Title);
-                        Prefs.SetColor(windowColor);
-                    }else
-                    {
-                        Console.Write(topLeft + (new StringBuilder().Insert(0, horizontalTop, aWindow.Width-2).ToString())+ topRight);
-                    }
-                     
-                    cursorRow++;
-                    for (int i = 0; i < aWindow.Height; i++)
-                    {
-                        SetCursorPosition (cursorCol, cursorRow + i);
-                        if (i == 1 & aWindow.HeaderRow)
-                        {
-                            Console.Write(headerLeft + (new StringBuilder().Insert(0,headerHor,aWindow.Width-2).ToString())+ headerRight);
-                            if (aWindow.HeaderTitle != "" & aWindow.HeaderTitle.Length < aWindow.Width + 2)
-                            {
-                                var position = (aWindow.Width / 2) - (aWindow.HeaderTitle.Length / 2);
-                                SetCursorPosition(cursorCol + position, Console.CursorTop - 1);
-                                Console.Write(aWindow.HeaderTitle);
-                            }
-                        }else
-                        {
-                            Console.Write(vertical + (new StringBuilder().Insert(0," ",aWindow.Width-2).ToString())+ vertical);
-                        }
-                    }
-                    SetCursorPosition (cursorCol, Console.CursorTop);
-                    Console.Write(bottomLeft + (new StringBuilder().Insert(0, horizontalBot, aWindow.Width-2).ToString())+ bottomRight);
-                }
-                catch (Exception e)
-                {
-                    SystemMessage($"Error drawing window on console", false);
-                }
-                SetCursorPosition (OrgCursorCol, OrgCursorRow);
-                Prefs.SetColor(Prefs.Color.Defaults);
-            }
-        }
-
 
         public static void DisplayMenu(string title, string menuString, Prefs.Color aColorMenuOption)                  //Cleanup
         {
             currentWindowWidth = Prefs.GetWindowWidth();
 
-            string mString = "╔"+ (new StringBuilder().Insert(0,"═",currentWindowWidth-2).ToString())+"╗";
-
-            //string mString = "╔═".PadRight(Prefs.GetWindowWidth() - 2, '═')+"═╗";
-            string mString2 = "│".PadRight(Prefs.GetWindowWidth() - 1, ' ')+"│";
-            string mString3 = "╚=".PadRight(Prefs.GetWindowWidth() - 2, '═')+"=╝";
-            string mString4 = "└─".PadRight(Prefs.GetWindowWidth() -2, '─')+"─┘";
-            string mString5 = "├".PadRight(Prefs.GetWindowWidth()-1, '─')+"┤";
-            string mString6 = "└".PadRight(Prefs.GetWindowWidth()-1, '─')+"┘";
-            string mString7 = "─".PadRight(Prefs.GetWindowWidth() -1, '─')+"─";
+            var numberOfMenuItems = menuString.Split('\n').Length;
 
             lock (ConsoleLock)
             {
@@ -306,14 +82,9 @@ namespace BakeryConsole
 
                 Console.Clear();
                 PrintOnConsole(Prefs.GetWindowHeight().ToString()+" "+Prefs.GetWindowWidth().ToString(), 0, 0, Prefs.Color.Defaults);
-
-                //PrintOnConsole(mString, 0,1, Prefs.Color.Text);
-                //PrintOnConsole(mString2, 0,2, Prefs.Color.Text);
-                //PrintOnConsole(mString2, 0,3, Prefs.Color.Text);
-
-                Window topWindows = new Window("",2,2,false,"",Prefs.GetWindowWidth(), 3);
-                DrawWindow(topWindows, 1, 0,Prefs.Color.Text,Prefs.Color.Text);
                 
+                Box topWindow = new Box("", 2, 2, false, "", 1, Prefs.GetWindowWidth(), 2);
+                Box.DrawWindow(topWindow, 1, 0,Prefs.Color.Text,Prefs.Color.Text);
                 
                 Prefs.SetColor(Prefs.Color.Text);
                 
@@ -330,45 +101,26 @@ namespace BakeryConsole
                     PrintOnConsole("* Logged out *", Prefs.GetWindowWidth() - 15, 3, Prefs.Color.DefaultForeGround);
                 }
 
-                Prefs.SetColor(Prefs.Color.Text);
-                PrintOnConsole(mString4, 0,4, Prefs.Color.Text);
-                PrintOnConsole(mString, 0,5, Prefs.Color.Text);
-                PrintOnConsole(mString2, 0,6, Prefs.Color.Text);
-                PrintOnConsole(title, 1,6, Prefs.Color.MenuSelect);
-                PrintOnConsole(mString5, 0, 7, Prefs.Color.Text);
+                Box menuWindow = new Box( "", 2, 2, true, "", 1, Prefs.GetWindowWidth(), numberOfMenuItems + 1 );
+                Box.DrawWindow( menuWindow, 5, 0, Prefs.Color.Text, Prefs.Color.Text );
+                
+                PrintOnConsole(title, 1, 6, Prefs.Color.MenuSelect);
+                
+                SetCursorPosition(1, 8);
+                PrintMenuString(menuString, Prefs.Color.MenuSelect);
+           
+                string line = "─".PadRight(Prefs.GetWindowWidth() -1, '─')+"─";
+                PrintOnConsole (line, 0, Prefs.GetWindowHeight() - 2,Prefs.Color.Text);
+           
+                SetCursorPosition(1, numberOfMenuItems + 9);
             }
-
-            SetCursorPosition(1, 8);
-            PrintMenuString(menuString, Prefs.Color.MenuSelect);
-            SetCursorPosition(0, Console.CursorTop);
-            lock (ConsoleLock)
-            {
-                Prefs.SetColor(Prefs.Color.Text);
-                if (Debugger.IsAttached)
-                {
-                    Console.Write(mString6);
-                    //Console.Write("1234567890_234567890_234567890_234567890_234567890_234567890_234567890_234567890\n");
-                }
-                else
-                {
-                    Console.Write(mString6);
-                }
-            }
-            //for (int i = 0; i < Prefs.GetWindowHeight() - Console.CursorTop -1; i++)
-            //{
-            //    PrintOnConsole (mString2, 0, Console.CursorTop + i,Prefs.Color.Text);
-            //}
             
-            PrintOnConsole (mString7, 0, Prefs.GetWindowHeight() - 2,Prefs.Color.Text);
-            Console.WriteLine();
-            SetCursorPosition(1, Console.CursorTop);
         }
 
         private static void PrintMenuString(string menuString, Prefs.Color aColorMenuOption)                 
         {
             var menustringCharArray = menuString.ToCharArray();
-            PrintOnConsole("│", 0,Console.CursorTop, Prefs.Color.Text);
-            PrintOnConsole("│", Prefs.GetWindowWidth() -1 ,Console.CursorTop, Prefs.Color.Text);
+            
             Prefs.SetColor(Prefs.Color.DefaultForeGround);
             lock (ConsoleLock)
             {
@@ -388,8 +140,6 @@ namespace BakeryConsole
                     
                     if(menustringCharArray[i].ToString() == "\n")
                     {
-                        PrintOnConsole("│", 0,Console.CursorTop, Prefs.Color.Text);
-                        PrintOnConsole("│", Prefs.GetWindowWidth()-1,Console.CursorTop, Prefs.Color.Text);
                         Prefs.SetColor(Prefs.Color.DefaultForeGround);
                         Console.Write(menustringCharArray[i]);
                         SetCursorPosition (Console.CursorLeft + 1, Console.CursorTop);  
@@ -399,7 +149,6 @@ namespace BakeryConsole
                         Prefs.SetColor(Prefs.Color.DefaultForeGround);
                         Console.Write(menustringCharArray[i]);
                     }
-                    
                 }
             }
         }
