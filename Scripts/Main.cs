@@ -27,7 +27,7 @@ namespace BakeryConsole
         public static ClassSelect classSelect       = new ClassSelect();
 
         // declare variables
-        private static string validation            = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 " + "\b";
+        private static string validation            = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 @'-/" + "\b";
         private static string compareString         = "";
         public  static string filePeople            = "people.json";
         private static string fileCustomers         = "customers.json";
@@ -366,7 +366,6 @@ namespace BakeryConsole
             {
                 _ = (T)Activator.CreateInstance(typeof(T), true, true);         // display empty inputfield
             }
-                
             UpdateTotalRecordsOnScreen(recordsInList);
             StringBuilder zoekString = new StringBuilder();
 
@@ -447,14 +446,16 @@ namespace BakeryConsole
 /*** SEARCH ***/    default:
                         
                         compareString       = BuildZoekString(zoekString, cursorTop);
-                        int foundListIndex  = aList.FindIndex(item => (item.Description + item.ID).Contains(compareString));
-                        int numberFound     = aList.Count(item => (item.Description + item.ID).Contains(compareString));
+                        //var searchString    = RecordManager.GetSearchString<T>(selectedRecordsList[recordIndex - 1]);
+                        
+                        int foundListIndex  = aList.FindIndex(item => item.ConstructSearchString().Contains(compareString));
+                        int numberFound     = aList.Count(item => item.ConstructSearchString().Contains(compareString));
                         
                         if (numberFound > 0)
                         {
                             change = true;
                                                         
-                            selectedRecordsList = aList.FindAll(item => (item.Description + item.ID).Contains(compareString));
+                            selectedRecordsList = aList.FindAll(item => item.ConstructSearchString().Contains(compareString));
                             
                             numberOfRecordsSelected = selectedRecordsList.Count;
                             
@@ -475,7 +476,7 @@ namespace BakeryConsole
                              _ = (T)Activator.CreateInstance(typeof(T), selectedRecordsList[0], true);         // display first found record
                         }else
                         {
-                            zoekString.Clear();
+                            //zoekString.Clear();
                         }
                         break;
                 }
@@ -492,14 +493,13 @@ namespace BakeryConsole
         {
             string returnString;
            
-            //zoekstring.Append(inputKey.KeyChar.ToString());
-
             if (validation.ToString().Contains(inputKey.KeyChar.ToString() )) 
             {
-                if (inputKey.KeyChar == 8 & zoekstring.Length > 1)
+                if (inputKey.KeyChar == 8 & zoekstring.Length > 0)
                 {
                     zoekstring.Length--;
-                }else
+
+                }else if (zoekstring.Length < 10 & inputKey.KeyChar != 8)
                 {
                     zoekstring.Append(inputKey.KeyChar.ToString());
                 }
@@ -507,8 +507,7 @@ namespace BakeryConsole
             {
                 zoekstring.Clear();
             }
-
-            //IO.PrintOnConsole("Searching: [ " + zoekstring.ToString() + " ]".PadRight(20, ' '), 1, cursorTop - 1, Color.TextColors.Defaults);
+            
             returnString = zoekstring.ToString();
             return returnString;
         }
