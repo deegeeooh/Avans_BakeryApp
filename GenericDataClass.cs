@@ -19,7 +19,7 @@ namespace BakeryConsole
         private bool _showInput;
         private bool _trim;
 
-        public static string _DescriptionFieldName = "Description";
+        private static string _DescriptionFieldName = "Description";
 
         private static int[,] fieldProperties;          // { 0 arrayindex,
                                                         //   1 fieldlength,
@@ -71,7 +71,8 @@ namespace BakeryConsole
             if (!displayOnly)            //Edit
             {
                 StrVal = new string[fieldProperties.GetLength(0)]; 
-                
+                FieldNames              = fieldNames;        
+                FieldProperties         = fieldProperties;
                 for (int i = 0; i < fieldProperties.GetLength(0); i++)
                 {
                     Checkbooleans(i);
