@@ -30,7 +30,7 @@ class Program
         {
             lock (ConsoleLock)
             {
-                Console.SetCursorPosition(0, 35);
+                Console.SetCursorPosition(0, 10);
                 if (i % 60 == 1)
                 {
                     mins++;
