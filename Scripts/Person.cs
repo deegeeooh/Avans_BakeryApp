@@ -64,12 +64,12 @@ namespace BakeryConsole
             var cursor = Console.CursorTop;
                 for (int i = 0; i < fieldProperties.GetLength(0); i++)
                 {
-                    IO.PrintBoundaries(fieldNames[i], "", lengthQuestionField, fieldProperties[i, 1], cursor, 1, false); Console.WriteLine(); cursor++;
+                    IO.PrintBoundaries(fieldNames[i], "", "", lengthQuestionField, fieldProperties[i, 1], cursor, 1, false); Console.WriteLine(); cursor++;
                 }
             _ = new Address(clearForm, _DescriptionFieldName, false);                             // call Address to clear it's specific fields, 2nd part
 /*2nd*/ }
 
-/*1st*/ public Person(Person aPerson, bool displayOnly) : base (aPerson, displayOnly, _DescriptionFieldName, true)   
+/*1st*/ public Person(Person aPerson, string aHighLight, bool displayOnly) : base (aPerson, aHighLight, displayOnly, _DescriptionFieldName, true)   
         {
             if (!displayOnly)               //EDIT 
             {
@@ -92,7 +92,7 @@ namespace BakeryConsole
                 CheckMutations(aPerson, aPerson.RelationType,           this.RelationType,           fieldNames[3], aPerson.Mutations.Count);
                 CheckMutations(aPerson, aPerson.DateOfBirth.ToString(), this.DateOfBirth.ToString(), fieldNames[4], aPerson.Mutations.Count);
 
-/*2nd*/         GetAddressFields(new Address(aPerson, displayOnly, _DescriptionFieldName, false));
+/*2nd*/         GetAddressFields(new Address(aPerson, aHighLight, displayOnly, _DescriptionFieldName, false));
                 
                 CheckMutations(aPerson, aPerson.Street,                 this.Street,    Address.fieldNames[0],  aPerson.Mutations.Count);
                 CheckMutations(aPerson, aPerson.Zipcode,                this.Zipcode,   Address.fieldNames[1],  aPerson.Mutations.Count);
@@ -105,15 +105,15 @@ namespace BakeryConsole
             {
                 var cursor = Console.CursorTop;
                
-                IO.PrintBoundaries(fieldNames[0],  aPerson.Prefix,       lengthQuestionField, fieldProperties[0, 1], cursor, 1, aPerson.Active); Console.WriteLine(); cursor++;
-                IO.PrintBoundaries(fieldNames[1],  aPerson.FirstName,    lengthQuestionField, fieldProperties[1, 1], cursor, 1, aPerson.Active); Console.WriteLine(); cursor++;
-                IO.PrintBoundaries(fieldNames[2],  aPerson.Gender,       lengthQuestionField, fieldProperties[2, 1], cursor, 1, aPerson.Active); Console.WriteLine(); cursor++;
-                IO.PrintBoundaries(fieldNames[3],  aPerson.RelationType, lengthQuestionField, fieldProperties[3, 1], cursor, 1, aPerson.Active); Console.WriteLine(); cursor++;
+                IO.PrintBoundaries(fieldNames[0],  aPerson.Prefix,       aHighLight, lengthQuestionField, fieldProperties[0, 1], cursor, 1, aPerson.Active); Console.WriteLine(); cursor++;
+                IO.PrintBoundaries(fieldNames[1],  aPerson.FirstName,    aHighLight,lengthQuestionField, fieldProperties[1, 1], cursor, 1, aPerson.Active); Console.WriteLine(); cursor++;
+                IO.PrintBoundaries(fieldNames[2],  aPerson.Gender,       aHighLight,lengthQuestionField, fieldProperties[2, 1], cursor, 1, aPerson.Active); Console.WriteLine(); cursor++;
+                IO.PrintBoundaries(fieldNames[3],  aPerson.RelationType, aHighLight,lengthQuestionField, fieldProperties[3, 1], cursor, 1, aPerson.Active); Console.WriteLine(); cursor++;
                 IO.PrintBoundaries(fieldNames[4],  aPerson.DateOfBirth.ToString("dd/MM/yyyy"), 
-                                                                         lengthQuestionField, fieldProperties[4, 1], cursor, 1, aPerson.Active);     
+                                                                         aHighLight,lengthQuestionField, fieldProperties[4, 1], cursor, 1, aPerson.Active);     
                 DisplayAge(aPerson.DateOfBirth, cursor); Console.WriteLine(); cursor++;
 
-/*2nd*/          _ = new Address(aPerson, displayOnly, _DescriptionFieldName, false);
+/*2nd*/          _ = new Address(aPerson, aHighLight, displayOnly, _DescriptionFieldName, false);
             }
         }
 

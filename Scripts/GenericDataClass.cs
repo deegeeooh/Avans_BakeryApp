@@ -62,11 +62,11 @@ namespace BakeryConsole
             var cursor = Console.CursorTop;
             for (int i = 0; i < fieldProperties.GetLength(0); i++)
             {
-                IO.PrintBoundaries(fieldNames[i], "", lengthQuestionField, fieldProperties[i, 1], cursor, 1, false); Console.WriteLine(); cursor++;
+                IO.PrintBoundaries(fieldNames[i], "", "", lengthQuestionField, fieldProperties[i, 1], cursor, 1, false); Console.WriteLine(); cursor++;
             }
         }
 
-        public GenericDataClass(GenericDataClass anObject, bool displayOnly) : base(anObject, displayOnly, _DescriptionFieldName, true)
+        public GenericDataClass(GenericDataClass anObject, string aHighLight, bool displayOnly) : base(anObject, aHighLight, displayOnly, _DescriptionFieldName, true)
         {
             if (!displayOnly)            //Edit
             {
@@ -90,10 +90,10 @@ namespace BakeryConsole
                 {
                     if (fieldProperties[i,3] == 1 |fieldProperties[i,3] == 2)              // numeric field, align to right of field
                     {
-                        IO.PrintBoundaries(fieldNames[i], anObject.StrVal[i].PadLeft(fieldProperties[i,1],' '), lengthQuestionField, fieldProperties[i, 1], cursorRow, 1, anObject.Active); Console.WriteLine(); cursorRow++;
+                        IO.PrintBoundaries(fieldNames[i], anObject.StrVal[i].PadLeft(fieldProperties[i,1],' '), aHighLight, lengthQuestionField, fieldProperties[i, 1], cursorRow, 1, anObject.Active); Console.WriteLine(); cursorRow++;
                     }else
                     {
-                        IO.PrintBoundaries(fieldNames[i], anObject.StrVal[i], lengthQuestionField, fieldProperties[i, 1], cursorRow, 1, anObject.Active); Console.WriteLine(); cursorRow++;
+                        IO.PrintBoundaries(fieldNames[i], anObject.StrVal[i], aHighLight, lengthQuestionField, fieldProperties[i, 1], cursorRow, 1, anObject.Active); Console.WriteLine(); cursorRow++;
                     }
                 }
             }

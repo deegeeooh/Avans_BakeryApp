@@ -360,7 +360,7 @@ namespace BakeryConsole
             if (aList.Count > 0)                                                //display first record
             {
                 RecordManager.SetTotalRecords(recordsInList);                   // store total records in Recordmanager
-                _ = (T)Activator.CreateInstance(typeof(T), aList[0], true);     // display first record on screen
+                _ = (T)Activator.CreateInstance(typeof(T), aList[0], "", true);     // display first record on screen
             }
             else
             {
@@ -429,7 +429,7 @@ namespace BakeryConsole
                         {
                             recordIndex--;
                             IO.SetCursorPosition(cursorLeft, cursorTop);
-                            _ = (T)Activator.CreateInstance(typeof(T), selectedRecordsList[recordIndex - 1], true);
+                            _ = (T)Activator.CreateInstance(typeof(T), selectedRecordsList[recordIndex - 1], compareString, true);
                         }
                         break;
 
@@ -439,7 +439,7 @@ namespace BakeryConsole
                         {
                             recordIndex++;
                             IO.SetCursorPosition(cursorLeft, cursorTop);
-                            _ = (T)Activator.CreateInstance(typeof(T), selectedRecordsList[recordIndex - 1], true);
+                            _ = (T)Activator.CreateInstance(typeof(T), selectedRecordsList[recordIndex - 1], compareString, true);
                         }
                         break;
                     
@@ -464,6 +464,8 @@ namespace BakeryConsole
                             if (change)
                             {
                                 selectedRecordsList = aList;
+                                IO.SetCursorPosition(cursorLeft, cursorTop);
+                                _ = (T)Activator.CreateInstance(typeof(T), selectedRecordsList[recordIndex - 1], compareString, true);
                                 change = false;
                             }
                         }
@@ -473,7 +475,8 @@ namespace BakeryConsole
                         {
                             recordIndex = 1;
                             IO.SetCursorPosition(cursorLeft, cursorTop);
-                             _ = (T)Activator.CreateInstance(typeof(T), selectedRecordsList[0], true);         // display first found record
+                            //_ = (T)Activator.CreateInstance(typeof(T), selectedRecordsList[0], true);         // display first found record
+                             _ = (T)Activator.CreateInstance(typeof(T), selectedRecordsList[0], compareString, true);         // display first found record
                         }else
                         {
                             //zoekString.Clear();
@@ -530,7 +533,7 @@ namespace BakeryConsole
                 if (personSearchResult != null)
                 {
                     IO.SetCursorPosition(cursorLeft, cursorTop);
-                    _ = new Person(peopleList[recordIndex - 1], true);
+                    _ = new Person(peopleList[recordIndex - 1], "", true);
                     recordIndex = personSearchResult.RecordCounter;
                 }
                 else

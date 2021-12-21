@@ -86,11 +86,11 @@ namespace BakeryConsole
             var cursor = Console.CursorTop;
                 for (int i = 0; i < fieldProperties.GetLength(0); i++)
                 {
-                    IO.PrintBoundaries(fieldNames[i], "", lengthQuestionField, fieldProperties[i, 1], cursor, 1, false); Console.WriteLine(); cursor++;
+                    IO.PrintBoundaries(fieldNames[i], "", "", lengthQuestionField, fieldProperties[i, 1], cursor, 1, false); Console.WriteLine(); cursor++;
                 }
         }
 
-        public Product(Product aProduct, bool displayOnly) : base (aProduct, displayOnly, _DescriptionFieldName, true)    // Constructor for edit and display existing record
+        public Product(Product aProduct, string aHighLight, bool displayOnly) : base (aProduct, aHighLight, displayOnly, _DescriptionFieldName, true)    // Constructor for edit and display existing record
         {
             if (!displayOnly)  //EDIT
             {
@@ -127,12 +127,12 @@ namespace BakeryConsole
             {
                 var cursorColumn = Console.CursorTop;
 
-                IO.PrintBoundaries(fieldNames[0], aProduct.ProductType, lengthQuestionField, fieldProperties[0, 1], cursorColumn, 1, aProduct.Active); Console.WriteLine(); cursorColumn++;
-                IO.PrintBoundaries(fieldNames[1], aProduct.ProductionDate.ToString("dd/MM/yyyy"), lengthQuestionField, fieldProperties[1, 1], cursorColumn, 1, aProduct.Active); Console.WriteLine(); cursorColumn++;
-                IO.PrintBoundaries(fieldNames[2], aProduct.ExpirationDate.ToString("dd/MM/yyyy"), lengthQuestionField, fieldProperties[2, 1], cursorColumn, 1, aProduct.Active); Console.WriteLine(); cursorColumn++;
-                IO.PrintBoundaries(fieldNames[3], aProduct.SalesPrice.ToString("F2").PadLeft(fieldProperties[3 ,1],' ') , lengthQuestionField, fieldProperties[3, 1], cursorColumn, 1, aProduct.Active); Console.WriteLine(); cursorColumn++;
-                IO.PrintBoundaries(fieldNames[4], aProduct.CostPrice.ToString("F2").PadLeft(fieldProperties[4, 1], ' '), lengthQuestionField, fieldProperties[4, 1], cursorColumn, 1, aProduct.Active); Console.WriteLine(); cursorColumn++;
-                IO.PrintBoundaries(fieldNames[5], aProduct.Stock.ToString().PadLeft(fieldProperties[5, 1], ' '), lengthQuestionField, fieldProperties[5, 1], cursorColumn, 1, aProduct.Active); Console.WriteLine(); cursorColumn++;
+                IO.PrintBoundaries(fieldNames[0], aProduct.ProductType, aHighLight,                                                     lengthQuestionField, fieldProperties[0, 1], cursorColumn, 1, aProduct.Active); Console.WriteLine(); cursorColumn++;
+                IO.PrintBoundaries(fieldNames[1], aProduct.ProductionDate.ToString("dd/MM/yyyy"), aHighLight,                           lengthQuestionField, fieldProperties[1, 1], cursorColumn, 1, aProduct.Active); Console.WriteLine(); cursorColumn++;
+                IO.PrintBoundaries(fieldNames[2], aProduct.ExpirationDate.ToString("dd/MM/yyyy"), aHighLight,                           lengthQuestionField, fieldProperties[2, 1], cursorColumn, 1, aProduct.Active); Console.WriteLine(); cursorColumn++;
+                IO.PrintBoundaries(fieldNames[3], aProduct.SalesPrice.ToString("F2").PadLeft(fieldProperties[3 ,1],' ') , aHighLight,   lengthQuestionField, fieldProperties[3, 1], cursorColumn, 1, aProduct.Active); Console.WriteLine(); cursorColumn++;
+                IO.PrintBoundaries(fieldNames[4], aProduct.CostPrice.ToString("F2").PadLeft(fieldProperties[4, 1], ' '),aHighLight,     lengthQuestionField, fieldProperties[4, 1], cursorColumn, 1, aProduct.Active); Console.WriteLine(); cursorColumn++;
+                IO.PrintBoundaries(fieldNames[5], aProduct.Stock.ToString().PadLeft(fieldProperties[5, 1], ' '),aHighLight,             lengthQuestionField, fieldProperties[5, 1], cursorColumn, 1, aProduct.Active); Console.WriteLine(); cursorColumn++;
             
             }
             

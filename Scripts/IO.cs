@@ -253,7 +253,7 @@ namespace BakeryConsole
 
             if (showBoundaries)
             {
-                PrintBoundaries(fieldName, fieldValue, lengthQuestionField, lengthInputField, cursorTop, cursorOffset, true);
+                PrintBoundaries(fieldName, fieldValue, "", lengthQuestionField, lengthInputField, cursorTop, cursorOffset, true);
             }
 
             if (fieldValue != "")                                          // if a edit value is given, assign to inputStringbuilder and print it
@@ -404,8 +404,56 @@ namespace BakeryConsole
             return returnString;
         }
 
+        //public static void PrintBoundaries(string displayString,            // textstring of name of field
+        //                                   string fieldValue,               // current value of this field (for edit purposes)
+        //                                   int lengthQuestionField,         // Length of the name of field to be padded
+        //                                   int lengthInputField,            // idem input field
+        //                                   int cursorRow,                   // reset cursor to row
+        //                                   int cursorCol,
+        //                                   bool active)
+        //{
+        //    var inactiveColor = (active) ? Prefs.Color.Text : Prefs.Color.Inactive;
+
+        //    Prefs.SetColor(Prefs.Color.DefaultForeGround);
+        //    lock (ConsoleLock)
+        //    {
+        //        Console.SetCursorPosition (cursorCol,cursorRow);
+        //        Console.Write(displayString.PadRight(lengthQuestionField, ' '));
+        //        if (fieldValue == "")
+        //        {
+        //            Console.Write("[".PadRight(lengthInputField + 1, ' ') + "]");            // print input field boundaries
+
+        //            if (Debugger.IsAttached)
+        //            {
+        //                Console.Write("".PadRight(Prefs.GetWindowWidth() - lengthQuestionField - lengthInputField - 4, 'X')); // fillout with " " to edge
+        //            }
+        //            else
+        //            {
+        //                Console.Write("".PadRight(Prefs.GetWindowWidth() - lengthQuestionField - lengthInputField - 4, ' '));
+        //            }
+
+        //        }
+        //        else                                                                         // if an existing field value is passed on, print that
+        //        {
+        //            Console.Write("[");
+        //            if (fieldValue != "01/01/0001" & fieldValue != "01-01-0001")              //TODO: this is really bad, find another solution
+        //            {
+        //                Prefs.SetColor(inactiveColor); Console.Write(fieldValue.PadRight(lengthInputField, ' ')); 
+        //            }else
+        //            {
+        //                Prefs.SetColor(inactiveColor); Console.Write("".PadRight(lengthInputField, ' ')); 
+        //            }
+        //            Prefs.SetColor(Prefs.Color.DefaultForeGround); Console.Write("]");
+        //        }
+        //    }
+        //    IO.SetCursorPosition(lengthQuestionField + 1 + cursorCol, cursorRow);                // reset cursorposition to beginning of the input field
+        //    Prefs.SetColor(Prefs.Color.DefaultForeGround);
+        //}
+
+
         public static void PrintBoundaries(string displayString,            // textstring of name of field
                                            string fieldValue,               // current value of this field (for edit purposes)
+                                           string aHighlight,               // part of string to highlight (when searching)
                                            int lengthQuestionField,         // Length of the name of field to be padded
                                            int lengthInputField,            // idem input field
                                            int cursorRow,                   // reset cursor to row
@@ -413,7 +461,6 @@ namespace BakeryConsole
                                            bool active)
         {
             var inactiveColor = (active) ? Prefs.Color.Text : Prefs.Color.Inactive;
-
             Prefs.SetColor(Prefs.Color.DefaultForeGround);
             lock (ConsoleLock)
             {
@@ -435,15 +482,53 @@ namespace BakeryConsole
                 }
                 else                                                                         // if an existing field value is passed on, print that
                 {
-                    Console.Write("[");
-                    if (fieldValue != "01/01/0001" & fieldValue != "01-01-0001")
+                    //Console.Write("[");
+                    
+                    Console.Write("[".PadRight(lengthInputField + 1, ' ') + "]");
+                    Console.SetCursorPosition (cursorCol + lengthQuestionField + 1,cursorRow);
+                    
+                    var charsInfieldValue = fieldValue.ToCharArray();
+                    if (fieldValue != "01/01/0001" & fieldValue != "01-01-0001")              //TODO: this is really bad, find another solution
                     {
-                        Prefs.SetColor(inactiveColor); Console.Write(fieldValue.PadRight(lengthInputField, ' ')); 
+                        if (aHighlight != "" & fieldValue.Contains(aHighlight))                                   // check if it is in there anyway
+                        {
+                            for (int i = 0; i < fieldValue.Length; i++)
+                            {
+
+                                if (fieldValue.IndexOf(aHighlight, i) != -1)
+                                {
+                                    if (i == fieldValue.IndexOf(aHighlight, i))
+                                    {
+                                                                                
+                                        Prefs.SetColor(Prefs.Color.Inverted);
+                                        Console.Write(aHighlight);
+                                        i += aHighlight.Length - 1;
+                                    }else
+                                    {
+                                        Prefs.SetColor(inactiveColor);
+                                        Console.Write(charsInfieldValue[i].ToString());
+                                    }
+
+                                    
+                                }else
+                                {
+                                    Prefs.SetColor(inactiveColor);
+                                    Console.Write(charsInfieldValue[i].ToString());
+                                }
+                               
+                            }
+                        }else 
+                        {
+                            Prefs.SetColor(inactiveColor); Console.Write(fieldValue.PadRight(lengthInputField, ' ')); 
+                        }
+                        //Prefs.SetColor(inactiveColor); Console.Write(fieldValue.PadRight(lengthInputField, ' ')); 
                     }else
                     {
                         Prefs.SetColor(inactiveColor); Console.Write("".PadRight(lengthInputField, ' ')); 
                     }
-                    Prefs.SetColor(Prefs.Color.DefaultForeGround); Console.Write("]");
+                    //Prefs.SetColor(inactiveColor); Console.Write("".PadRight(lengthInputField - fieldValue.Length, ' ')); 
+                    
+                    //Prefs.SetColor(Prefs.Color.DefaultForeGround); Console.Write("]");
                 }
             }
             IO.SetCursorPosition(lengthQuestionField + 1 + cursorCol, cursorRow);                // reset cursorposition to beginning of the input field

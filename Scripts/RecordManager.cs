@@ -49,12 +49,12 @@ namespace BakeryConsole
 
                 for (int i = 0; i < fieldProperties.GetLength(0); i++)
                 {
-                    IO.PrintBoundaries(fieldNames[i], "", lengthQuestionField, fieldProperties[i, 1], cursor, 1, false); Console.WriteLine(); cursor++;
+                    IO.PrintBoundaries(fieldNames[i], "", "", lengthQuestionField, fieldProperties[i, 1], cursor, 1, false); Console.WriteLine(); cursor++;
                 }
             }
         }
 
-        public RecordManager( RecordManager anInheritor, bool displayOnly, string aStringFor_Name, bool _ExecuteConstructor )
+        public RecordManager( RecordManager anInheritor, string aHighLight, bool displayOnly, string aStringFor_Name, bool _ExecuteConstructor )
         {
             if (_ExecuteConstructor)
             {
@@ -75,8 +75,8 @@ namespace BakeryConsole
                     fieldNames[1]   = aStringFor_Name;
                     int cursorColumn = Console.CursorTop;
                     IfActive(anInheritor, lengthQuestionField + fieldProperties[0, 1] + 5, cursorColumn);
-                    IO.PrintBoundaries(fieldNames[0], anInheritor.ID,          lengthQuestionField, fieldProperties[0, 1], cursorColumn, 1, anInheritor.Active); Console.WriteLine(); cursorColumn++;
-                    IO.PrintBoundaries(fieldNames[1], anInheritor.Description, lengthQuestionField, fieldProperties[1, 1], cursorColumn, 1, anInheritor.Active); Console.WriteLine(); cursorColumn++;
+                    IO.PrintBoundaries(fieldNames[0], anInheritor.ID,          aHighLight, lengthQuestionField, fieldProperties[0, 1], cursorColumn, 1, anInheritor.Active); Console.WriteLine(); cursorColumn++;
+                    IO.PrintBoundaries(fieldNames[1], anInheritor.Description, aHighLight, lengthQuestionField, fieldProperties[1, 1], cursorColumn, 1, anInheritor.Active); Console.WriteLine(); cursorColumn++;
 
                 }
             }

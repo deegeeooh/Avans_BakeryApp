@@ -48,11 +48,11 @@ namespace BakeryConsole
             var cursor = Console.CursorTop;
                 for (int i = 0; i < fieldProperties.GetLength(0); i++)
                 {
-                    IO.PrintBoundaries(fieldNames[i], "", lengthQuestionField, fieldProperties[i, 1], cursor, 1, false); Console.WriteLine(); cursor++;
+                    IO.PrintBoundaries(fieldNames[i], "", "", lengthQuestionField, fieldProperties[i, 1], cursor, 1, false); Console.WriteLine(); cursor++;
                 }
         }
 
-        public Employee(Employee anEmployee, bool displayOnly ) : base (anEmployee, displayOnly) //TODO: clear
+        public Employee(Employee anEmployee, string aHighLight, bool displayOnly ) : base (anEmployee, aHighLight, displayOnly) //TODO: clear
         {
             if (!displayOnly)
             {
@@ -78,10 +78,10 @@ namespace BakeryConsole
             {
                 var cursor = Console.CursorTop;
 
-                IO.PrintBoundaries(fieldNames[0], anEmployee.JobTitle, lengthQuestionField, fieldProperties[0, 1], cursor, 1, anEmployee.Active); Console.WriteLine(); cursor++;
-                IO.PrintBoundaries(fieldNames[1], anEmployee.DateJoined.ToString("dd/MM/yyyy"), lengthQuestionField, fieldProperties[1, 1], cursor, 1, anEmployee.Active); Console.WriteLine(); cursor++;
-                IO.PrintBoundaries(fieldNames[2], anEmployee.DateExit.ToString("dd/MM/yyyy"), lengthQuestionField, fieldProperties[2, 1], cursor, 1, anEmployee.Active); Console.WriteLine(); cursor++;
-                IO.PrintBoundaries(fieldNames[3], anEmployee.Salary.ToString().PadLeft(fieldProperties[3, 1],' '), lengthQuestionField, fieldProperties[3, 1], cursor, 1, anEmployee.Active); Console.WriteLine(); cursor++;
+                IO.PrintBoundaries(fieldNames[0], anEmployee.JobTitle, aHighLight, lengthQuestionField, fieldProperties[0, 1], cursor, 1, anEmployee.Active); Console.WriteLine(); cursor++;
+                IO.PrintBoundaries(fieldNames[1], anEmployee.DateJoined.ToString("dd/MM/yyyy"), aHighLight, lengthQuestionField, fieldProperties[1, 1], cursor, 1, anEmployee.Active); Console.WriteLine(); cursor++;
+                IO.PrintBoundaries(fieldNames[2], anEmployee.DateExit.ToString("dd/MM/yyyy"), aHighLight, lengthQuestionField, fieldProperties[2, 1], cursor, 1, anEmployee.Active); Console.WriteLine(); cursor++;
+                IO.PrintBoundaries(fieldNames[3], anEmployee.Salary.ToString().PadLeft(fieldProperties[3, 1],' '), aHighLight, lengthQuestionField, fieldProperties[3, 1], cursor, 1, anEmployee.Active); Console.WriteLine(); cursor++;
                 //IO.PrintBoundaries(empFieldnames[5], anEmployee.SickDays.ToString(), lengthQuestionField, empFieldProp[5, 1], cursor, anEmployee.Active); Console.WriteLine(); cursor++;
                 
             }

@@ -74,12 +74,12 @@ namespace BakeryConsole
                 var cursor = Console.CursorTop;
                     for (int i = start; i < lenght; i++)
                     {
-                        IO.PrintBoundaries(fieldNames[i], "", lengthQuestionField, fieldProperties[i, 1], cursor, 1, false); Console.WriteLine(); cursor++;
+                        IO.PrintBoundaries(fieldNames[i], "", "", lengthQuestionField, fieldProperties[i, 1], cursor, 1, false); Console.WriteLine(); cursor++;
                     }
             }
         }
 
-        public Address(Address anAddress, bool displayOnly, string aStringFor_Name, bool _ExecuteParentConstructorOnly) : base(anAddress, displayOnly, aStringFor_Name, _ExecuteParentConstructorOnly)    // Constructor for edit and display existing record
+        public Address(Address anAddress, string aHighLight, bool displayOnly, string aStringFor_Name, bool _ExecuteParentConstructorOnly) : base(anAddress, aHighLight, displayOnly, aStringFor_Name, _ExecuteParentConstructorOnly)    // Constructor for edit and display existing record
         {
             if (!displayOnly)  //EDIT
             {
@@ -118,12 +118,12 @@ namespace BakeryConsole
 /*2nd*/         }else
                 {
                     int cursorColumn = Console.CursorTop;
-                IO.PrintBoundaries(fieldNames[0], anAddress.Street,     lengthQuestionField, fieldProperties[0, 1], cursorColumn, 1, anAddress.Active); Console.WriteLine(); cursorColumn++;
-                IO.PrintBoundaries(fieldNames[1], anAddress.Zipcode,    lengthQuestionField, fieldProperties[1, 1], cursorColumn, 1, anAddress.Active); Console.WriteLine(); cursorColumn++;
-                IO.PrintBoundaries(fieldNames[2], anAddress.City,       lengthQuestionField, fieldProperties[2, 1], cursorColumn, 1, anAddress.Active); Console.WriteLine(); cursorColumn++;
-                IO.PrintBoundaries(fieldNames[3], anAddress.Country,    lengthQuestionField, fieldProperties[3, 1], cursorColumn, 1, anAddress.Active); Console.WriteLine(); cursorColumn++;
-                IO.PrintBoundaries(fieldNames[4], anAddress.Telephone,  lengthQuestionField, fieldProperties[4, 1], cursorColumn, 1, anAddress.Active); Console.WriteLine(); cursorColumn++;
-                IO.PrintBoundaries(fieldNames[5], anAddress.Email,      lengthQuestionField, fieldProperties[5, 1], cursorColumn, 1, anAddress.Active); Console.WriteLine(); cursorColumn++;
+                IO.PrintBoundaries(fieldNames[0], anAddress.Street,     aHighLight, lengthQuestionField, fieldProperties[0, 1], cursorColumn, 1, anAddress.Active); Console.WriteLine(); cursorColumn++;
+                IO.PrintBoundaries(fieldNames[1], anAddress.Zipcode,    aHighLight, lengthQuestionField, fieldProperties[1, 1], cursorColumn, 1, anAddress.Active); Console.WriteLine(); cursorColumn++;
+                IO.PrintBoundaries(fieldNames[2], anAddress.City,       aHighLight, lengthQuestionField, fieldProperties[2, 1], cursorColumn, 1, anAddress.Active); Console.WriteLine(); cursorColumn++;
+                IO.PrintBoundaries(fieldNames[3], anAddress.Country,    aHighLight, lengthQuestionField, fieldProperties[3, 1], cursorColumn, 1, anAddress.Active); Console.WriteLine(); cursorColumn++;
+                IO.PrintBoundaries(fieldNames[4], anAddress.Telephone,  aHighLight, lengthQuestionField, fieldProperties[4, 1], cursorColumn, 1, anAddress.Active); Console.WriteLine(); cursorColumn++;
+                IO.PrintBoundaries(fieldNames[5], anAddress.Email,      aHighLight, lengthQuestionField, fieldProperties[5, 1], cursorColumn, 1, anAddress.Active); Console.WriteLine(); cursorColumn++;
                 }
             }
         }
