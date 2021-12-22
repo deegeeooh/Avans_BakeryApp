@@ -39,7 +39,7 @@ namespace BakeryConsole
         private static string fileProducts          = "products.json";
         private static string fileUsers             = "users.json";
         public  static string licenseString         = "INITECH Inc.";
-        public  static string buildVersion          = "0.21";                   // NICE: use assemblyversion attribute
+        public  static string buildVersion          = "0.22";                   // NICE: use assemblyversion attribute
         public  static int    warningLenghtDefault  = 1000;                     // displaytime in ms for system messages
         
         //init genericDataClass call variables
@@ -208,13 +208,13 @@ namespace BakeryConsole
                 } while (inputKey.Key != ConsoleKey.Home);
 
                 CheckMenuInputMasterData();
-            } else if (inputKey.Key == ConsoleKey.F3) { Prefs.CycleColors(0, false); return; }       // input text color
-              else if (inputKey.Key == ConsoleKey.F4) { Prefs.CycleColors(1, false); return; }       // highlighted text color
-              else if (inputKey.Key == ConsoleKey.F5) { Prefs.CycleColors(2, false); return; }       // normal text
-              else if (inputKey.Key == ConsoleKey.F6) { Prefs.CycleColors(3, false); return; }       // background
-              else if (inputKey.Key == ConsoleKey.F7) { Prefs.CycleColors(4, false); return; }       // Menu select color
-              else if (inputKey.Key == ConsoleKey.F8) { Prefs.CycleColors(5, false); return; }       // Software license nameholder Color
-              else if (inputKey.Key == ConsoleKey.F9) { Prefs.CycleColors(6, true); return; }       // random colors including background
+            } else if (inputKey.Key == ConsoleKey.F3)  { Prefs.CycleColors(0, false); return; }       // input text color
+              else if (inputKey.Key == ConsoleKey.F4)  { Prefs.CycleColors(1, false); return; }       // highlighted text color
+              else if (inputKey.Key == ConsoleKey.F5)  { Prefs.CycleColors(2, false); return; }       // normal text
+              else if (inputKey.Key == ConsoleKey.F6)  { Prefs.CycleColors(3, false); return; }       // background
+              else if (inputKey.Key == ConsoleKey.F7)  { Prefs.CycleColors(4, false); return; }       // Menu select color
+              else if (inputKey.Key == ConsoleKey.F8)  { Prefs.CycleColors(5, false); return; }       // Software license nameholder Color
+              else if (inputKey.Key == ConsoleKey.F9)  { Prefs.CycleColors(6, true); return; }        // random colors including background
               else if (inputKey.Key == ConsoleKey.F10) { Prefs.CycleColors(6, false); return; }       // random colors excluding background
               else if (inputKey.Key == ConsoleKey.F11) { Prefs.SetStandardColor(); }                  // Set/Reset to standard color scheme
 
@@ -353,8 +353,8 @@ namespace BakeryConsole
             int recordsInList = aList.Count;                                    // total number of records in file
 
             // init help variables for search selection    
-            var selectedRecordsList = aList;
-            var numberOfRecordsSelected  = recordsInList;
+            var selectedRecordsList = aList;                                    // list to store selected records with search
+            var numberOfRecordsSelected  = recordsInList;                       // 
             bool change = false;
                             
             if (aList.Count > 0)                                                //display first record
@@ -383,11 +383,11 @@ namespace BakeryConsole
                             if (selectedRecordsList[recordIndex -1].Active)
                             {
                                 IO.SetCursorPosition(cursorLeft, cursorTop + 1);       
-                                selectedRecordsList[recordIndex -1] = (T)Activator.CreateInstance(typeof(T), selectedRecordsList[recordIndex - 1], false);     // call editor constructor
+                                selectedRecordsList[recordIndex -1] = (T)Activator.CreateInstance(typeof(T), selectedRecordsList[recordIndex - 1], "", false);     // call editor constructor
                                 aList[selectedRecordsList[recordIndex - 1].RecordCounter - 1] = selectedRecordsList[recordIndex - 1];
                                 JSON.WriteToFile(aFilename, aList, true);                                             // write to file
                                 IO.SetCursorPosition(cursorLeft, cursorTop);
-                                _ = (T)Activator.CreateInstance(typeof(T), selectedRecordsList[recordIndex - 1], true);           // update current record on screen
+                                _ = (T)Activator.CreateInstance(typeof(T), selectedRecordsList[recordIndex - 1], "", true);           // update current record on screen
                             }
                         }
                         break;
@@ -403,8 +403,8 @@ namespace BakeryConsole
                         recordIndex = recordsInList;                                                            // set index to new created record
                         RecordManager.SetTotalRecords(recordsInList);                                           // store number of records
                         Console.SetCursorPosition(cursorLeft, cursorTop);
-                        _ = (T)Activator.CreateInstance(typeof(T), aList[recordIndex - 1], true);               // refresh record on screen
-                        JSON.WriteToFile(aFilename, aList, true);                                                 // write to file 
+                        _ = (T)Activator.CreateInstance(typeof(T), aList[recordIndex - 1], "", true);           // refresh record on screen
+                        JSON.WriteToFile(aFilename, aList, true);                                               // write to file 
                         UpdateTotalRecordsOnScreen(recordsInList);                                              // update total records on screen
 
                         break;
@@ -417,7 +417,6 @@ namespace BakeryConsole
                             RecordManager.ToggleDeletionFlag<T>(selectedRecordsList[recordIndex - 1], recordIndex - 1);           // toggle flag
                             _ = (T)Activator.CreateInstance(typeof(T), selectedRecordsList[recordIndex - 1], true);               // refresh record on screen
                             aList[selectedRecordsList[recordIndex-1].RecordCounter - 1].Active = selectedRecordsList[recordIndex - 1].Active;
-                            //selectedRecordsList[selectedRecordsList[recordIndex - 1].RecordCounter - 1].Active = selectedRecordsList[recordIndex - 1].Active;
                             JSON.WriteToFile(aFilename, aList, false);                                                // write
                             Thread.Sleep(500);
                         }
