@@ -136,10 +136,10 @@ namespace BakeryConsole
 
             for (int i = 0; i < StrVal.Length; i++)
             {
-                searchString += StrVal[i].ToString();
+                searchString += StrVal[i].ToString() + "\r";
             }
             
-            searchString += base.ConstructSearchString();
+            searchString += "\r" + base.ConstructSearchString();
             return searchString;
         }
 

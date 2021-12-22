@@ -161,9 +161,9 @@ namespace BakeryConsole
         }
         public override string ConstructSearchString()
         {
-            string searchString = base.ConstructSearchString() + 
-                                  this.Prefix +
-                                  this.FirstName +
+            string searchString = base.ConstructSearchString() + "\r" +
+                                  this.Prefix +"\r" +
+                                  this.FirstName +"\r" +
                                   this.DateOfBirth.ToString("dd/MM/yyyy");
             return searchString;
         }

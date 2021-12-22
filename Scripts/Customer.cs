@@ -80,9 +80,9 @@ namespace BakeryConsole
             {
                 var cursorRow = Console.CursorTop;
 
-                IO.PrintBoundaries(fieldNames[0], aCustomer.MainContact,  "", lengthQuestionField, fieldProperties[0, 1], cursorRow, 1, aCustomer.Active); Console.WriteLine(); cursorRow++;
-                IO.PrintBoundaries(fieldNames[1], aCustomer.Jobtitle,     "", lengthQuestionField, fieldProperties[1, 1], cursorRow, 1, aCustomer.Active); Console.WriteLine(); cursorRow++;
-                IO.PrintBoundaries(fieldNames[2], aCustomer.CustomerType, "", lengthQuestionField, fieldProperties[2, 1], cursorRow, 1, aCustomer.Active); Console.WriteLine(); cursorRow++;
+                IO.PrintBoundaries(fieldNames[0], aCustomer.MainContact,  aHighLight, lengthQuestionField, fieldProperties[0, 1], cursorRow, 1, aCustomer.Active); Console.WriteLine(); cursorRow++;
+                IO.PrintBoundaries(fieldNames[1], aCustomer.Jobtitle,     aHighLight, lengthQuestionField, fieldProperties[1, 1], cursorRow, 1, aCustomer.Active); Console.WriteLine(); cursorRow++;
+                IO.PrintBoundaries(fieldNames[2], aCustomer.CustomerType, aHighLight, lengthQuestionField, fieldProperties[2, 1], cursorRow, 1, aCustomer.Active); Console.WriteLine(); cursorRow++;
                 
 /*2nd*/         _ = new Address(aCustomer, aHighLight, displayOnly, _DescriptionFieldName, false);
             }
@@ -104,6 +104,15 @@ namespace BakeryConsole
             this.Telephone = _newInstance.Telephone;
             this.Email     = _newInstance.Email;
         }
+        public override string ConstructSearchString()
+        {
+            string searchString = base.ConstructSearchString() + "\r" +
+                                  MainContact +"\r" +
+                                  Jobtitle +"\r" +
+                                  CustomerType +"\r";
+            return searchString;
+        }
+
 
     }
 }

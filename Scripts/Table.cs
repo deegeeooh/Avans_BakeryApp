@@ -54,8 +54,6 @@ namespace BakeryConsole
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
         
-        
-        
         public static Table ConstructVarTable(string[] title, int[] titlePos, bool headerRow, string[] header, int[] headerPos, int[] width, int height)
         {
             List<Box> boxList   = new List<Box>();

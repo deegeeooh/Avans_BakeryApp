@@ -136,12 +136,12 @@ namespace BakeryConsole
         }
         public override string ConstructSearchString()
         {
-        string searchString =   base.ConstructSearchString() +
-                                this.Street +
-                                this.Zipcode +
-                                this.City +
-                                this.Country +
-                                this.Telephone +
+        string searchString =   base.ConstructSearchString() +"\r" +
+                                this.Street +"\r" +
+                                this.Zipcode +"\r" +
+                                this.City +"\r" +
+                                this.Country +"\r" +
+                                this.Telephone +"\r" +
                                 this.Email ;
         return searchString;
         }

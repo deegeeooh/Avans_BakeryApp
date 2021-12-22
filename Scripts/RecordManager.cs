@@ -141,7 +141,7 @@ namespace BakeryConsole
 
         public virtual string ConstructSearchString()
         {
-            string searchString = this.ID + this.Description;
+            string searchString = this.ID + "\r" + this.Description;
             return searchString;
         }
         
@@ -173,9 +173,5 @@ namespace BakeryConsole
             }
             return b + a;
         }
-
-        
-
-
     }
 }
