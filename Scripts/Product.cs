@@ -147,12 +147,12 @@ namespace BakeryConsole
         public override string ConstructSearchString()
         {
             string searchString = base.ConstructSearchString() +"\r" +
-                                  this.ProductType +"\r" +
-                                  this.ProductionDate +"\r" +
-                                  this.ExpirationDate+"\r" +
-                                  this.SalesPrice +"\r" +
-                                  this.CostPrice+"\r" +
-                                  this.Stock;
+                                  ProductType +"\r" +
+                                  ProductionDate.ToString("dd/MM/yyyy") +"\r" +
+                                  ExpirationDate.ToString("dd/MM/yyyy") +"\r" +
+                                  SalesPrice +"\r" +
+                                  CostPrice +"\r" +
+                                  Stock;
             return searchString;
         }
 
