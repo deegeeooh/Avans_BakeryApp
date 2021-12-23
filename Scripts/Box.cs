@@ -199,7 +199,18 @@ namespace BakeryConsole
         {
             var OrgCursorCol = Console.CursorLeft;
             var OrgCursorRow = Console.CursorTop;
-
+            
+            topLeft = "╔";
+            topRight = "╗";
+            bottomLeft = "╚";
+            bottomRight = "╝";
+            horizontalTop = "═";
+            horizontalBot = "═";
+            vertical = "║";
+            headerLeft = "╠";
+            headerRight = "╣";
+            headerHor = "═";
+            
             switch (aWindow.Type)
             {
              //         0                     1                   2                 3                   4                   5
@@ -209,18 +220,18 @@ namespace BakeryConsole
              //║                  ║ │                  ││                  ││                  │                  │                  │
              //║                  ║ │                  ││                  ││                  │                  │                  │
              //╚══════════════════╝ └──────────────────┘└──────────────────┘└──────────────────┴──────────────────┴──────────────────┘
-
+             
                 case 0:
-                    topLeft = "╔";
-                    topRight = "╗";
-                    bottomLeft = "╚";
-                    bottomRight = "╝";
-                    horizontalTop = "═";
-                    horizontalBot = "═";
-                    vertical = "║";
-                    headerLeft = "╠";
-                    headerRight = "╣";
-                    headerHor = "═";
+                    //topLeft = "╔";
+                    //topRight = "╗";
+                    //bottomLeft = "╚";
+                    //bottomRight = "╝";
+                    //horizontalTop = "═";
+                    //horizontalBot = "═";
+                    //vertical = "║";
+                    //headerLeft = "╠";
+                    //headerRight = "╣";
+                    //headerHor = "═";
                     break;
 
                 case 1:
@@ -237,11 +248,11 @@ namespace BakeryConsole
                     break;
 
                 case 2:
-                    topLeft = "╔";
-                    topRight = "╗";
+                    //topLeft = "╔";
+                    //topRight = "╗";
                     bottomLeft = "└";
                     bottomRight = "┘";
-                    horizontalTop = "═";
+                    //horizontalTop = "═";
                     horizontalBot = "─";
                     vertical = "│";
                     headerLeft = "├";
@@ -250,11 +261,11 @@ namespace BakeryConsole
 
                     break;
                 case 3:
-                    topLeft = "╔";
+                    //topLeft = "╔";
                     topRight = "╦";
                     bottomLeft = "└";
                     bottomRight = "┴";
-                    horizontalTop = "═";
+                    //horizontalTop = "═";
                     horizontalBot = "─";
                     vertical = "│";
                     headerLeft = "├";
@@ -267,7 +278,7 @@ namespace BakeryConsole
                     topRight = "╦";
                     bottomLeft = "┴";
                     bottomRight = "┴";
-                    horizontalTop = "═";
+                    //horizontalTop = "═";
                     horizontalBot = "─";
                     vertical = "│";
                     headerLeft = "┼";
@@ -278,10 +289,10 @@ namespace BakeryConsole
 
                 case 5:
                     topLeft = "╦";
-                    topRight = "╗";
+                    //topRight = "╗";
                     bottomLeft = "┴";
                     bottomRight = "┘";
-                    horizontalTop = "═";
+                    //horizontalTop = "═";
                     horizontalBot = "─";
                     vertical = "│";
                     headerLeft = "┼";
