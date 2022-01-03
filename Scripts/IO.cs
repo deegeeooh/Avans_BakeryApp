@@ -16,17 +16,6 @@ namespace BakeryConsole
 
         private static int currentWindowWidth; //= Prefs.GetWindowWidth();
         private static int currentWindowHeight;// = Prefs.GetWindowHeight();
-
-        static string topLeft;
-        static string topRight;
-        static string bottomLeft;
-        static string bottomRight;
-        static string horizontalTop;
-        static string horizontalBot;
-        static string vertical;
-        static string headerLeft;
-        static string headerRight;
-        static string headerHor;
         
         public static void SetWarningLength(int aValueInMs)
         {
@@ -115,7 +104,6 @@ namespace BakeryConsole
            
                 SetCursorPosition(1, numberOfMenuItems + 9);
             }
-            
         }
 
         private static void PrintMenuString(string menuString, Prefs.Color aColorMenuOption)                 
@@ -159,7 +147,7 @@ namespace BakeryConsole
             lock (ConsoleLock)
             {
                 Prefs.SetColor(aColor);
-                int currentCursorPosTop = Console.CursorTop;                            // store current cursor pos
+                int currentCursorPosTop = Console.CursorTop;                                // store current cursor pos
                 int currentCursorPosLeft = Console.CursorLeft;
                 {
                     if (Console.CursorTop <= Prefs.GetWindowHeight() - 1)
@@ -167,7 +155,7 @@ namespace BakeryConsole
                         Console.SetCursorPosition(column, row);
                         Console.Write(aString);
                     }
-                    Console.SetCursorPosition(currentCursorPosLeft, currentCursorPosTop);
+                    Console.SetCursorPosition(currentCursorPosLeft, currentCursorPosTop);   // restore cursorpos
                 } 
             }
         }
@@ -294,8 +282,8 @@ namespace BakeryConsole
                             {
                                 if (inputStringbuilder.Length < lengthInputField)                                   // Insert only as long as not max inputlenght
                                 {
-                                    inputStringbuilder.Insert(indexInStringbuilder - 1, tempString);            //INSERT CHARACTER
-                                    //indexInStringbuilder++;
+                                    inputStringbuilder.Insert(indexInStringbuilder - 1, tempString);                //INSERT CHARACTER
+                                    indexInStringbuilder++;                                                         // and move cursor one to the right
                                 }
                                 else
                                 {
@@ -403,57 +391,10 @@ namespace BakeryConsole
             Prefs.SetColor(Prefs.Color.Text);
             return returnString;
         }
-
-        //public static void PrintBoundaries(string displayString,            // textstring of name of field
-        //                                   string fieldValue,               // current value of this field (for edit purposes)
-        //                                   int lengthQuestionField,         // Length of the name of field to be padded
-        //                                   int lengthInputField,            // idem input field
-        //                                   int cursorRow,                   // reset cursor to row
-        //                                   int cursorCol,
-        //                                   bool active)
-        //{
-        //    var inactiveColor = (active) ? Prefs.Color.Text : Prefs.Color.Inactive;
-
-        //    Prefs.SetColor(Prefs.Color.DefaultForeGround);
-        //    lock (ConsoleLock)
-        //    {
-        //        Console.SetCursorPosition (cursorCol,cursorRow);
-        //        Console.Write(displayString.PadRight(lengthQuestionField, ' '));
-        //        if (fieldValue == "")
-        //        {
-        //            Console.Write("[".PadRight(lengthInputField + 1, ' ') + "]");            // print input field boundaries
-
-        //            if (Debugger.IsAttached)
-        //            {
-        //                Console.Write("".PadRight(Prefs.GetWindowWidth() - lengthQuestionField - lengthInputField - 4, 'X')); // fillout with " " to edge
-        //            }
-        //            else
-        //            {
-        //                Console.Write("".PadRight(Prefs.GetWindowWidth() - lengthQuestionField - lengthInputField - 4, ' '));
-        //            }
-
-        //        }
-        //        else                                                                         // if an existing field value is passed on, print that
-        //        {
-        //            Console.Write("[");
-        //            if (fieldValue != "01/01/0001" & fieldValue != "01-01-0001")              //TODO: this is really bad, find another solution
-        //            {
-        //                Prefs.SetColor(inactiveColor); Console.Write(fieldValue.PadRight(lengthInputField, ' ')); 
-        //            }else
-        //            {
-        //                Prefs.SetColor(inactiveColor); Console.Write("".PadRight(lengthInputField, ' ')); 
-        //            }
-        //            Prefs.SetColor(Prefs.Color.DefaultForeGround); Console.Write("]");
-        //        }
-        //    }
-        //    IO.SetCursorPosition(lengthQuestionField + 1 + cursorCol, cursorRow);                // reset cursorposition to beginning of the input field
-        //    Prefs.SetColor(Prefs.Color.DefaultForeGround);
-        //}
-
-
+                
         public static void PrintBoundaries(string displayString,            // textstring of name of field
                                            string fieldValue,               // current value of this field (for edit purposes)
-                                           string aHighlight,               // part of string to highlight (when searching)
+                                           string aHighlight,               // part of string to be highlighted (when searching)
                                            int lengthQuestionField,         // Length of the name of field to be padded
                                            int lengthInputField,            // idem input field
                                            int cursorRow,                   // reset cursor to row
@@ -490,6 +431,9 @@ namespace BakeryConsole
                     var charsInfieldValue = fieldValue.ToCharArray();
                     if (fieldValue != "01/01/0001" & fieldValue != "01-01-0001")              //TODO: this is really bad, find another solution
                     {
+                        
+                        //fieldValue.
+                        
                         if (aHighlight != "" & fieldValue.Contains(aHighlight))                                   // check if it is in there anyway
                         {
                             for (int i = 0; i < fieldValue.Length; i++)
@@ -521,14 +465,10 @@ namespace BakeryConsole
                         {
                             Prefs.SetColor(inactiveColor); Console.Write(fieldValue.PadRight(lengthInputField, ' ')); 
                         }
-                        //Prefs.SetColor(inactiveColor); Console.Write(fieldValue.PadRight(lengthInputField, ' ')); 
                     }else
                     {
                         Prefs.SetColor(inactiveColor); Console.Write("".PadRight(lengthInputField, ' ')); 
                     }
-                    //Prefs.SetColor(inactiveColor); Console.Write("".PadRight(lengthInputField - fieldValue.Length, ' ')); 
-                    
-                    //Prefs.SetColor(Prefs.Color.DefaultForeGround); Console.Write("]");
                 }
             }
             IO.SetCursorPosition(lengthQuestionField + 1 + cursorCol, cursorRow);                // reset cursorposition to beginning of the input field
