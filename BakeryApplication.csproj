@@ -106,6 +106,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Scripts\Address.cs" />
+    <Compile Include="Scripts\Box.cs" />
     <Compile Include="Scripts\GenericDataClass.cs" />
     <Compile Include="Scripts\JSON.cs" />
     <Compile Include="Scripts\Mutation.cs" />
@@ -127,7 +128,6 @@
     <Compile Include="Scripts\Table.cs" />
     <Compile Include="Scripts\User.cs" />
     <Compile Include="Scripts\WINDLL.cs" />
-    <Compile Include="Scripts\Box.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

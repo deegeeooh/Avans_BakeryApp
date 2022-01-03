@@ -28,13 +28,19 @@ namespace BakeryConsole
                 {
                     if (i == 0)
                     {
-                        boxList.Add(new Box(title, 0, 3, headerRow, "", 1, width, height));
+                        if (numberOfColumns == 1)
+                        {
+                            boxList.Add(new Box(title, 1, 1, headerRow, header, 1, width, height));
+                        }else
+                        {
+                            boxList.Add(new Box(title, 1, 3, headerRow, header, 1, width, height));
+                        }
                     } else if (i == numberOfColumns - 1)
                     {
-                        boxList.Add(new Box("", 1, 5, headerRow, "", 1, width, height));
+                        boxList.Add(new Box("", 1, 5, headerRow, header, 1, width, height));
                     } else
                     {
-                        boxList.Add(new Box("", 1, 4, headerRow, "", 1, width, height));
+                        boxList.Add(new Box("", 1, 4, headerRow, header, 1, width, height));
                     }
                 }
             return new Table(boxList);

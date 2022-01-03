@@ -75,27 +75,27 @@ namespace BakeryConsole
             IO.SetWarningLength(warningLenghtDefault);
             Console.Clear();
 
-
-            var stdTable = Table.ConstrucStdTable ("lalalallaalal",true,"bloebloe",5,20,15);
-            IO.DisplayTable(stdTable, 2, 0, true);
-            Console.ReadKey();
+            // testing table stuffies
+            //var stdTable = Table.ConstrucStdTable ("lalalallaalal",true,"bloebloe",5,20,15);
+            //IO.DisplayTable(stdTable, 2, 0, true);
+            //Console.ReadKey();
             
 
-            var testTable = Table.ConstructVarTable (new string[] {"Column 1", "Col 2","Col 3", "Pepijn","Column 5","Colum nummer zes"},
-                                                     new int[] {0, 0, 1, 1, 2, 2},
-                                                     true,
-                                                     new string[] {"Name","Address","Code","Telephone","email","Woonplaats"},
-                                                     new int[] {0, 0, 1, 1, 2, 2},
-                                                     new int[] {25, 20, 15, 10, 5, 30},
-                                                     25);
+            //var testTable = Table.ConstructVarTable (new string[] {"Column 1", "Col 2","Col 3", "Pepijn","Column 5","Colum nummer zes"},
+            //                                         new int[] {0, 0, 1, 1, 2, 2},
+            //                                         true,
+            //                                         new string[] {"Name","Address","Code","Telephone","email","Woonplaats"},
+            //                                         new int[] {0, 0, 1, 1, 2, 2},
+            //                                         new int[] {25, 20, 15, 10, 5, 30},
+            //                                         25);
             
-            IO.DisplayTable(testTable, 2, 0, true);
+            //IO.DisplayTable(testTable, 2, 0, true);
             
-            Console.ReadKey(true);
+            //Console.ReadKey(true);
             
-            Box.DrawWindow(new Box("[ 123456789 ]", 1, 1, true, "Header title", 1, 25, 15), 1, 1, Prefs.Color.Input, Prefs.Color.MenuSelect);
+            //Box.DrawWindow(new Box("[ 123456789 ]", 1, 1, true, "Header title", 1, 25, 15), 1, 1, Prefs.Color.Input, Prefs.Color.MenuSelect);
             
-            Console.ReadKey();
+            //Console.ReadKey();
 
 
             // Main Menu Loop

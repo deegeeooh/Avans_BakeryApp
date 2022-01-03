@@ -21,12 +21,12 @@ namespace BakeryConsole
 
         public static void SetConsoleWindowProperties()
         {
-            IntPtr handle = GetConsoleWindow();
+            IntPtr handle  = GetConsoleWindow();
             IntPtr sysMenu = GetSystemMenu(handle, false);
 
             if (handle != IntPtr.Zero)
             {
-                //DeleteMenu(sysMenu, SC_CLOSE, MF_BYCOMMAND);
+                DeleteMenu(sysMenu, SC_CLOSE, MF_BYCOMMAND);
                 DeleteMenu(sysMenu, SC_MINIMIZE, MF_BYCOMMAND);
                 DeleteMenu(sysMenu, SC_MAXIMIZE, MF_BYCOMMAND);
                 DeleteMenu(sysMenu, SC_SIZE, MF_BYCOMMAND);
