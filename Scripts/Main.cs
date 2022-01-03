@@ -27,7 +27,7 @@ namespace BakeryConsole
         public static ClassSelect classSelect       = new ClassSelect();
 
         // declare variables
-        private static string validation            = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 @'-/" + "\b";
+        private static string validation            = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 @'-/," + "\b";
         private static string compareString         = "";
         public  static string filePeople            = "people.json";
         private static string fileCustomers         = "customers.json";
@@ -41,7 +41,7 @@ namespace BakeryConsole
         public  static string licenseString         = "INITECH Inc.";
         public  static string buildVersion          = "0.22";                   // NICE: use assemblyversion attribute
         public  static int    warningLenghtDefault  = 1000;                     // displaytime in ms for system messages
-        
+
         //init genericDataClass call variables
         private static string[] fieldNames;
         private static int[,] fieldProperties;
@@ -76,27 +76,26 @@ namespace BakeryConsole
             Console.Clear();
 
 
-            //var stdTable = Table.ConstrucStdTable ("",true,"",7,10,15);
-            //IO.DisplayTable(stdTable, 2, 0, true);
-            //Console.ReadKey();
+            var stdTable = Table.ConstrucStdTable ("lalalallaalal",true,"bloebloe",5,20,15);
+            IO.DisplayTable(stdTable, 2, 0, true);
+            Console.ReadKey();
             
 
-            //var testTable = Table.ConstructVarTable (new string[] {"Column 1", "Col 2","Col 3", "Pepijn","Column 5","Colum nummer zes"},
-            //                                         new int[] {0, 0, 1, 1, 2, 2},
-            //                                         true,
-            //                                         new string[] {"Name","Address","Code","Telephone","email","Woonplaats"},
-            //                                         new int[] {0, 0, 1, 1, 2, 2},
-            //                                         new int[] {25, 20, 15, 10, 5, 30},
-            //                                         25);
-
+            var testTable = Table.ConstructVarTable (new string[] {"Column 1", "Col 2","Col 3", "Pepijn","Column 5","Colum nummer zes"},
+                                                     new int[] {0, 0, 1, 1, 2, 2},
+                                                     true,
+                                                     new string[] {"Name","Address","Code","Telephone","email","Woonplaats"},
+                                                     new int[] {0, 0, 1, 1, 2, 2},
+                                                     new int[] {25, 20, 15, 10, 5, 30},
+                                                     25);
             
-            //IO.DisplayTable(testTable, 2, 0, true);
-
-            //Console.ReadKey(true);
+            IO.DisplayTable(testTable, 2, 0, true);
             
-            //Box.DrawWindow(new Box("[ 123456789 ]", 1, 1, true, "Header title", 1, 25, 15), 1, 1, Prefs.Color.Input, Prefs.Color.MenuSelect);
+            Console.ReadKey(true);
             
-            //Console.ReadKey();
+            Box.DrawWindow(new Box("[ 123456789 ]", 1, 1, true, "Header title", 1, 25, 15), 1, 1, Prefs.Color.Input, Prefs.Color.MenuSelect);
+            
+            Console.ReadKey();
 
 
             // Main Menu Loop
@@ -394,12 +393,12 @@ namespace BakeryConsole
                     //case ConsoleKey.I:
 /*** ADD ***/       case ConsoleKey.Insert:
 
-                        selectedRecordsList = aList;                                                            // reset searchlist
+                        selectedRecordsList = aList;                                                            // reset searchlist to contain all records
                         IO.SetCursorPosition(cursorLeft, cursorTop);
                         if (recordsInList != 0) _ = (T)Activator.CreateInstance(typeof(T), true, true);         // clear form if record on screen
                         IO.SetCursorPosition(cursorLeft, cursorTop + 1);                    
                         aList.Add((T)Activator.CreateInstance(typeof(T)));                                      // add new record 
-                        recordsInList++; numberOfRecordsSelected++;                                                                        // increase record counter
+                        recordsInList++; numberOfRecordsSelected++;                                             // increase record counter
                         recordIndex = recordsInList;                                                            // set index to new created record
                         RecordManager.SetTotalRecords(recordsInList);                                           // store number of records
                         Console.SetCursorPosition(cursorLeft, cursorTop);
@@ -415,7 +414,7 @@ namespace BakeryConsole
                         {
                             IO.SetCursorPosition(cursorLeft, cursorTop);                        
                             RecordManager.ToggleDeletionFlag<T>(selectedRecordsList[recordIndex - 1], recordIndex - 1);           // toggle flag
-                            _ = (T)Activator.CreateInstance(typeof(T), selectedRecordsList[recordIndex - 1], true);               // refresh record on screen
+                            _ = (T)Activator.CreateInstance(typeof(T), selectedRecordsList[recordIndex - 1], compareString, true);               // refresh record on screen
                             aList[selectedRecordsList[recordIndex-1].RecordCounter - 1].Active = selectedRecordsList[recordIndex - 1].Active;
                             JSON.WriteToFile(aFilename, aList, false);                                                // write
                             Thread.Sleep(500);
