@@ -164,6 +164,8 @@ namespace BakeryConsole
             string searchString = base.ConstructSearchString() + "\r" +
                                   this.Prefix +"\r" +
                                   this.FirstName +"\r" +
+                                  this.Gender +"\r" +
+                                  this.RelationType +"\r" +
                                   this.DateOfBirth.ToString("dd/MM/yyyy");
             return searchString;
         }
