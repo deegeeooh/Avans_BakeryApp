@@ -1,3 +1,12 @@
+
+[0.23] 17/01/2022
+migrated to using ConsoleLibrary.dll
+(removed IO,Prefs,JSON,Box,Table, WINDLL classes)
+
+fixes:
+using of dummy bool for Activator calls
+parse error for stock int in Product
+
 [0.22] 03/01/2022
 
 Added:
