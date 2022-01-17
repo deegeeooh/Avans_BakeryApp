@@ -1,5 +1,20 @@
+[0.22] 03/01/2022
 
-[0.21] 17/12
+Added:
+ConstructSearchString() method to data classes (using virtual/override to Recordmanager)
+display of searchstring via Prefs.PrintBoundaries() and refactored all calls to it (note to self: use an interface next time :P)
+
+fixes:
+Main.BuildZoekString() not handling backspace correctly
+Added field divider to searchstring
+
+cleanup:
+Scripts > script folder
+Box.DrawWindows()
+Prepped moving generic console functionality to ConsoleLibrary.dll later
+
+
+[0.21] 17/12/2021
 
 Class Box for creating and displaying boxes on screen
 Class Table for creating table objects consisting of variable columns (boxes)
