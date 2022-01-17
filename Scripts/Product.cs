@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using ConsoleLibrary;
 
 namespace BakeryConsole
 {
@@ -77,11 +78,18 @@ namespace BakeryConsole
                 CostPrice = 0;
             }
 
-            Stock          = Int32.Parse(IO.GetInput(fieldNames[5], "", checkinputStringNum, lengthQuestionField, fieldProperties[5, 1], false, true, true, true, true, fieldProperties[5, 2], 1));
+            string getStock          =  IO.GetInput(fieldNames[5], "", checkinputStringNum, lengthQuestionField, fieldProperties[5, 1], false, true, true, true, true, fieldProperties[5, 2], 1);
+            if (getStock != "")
+            {
+                Stock = int.Parse(getStock);
+            }else
+            {
+                Stock = 0;  
+            }
            
         }
 
-        public Product(bool clearForm, bool _Activatordummy) : base (clearForm, _DescriptionFieldName, true)                                   // Constructor for displaying clear input form
+        public Product(bool clearForm) : base (clearForm, _DescriptionFieldName, true)                                   // Constructor for displaying clear input form
         {
             var cursor = Console.CursorTop;
                 for (int i = 0; i < fieldProperties.GetLength(0); i++)
