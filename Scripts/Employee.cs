@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using ConsoleLibrary;
 
 namespace BakeryConsole
 {
@@ -43,7 +44,7 @@ namespace BakeryConsole
 
             //CheckMutations(this, " ", "[Created:]", "", 0);          // create a single mutation to indicate creation datestamp   } from parent Person
         }
-        public Employee(bool clearForm, bool _Activatordummy) : base (clearForm, _Activatordummy)     //_Dummy for calling with Activator.CreateInstance
+        public Employee(bool clearForm) : base (clearForm)     //_Dummy for calling with Activator.CreateInstance
         {
             var cursor = Console.CursorTop;
                 for (int i = 0; i < fieldProperties.GetLength(0); i++)

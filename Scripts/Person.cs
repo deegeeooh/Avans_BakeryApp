@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using ConsoleLibrary;
 
 namespace BakeryConsole
 {
@@ -59,7 +60,7 @@ namespace BakeryConsole
 /*2nd*/     GetAddressFields(new Address());                                            // get Address' fields and copy them from that instance to this one.
         }
 
-/*1st*/ public Person(bool clearForm, bool _Activatordummy) : base (clearForm, _DescriptionFieldName, true)             // clear fields after base cleared 1st part fields
+/*1st*/ public Person(bool clearForm) : base (clearForm, _DescriptionFieldName, true)             // clear fields after base cleared 1st part fields
         {                                                                                         // and TotalRecords etc will be increased which we only want from ()
             var cursor = Console.CursorTop;
                 for (int i = 0; i < fieldProperties.GetLength(0); i++)

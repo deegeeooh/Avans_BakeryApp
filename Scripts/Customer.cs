@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using ConsoleLibrary;
 
 namespace BakeryConsole
 {
@@ -38,7 +39,7 @@ namespace BakeryConsole
 
         }
 
-/*1st*/ public Customer( bool clearForm ) : base(clearForm, _DescriptionFieldName, true)  // call Address, _1st part
+/*1st*/ public Customer(bool clearForm) : base(clearForm, _DescriptionFieldName, true)  // call Address, _1st part
         {
             var cursor = Console.CursorTop;
             if (clearForm)
