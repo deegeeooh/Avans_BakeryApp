@@ -6,6 +6,7 @@ migrated to using ConsoleLibrary.dll
 fixes:
 using of dummy bool for Activator calls
 parse error for stock int in Product
+wrong constructor call when creating new file for Product
 
 [0.22] 03/01/2022
 
