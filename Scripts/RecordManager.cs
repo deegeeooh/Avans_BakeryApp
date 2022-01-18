@@ -7,9 +7,9 @@ namespace BakeryConsole
     class RecordManager
     {
 
-        private static int lengthQuestionField      = 30;
-        private static string checkinputStringAlpha = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/-@|' .,_";
-
+        private static int      lengthQuestionField      = 30;
+        private static string   checkinputStringAlpha = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/-@|' .,_";
+        private static int      totalRecords;                   // static field
         private static int[,] fieldProperties       = { { 0,   8,  1 },             //NICE : Use attributes instead
                                                         { 1,  45,  1 } };
 
@@ -20,7 +20,7 @@ namespace BakeryConsole
         public string ID                { get; set; }                  // unique record ID
         public string Description       { get; set; }                  // Default record search string
         public int RecordCounter        { get; set; }                  // NOT static, this is a record propery of the  class    
-        public static int TotalRecords  { get; set; }                  // static,this a class property        
+        
         public bool Active              { get; set; }                  // flag for record deletion/inactive
         public List<Mutation> Mutations { get; set; }                  // just as PoC; every record stores all mutations 
 
@@ -31,8 +31,8 @@ namespace BakeryConsole
         public RecordManager(string aStringFor_Name)
         {
             fieldNames[1]   = (aStringFor_Name == "") ? "Name" : aStringFor_Name;       
-            TotalRecords++;
-            RecordCounter   = TotalRecords;
+            totalRecords++;
+            RecordCounter   = totalRecords;
             Description     = IO.GetInput(fieldNames[1], "", checkinputStringAlpha, lengthQuestionField, fieldProperties[1, 1], false, true, true, true, true, fieldProperties[1, 2], 1);
             ID              = ConstructID(this);
             Active          = true;
@@ -54,7 +54,7 @@ namespace BakeryConsole
             }
         }
 
-        public RecordManager( RecordManager anInheritor, string aHighLight, bool displayOnly, string aStringFor_Name, bool _ExecuteConstructor )
+        public RecordManager(RecordManager anInheritor, string aHighLight, bool displayOnly, string aStringFor_Name, bool _ExecuteConstructor )
         {
             if (_ExecuteConstructor)
             {
@@ -128,9 +128,9 @@ namespace BakeryConsole
             }
         }
 
-        public static void SetTotalRecords( int aRecord )
+        public static void SetTotalRecords(int aRecord)
         {
-            TotalRecords = aRecord;
+            totalRecords = aRecord;
         }
 
         public static string GetSearchString<T>(T anInheritor) where T : RecordManager
