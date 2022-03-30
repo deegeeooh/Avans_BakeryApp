@@ -25,3 +25,4 @@ Compiling requirements:
 
 - Newtonsoft.Json library (install via NuGet in Visual Studio)
 - .NET 4.7.2
+- uses https://github.com/deegeeooh/ConsoleLibrary .dll for generic console versions starting from 0.23
