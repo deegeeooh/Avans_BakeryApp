@@ -20,7 +20,6 @@ namespace BakeryConsole
         public string ID                { get; set; }                  // unique record ID
         public string Description       { get; set; }                  // Default record search string
         public int RecordCounter        { get; set; }                  // NOT static, this is a record propery of the  class    
-        
         public bool Active              { get; set; }                  // flag for record deletion/inactive
         public List<Mutation> Mutations { get; set; }                  // just as PoC; every record stores all mutations 
 

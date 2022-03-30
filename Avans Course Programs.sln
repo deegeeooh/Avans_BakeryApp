@@ -7,14 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BakeryApplication", "Bakery
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReflectionTest", "Projects\ReflectionTest\ReflectionTest.csproj", "{CEDBFF66-EC03-4A8D-9178-CAC54C5A5AEB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Les Vier", "Projects\Les Vier\Les Vier.csproj", "{6A8A932E-FA7E-493D-A329-9D89F1DF9A3C}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LesDrie", "Projects\LesDrie\LesDrie.csproj", "{B9CCA0D9-CF5D-4591-8758-D91AB7610311}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReferenceTypesWeekVier", "Projects\LesVierReferenceTypes\ReferenceTypesWeekVier\ReferenceTypesWeekVier.csproj", "{A93F871B-48E8-49DB-A986-DB644B642A79}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ForNextVoorbeeld", "..\ForNext\ForNextVoorbeeld\ForNextVoorbeeld.csproj", "{D40D9F91-4084-4E51-A713-73247B0295E3}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "testcode2", "Projects\testcode2\testcode2.csproj", "{A33C69E4-A73C-4A3F-AF82-C76C5B86D10D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dynamic invoking of functions", "Projects\Dynamic invoking of functions\Dynamic invoking of functions.csproj", "{8AA3AD6B-E14B-472F-BE82-37C84C19C261}"
@@ -35,14 +27,6 @@ Global
 		{3CC5349A-6B02-4168-AAF1-92C83E7A4415}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CEDBFF66-EC03-4A8D-9178-CAC54C5A5AEB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CEDBFF66-EC03-4A8D-9178-CAC54C5A5AEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6A8A932E-FA7E-493D-A329-9D89F1DF9A3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6A8A932E-FA7E-493D-A329-9D89F1DF9A3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B9CCA0D9-CF5D-4591-8758-D91AB7610311}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B9CCA0D9-CF5D-4591-8758-D91AB7610311}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A93F871B-48E8-49DB-A986-DB644B642A79}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A93F871B-48E8-49DB-A986-DB644B642A79}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D40D9F91-4084-4E51-A713-73247B0295E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D40D9F91-4084-4E51-A713-73247B0295E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A33C69E4-A73C-4A3F-AF82-C76C5B86D10D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A33C69E4-A73C-4A3F-AF82-C76C5B86D10D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A33C69E4-A73C-4A3F-AF82-C76C5B86D10D}.Release|Any CPU.ActiveCfg = Release|Any CPU

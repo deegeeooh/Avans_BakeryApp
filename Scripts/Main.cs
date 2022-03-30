@@ -59,8 +59,8 @@ namespace BakeryConsole
         {
             // Control - C interrupt handling
 
-            Console.TreatControlCAsInput = true;                     // ConsoleCancel Eventhandler toggle;
-            Console.CancelKeyPress += new ConsoleCancelEventHandler(HandleCTRLC);  //set custom eventhandler
+            Console.TreatControlCAsInput = false;                                   // ConsoleCancel Eventhandler toggle;
+            Console.CancelKeyPress += new ConsoleCancelEventHandler(HandleCTRLC);   //set custom eventhandler
 
             // initialize variables and window
             
@@ -69,20 +69,28 @@ namespace BakeryConsole
 
             // read settings.json and set color scheme
 
-           
-
-            WINDLL.SetConsoleWindowProperties(true, true, true, true);
-
-            Prefs.InitializeColors();
-            //Prefs.SetConsoleWindowProperties();
+            WINDLL.SetConsoleWindowProperties(true, false, false, false);
+            Prefs.SetMinWindowSize(80, 36);
+            Prefs.InitializeDefaults();
             IO.SetWarningLength(warningLenghtDefault);
             Console.Clear();
 
-            // testing table stuffies
-            //var stdTable = Table.ConstrucStdTable ("lalalallaalal",true,"bloebloe",5,20,15);
-            //IO.DisplayTable(stdTable, 2, 0, true);
-            //Console.ReadKey();
+            //testing table stuffies
+
+            //Table stdTable;
+            //try
+            //{
+            //    stdTable = Table.ConstrucStdTable("lalalallaalal", true, "bloebloe", 15, 5, 15);
+            //    Table.DisplayTable(stdTable, 2, 0, false);
+            //}
+            //catch (Exception e)
+            //{
+            //    IO.SystemMessage(e.Message, false);
+            //}
+                        
             
+            //Console.ReadKey();
+
 
             //var testTable = Table.ConstructVarTable (new string[] {"Column 1", "Col 2","Col 3", "Pepijn","Column 5","Colum nummer zes"},
             //                                         new int[] {0, 0, 1, 1, 2, 2},
@@ -91,13 +99,13 @@ namespace BakeryConsole
             //                                         new int[] {0, 0, 1, 1, 2, 2},
             //                                         new int[] {25, 20, 15, 10, 5, 30},
             //                                         25);
-            
-            //IO.DisplayTable(testTable, 2, 0, true);
-            
+
+            //Table.DisplayTable(testTable, 2, 0, true);
+
             //Console.ReadKey(true);
-            
+
             //Box.DrawWindow(new Box("[ 123456789 ]", 1, 1, true, "Header title", 1, 25, 15), 1, 1, Prefs.Color.Input, Prefs.Color.MenuSelect);
-            
+
             //Console.ReadKey();
 
 
@@ -106,19 +114,26 @@ namespace BakeryConsole
 /*MAIN*/    {
                 IO.DisplayMenu("Main Menu", licenseString,
                                             "(L)ogin\n(P)eople\n(E)mployees\n(C)ustomers\n" +
-                                            "Pro(D)ucts\n(M)asterdata\n\n(F3-F10) change colors, (F11) reset (F12) save\n(arrow keys) resize window\n\n" +
+                                            "Pro(D)ucts\n(M)asterdata\n\n(F3-F10) change colors, (F11) reset (F12) save\n(arrow keys/PgUP/PgDN) resize window\n\n" +
                                             "Enter your choice, (Esc) to Exit program\n\n",
                                             Login.validPassword);
-                //DebugMessage("Debug Mode is ON");
+                //if (Login.validPassword)
+                //{
+                //    Box aBox = new Box("",1,4,true,"Current file",2,28,15);
+                //    Box.DrawWindow (aBox,5,Prefs.GetWindowWidth() - 30 ,Prefs.Color.Text,Prefs.Color.Text);
+
+                //}
+
                 inputKey = Console.ReadKey(true);                               // 'true' : dont'display the input on the console
                 CheckMenuInput();
                 RecordManager.SetTotalRecords(0);                             // Reset counter to 0 to when switching classes
 
             } while (inputKey.Key != ConsoleKey.Escape);
 
-            Console.WriteLine("\n\nYou have been logged out.. Goodbye!");       // De MZZL!
-            Thread.Sleep(500);
             Console.ResetColor();
+            Console.Clear();
+            Thread.Sleep(500);
+            Console.WriteLine("\n\nYou have been logged out.. Goodbye!");       // De MZZL!
         }
 
         private static void HandleCTRLC( object sender, ConsoleCancelEventArgs args )     // custom Control-C eventhandler
@@ -145,8 +160,6 @@ namespace BakeryConsole
                 DebugMessage("Debug Mode is ON");
                 _debugEnabled = _debugEnabled ? false : true;   // toggle static property
             }
-
-
 
             if (inputKey.Key == ConsoleKey.L || !Login.validPassword & inputKey.Key != ConsoleKey.Escape)
             {

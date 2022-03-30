@@ -7,16 +7,13 @@ class Program
 
         static void Main(string[] args)
         {
-            string searchString = "12";
-            string toBeSearched = "Hoogstraat 12";
+            bool abool = false;
             
-            if (toBeSearched.Contains(searchString))
-            {
-                Console.WriteLine("\"{0}\" contains \"{1}\"",toBeSearched,searchString);
-            }else
-            {
-                Console.WriteLine("\"{0}\" does not contain \"{1}\"",toBeSearched,searchString);
-            }
+        
+            bool flagToggle = abool ? false : true;
+        string a = abool ? "abool is Waar" : "abool is onwaar";
+        Console.Write("flagToggle is " + flagToggle + " " + a);
+        Console.ReadKey();
         }
 
     }
