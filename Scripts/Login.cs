@@ -12,13 +12,14 @@ namespace BakeryConsole
     class Login             // NICE: add login ID's and store users ID's in mutations
     {
         readonly string checkInputString    = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-@|.,_!#$%^&*";
-        private string passWord             = "bakker";
+        private string passWord             = "Bakery";
         public static bool validPassword;
+        string inputString;
 
         public Login()
         {
-            
-            string passWordInput = IO.GetInput("Enter password: ", "", checkInputString, 18, 40,false, true, false, false, true, 0, 1);
+            inputString = "Enter password: " + "(debug: " + passWord + ") ";
+            string passWordInput = IO.GetInput(inputString, "", checkInputString, inputString.Length, 40,false, true, false, false, true, 0, 1);
 
             if (passWordInput == passWord)
             {
