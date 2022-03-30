@@ -64,7 +64,6 @@ namespace BakeryConsole
             }
 /*2nd*/     else                                   // handle from fieldNames[2] to end
             {
-                //start = 2;
                 start = 0;
                 lenght = fieldProperties.GetLength(0);
                 DisplayClearInputFields();
@@ -146,10 +145,6 @@ namespace BakeryConsole
                                 this.Email ;
         return searchString;
         }
-
-
-
-
     }
 
 }
