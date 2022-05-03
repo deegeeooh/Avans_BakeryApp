@@ -58,6 +58,8 @@ namespace BakeryConsole
 
             //Code             = IO.GetInput(fieldNames[0],  "", checkinputStringAlpha, lengthQuestionField, fieldProperties[0, 1], false, true, true, true, true, fieldProperties[0, 2]);
         }
+
+        // test 
         public GenericDataClass(bool clearForm) : base (clearForm, _DescriptionFieldName,  true)                                   // Constructor for displaying clear input form
         {
             var cursor = Console.CursorTop;
